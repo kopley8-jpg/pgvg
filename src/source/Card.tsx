@@ -36,10 +36,10 @@ export const Card = ({ device, pods }: ICard) => {
       </div>
       <div style={styles.info}>
         <div style={styles.infoHeader}>
-          <a>{device.brand + ' ' + device.model}</a>
+          {/* <a>{device.brand + ' ' + device.model}</a> */}
         </div>
         <div style={styles.infoEntries}>
-          {Object.entries(device)
+          {/* {Object.entries(device)
             .filter(([key]) => !excludeFields.includes(key))
             .map(([key, value], index) => (
               <Entry
@@ -48,7 +48,7 @@ export const Card = ({ device, pods }: ICard) => {
                 value={value}
                 onValueChange={() => {}}
               />
-            ))}
+            ))} */}
         </div>
       </div>
     </div>
@@ -57,12 +57,10 @@ export const Card = ({ device, pods }: ICard) => {
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
-    width: '80vw',
-    height: '400px',
+    width: '90%',
     borderRadius: '20px',
     backgroundColor: 'grey',
-    display: 'flex',
-    flexDirection: 'row',
+    flexShrink: 0,
   },
   photo: {
     height: '80vw',

@@ -84,26 +84,25 @@ export default function Main() {
   if (loading) return <div className="loader">Загрузка...</div>;
 
   return (
-    <div className="app">
-      <div style={styles.container}>
-        {devices.map((device, index) => (
-          <Card pods={pods} key={index} device={device} />
-        ))}
-      </div>
+    <div style={styles.container}>
+      {devices.map((device, index) => (
+        <Card pods={pods} key={index} device={device} />
+      ))}
     </div>
   );
 }
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
+    backgroundColor: '#ff0000',
+
     width: '100vw',
-    maxWidth: '100%',
-    minHeight: '100vh',
-    backgroundColor: '#1a1a1a',
-    padding: '20px',
+    height: '100vh',
+
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: '16px',
+
+    overflowY: 'auto',
   },
 };
