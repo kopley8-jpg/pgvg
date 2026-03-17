@@ -1,9 +1,15 @@
-import { onValue, ref } from "firebase/database";
-import React, { useEffect, useState } from "react";
-import { Card } from "./Card";
-import { toArray } from "./lib";
-import type { CoilType, DeviceType, PodType, TankType } from "./model";
-import { database } from "./firebase";
+import { onValue, push, ref, update } from 'firebase/database';
+import React, { useEffect, useState } from 'react';
+import { Card } from './Card';
+import { toArray } from './lib';
+import type {
+  CoilInContainType,
+  CoilType,
+  DeviceType,
+  PodType,
+  TankType,
+} from './model';
+import { database } from './firebase';
 
 export default function Main() {
   const [devices, setDevices] = useState<(DeviceType & { id: string })[]>([]);
@@ -13,13 +19,60 @@ export default function Main() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const kochegarRef = ref(database, "kochegar");
+    const kochegarRef = ref(database, 'kochegar');
     onValue(
       kochegarRef,
       (snapshot) => {
         const data = snapshot.val();
-        setDevices(toArray<DeviceType>(data.podiki));
-        setPods(toArray<PodType>(data.platform.cartridges));
+        const newPods = toArray<PodType>(data.platform.cartridges);
+        const dataTanks = toArray<
+          Omit<TankType, 'coils'> & { coils: string[] }
+        >(data.platform.tanks);
+        const newCoils = toArray<CoilType>(data.platform.coils);
+        const dataDevice = toArray<
+          Omit<DeviceType, 'platforms' | 'coilsInContain'> & {
+            platforms: string[];
+            coilsInContain: '' | CoilInContainType[];
+          }
+        >(data.podiki);
+
+        const newTanks: TankType[] = dataTanks.map((tank) => ({
+          ...tank,
+          coils: tank.coils
+            .map((name) => newCoils.filter((coil) => coil.Name === name))
+            .flat(),
+        }));
+
+        const newDevices: DeviceType[] = dataDevice.map((device) => ({
+          ...device,
+          platforms: device.platforms
+            .map((name) => [
+              ...newPods
+                .filter((pod) => pod.Name === name)
+                .map((pod) => {
+                  const type: 'tank' | 'pod' = 'pod';
+                  return { ...pod, type: type };
+                }),
+              ...newTanks
+                .filter((tank) => tank.name === name)
+                .map((pod) => {
+                  const type: 'tank' | 'pod' = 'tank';
+                  return { ...pod, type: type };
+                }),
+            ])
+            .flat(),
+          coilsInContain:
+            typeof device.coilsInContain === 'string'
+              ? []
+              : device.coilsInContain,
+        }));
+
+        setPods(newPods);
+        setTanks(newTanks);
+        setCoils(newCoils);
+        setDevices(newDevices);
+
+        console.log(newDevices);
         setLoading(false);
       },
       (error) => {
@@ -43,14 +96,14 @@ export default function Main() {
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
-    width: "100vw",
-    maxWidth: "100%",
-    minHeight: "100vh",
-    backgroundColor: "#1a1a1a",
-    padding: "20px",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: "16px",
+    width: '100vw',
+    maxWidth: '100%',
+    minHeight: '100vh',
+    backgroundColor: '#1a1a1a',
+    padding: '20px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '16px',
   },
 };

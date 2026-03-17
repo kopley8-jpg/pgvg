@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState } from 'react';
+import type { PodType } from './model';
+import { isArrayObj } from './lib';
 
 interface IEntry {
   keyy: string;
-  value: string;
+  value: string | any[];
   onValueChange: (newValue: string) => void;
 }
 
@@ -23,113 +25,97 @@ export const Entry = ({ keyy, value, onValueChange }: IEntry) => {
   };
 
   return (
-    <div key={keyy} style={styles.container}>
-      {isEditing ? (
-        <ChangingEntry
-          keyy={keyy}
-          value={value}
-          onChangeCancelButtonClick={handleChangeCancelButtonClick}
-          onChangeCompleteButtonClick={handleChangeCompleteButtonClick}
-        />
+    <div onClick={() => console.log(value)} key={keyy} style={styles.container}>
+      <a>{keyy + ':'}</a>
+      {!Array.isArray(value) ? (
+        <StrValue str={value} />
       ) : (
-        <DefaultEntry
-          keyy={keyy}
-          value={value}
-          onChangeButtonClick={handleChangeButtonClick}
-        />
+        <>{isArrayObj(value) ? <ObjsList objs={value} /> : <></>}</>
       )}
     </div>
   );
 };
 
-interface IChangingEntry {
-  keyy: string;
-  value: string;
-  onChangeCompleteButtonClick: (text: string) => void;
-  onChangeCancelButtonClick: () => void;
+interface IStrValue {
+  str: string;
 }
 
-const ChangingEntry = ({
-  keyy,
-  onChangeCompleteButtonClick,
-  onChangeCancelButtonClick,
-}: IChangingEntry) => {
-  const [changedValue, setChangedValue] = useState<string>("");
+interface IObjsList {
+  objs: object[];
+}
 
-  const handleTextInputChange = (text: string) => {
-    setChangedValue(text);
-  };
-
+const ObjsList = ({ objs }: IObjsList) => {
   return (
-    <div style={styles.container}>
-      <div style={styles.text}>
-        <a>{keyy + ":"}</a>
-        <input
-          value={changedValue}
-          size={10}
-          onChange={(e) => handleTextInputChange(e.target.value)}
-        />
-      </div>
-      <div style={styles.buttons}>
-        <div onClick={onChangeCancelButtonClick} style={styles.changeButton}>
-          отмена
-        </div>
-        <div
-          onClick={() => onChangeCompleteButtonClick(changedValue)}
-          style={styles.changeButton}
-        >
-          готово
-        </div>
+    <div style={styles.objsListContainer}>
+      <div style={styles.objsList}>
+        {objs.map((obj) => (
+          <div style={styles.objItem}>
+            <a>{(obj as any).Name}</a>
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
-interface IDefaultEntry {
-  keyy: string;
-  value: string;
-  onChangeButtonClick: () => void;
-}
-
-const DefaultEntry = ({ keyy, value, onChangeButtonClick }:IDefaultEntry) => {
-  return (
-    <div style={styles.container}>
-      <div style={styles.text}>
-        <a>{keyy + ": " + value}</a>
-      </div>
-      <div style={styles.buttons}>
-        <div onClick={onChangeButtonClick} style={styles.changeButton}>
-          <a>редачить</a>
-        </div>
-      </div>
-    </div>
-  );
+const StrValue = ({ str }: IStrValue) => {
+  return <a>{str}</a>;
 };
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
-    width: "100%",
-    minHeight: "40px",
-    backgroundColor: "blue",
-    marginBottom: "8px",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: "0px",
-    color: "white",
-    borderRadius: "8px",
+    width: '100%',
+    minHeight: '40px',
+    backgroundColor: 'red',
+    marginBottom: '8px',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    padding: '0 10px',
+    color: 'white',
+    borderRadius: '8px',
+    boxSizing: 'border-box',
     flexShrink: 0,
   },
-  text: {
-    height: "100%",
+  objsListContainer: {
+    flex: 1, // занимает всё доступное место
+    maxWidth: '100%', // ВАЖНО! позволяет сжиматься
+    height: '100%',
+    marginLeft: '8px',
   },
-  buttons: {},
+
+  objsList: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '8px',
+    overflowX: 'auto', // ← теперь будет работать!
+    overflowY: 'hidden',
+    padding: '4px 0',
+    height: '100%',
+  },
+
+  objItem: {
+    padding: '4px 12px',
+    backgroundColor: '#4CAF50',
+    borderRadius: '16px',
+    color: 'white',
+    fontSize: '14px',
+    whiteSpace: 'nowrap', // текст не переносится
+    flexShrink: 0, // не сжимается
+    display: 'flex',
+    alignItems: 'center',
+    height: '28px',
+  },
+  text: {
+    height: '100%',
+    backgroundColor: 'yellow',
+  },
+  buttons: { backgroundColor: 'yellow' },
   changeButton: {
-    width: "20px",
-    height: "20px",
-    backgroundColor: "brown",
-    cursor: "pointer",
-    borderRadius: "4px",
+    height: '20px',
+    backgroundColor: 'brown',
+    cursor: 'pointer',
+    borderRadius: '4px',
   },
 };

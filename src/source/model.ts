@@ -5,13 +5,23 @@ export type DeviceType = {
   brand: string;
   model: string;
   battery: string;
-  airflow: string;
+  airflow: 'есть' | 'нет';
   screen: string;
   mods: string;
   features: string;
-  platform: string[];
-  coilsInContain: string;
-  LonyardInContain: string;
+  platforms: (
+    | (PodType & { type: 'tank' | 'pod' })
+    | (TankType & { type: 'tank' | 'pod' })
+  )[];
+  coilsInContain: CoilInContainType[];
+  lonyardInContain: 'есть' | 'нет';
+};
+
+export type CoilInContainType = {
+  name: string;
+  capacity: number;
+  ohms: number;
+  count: number;
 };
 
 export type PodType = {
