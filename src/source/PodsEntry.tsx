@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import type { PodType } from "./model";
+import { array } from "firebase/firestore/pipelines";
 
 interface IPodsEntry {
   names: string[];
@@ -8,6 +9,7 @@ interface IPodsEntry {
 
 export const PodsEntry = ({ names, pods }: IPodsEntry) => {
   const [currentPods, setCurrentPods] = useState<(PodType | string)[]>([]);
+  const [pickedPod, setPickedPod] = useState<PodType | null>(null)
 
   useEffect(() => {
     setCurrentPods(
@@ -20,35 +22,61 @@ export const PodsEntry = ({ names, pods }: IPodsEntry) => {
 
   return (
     <div style={styles.container}>
-      <PodsList pods={currentPods} />
+      {pickedPod
+        ? <PodEntry pod={pickedPod} />
+        : <PodsList pods={currentPods} onItemPress={setPickedPod} />}
+
     </div>
   );
 };
 
 interface IPodsList {
   pods: (PodType | string)[];
+  onItemPress: ((pod: PodType) => void)
 }
 
-const PodsList = ({ pods }: IPodsList) => {
-  const [pickedPodId, setPickedPodId] = useState<string | null>();
+const PodsList = ({ pods, onItemPress }: IPodsList) => {
+
+  const handleClick = (pod: string | PodType) => {
+    if (typeof pod === "string") return
+    onItemPress(pod)
+  }
 
   return (
     <div style={styles.podsListContainer}>
       {pods.map((pod, index) => (
-        <PodItem key={index} pod={pod} />
+        <PodItem key={index} pod={pod} onClick={() => handleClick(pod)} />
       ))}
-      <div style={styles.addPodButton} />
+      <div style={styles.addPodButton}>+</div>
     </div>
   );
 };
 
-interface IPodItem {
-  pod: PodType | string;
+interface IPodEntry {
+  pod: PodType
 }
 
-const PodItem = ({ pod }: IPodItem) => {
+const PodEntry = ({ pod }: IPodEntry) => {
+  console.log(pod)
   return (
-    <div style={styles.podItemContainer}>
+    <div style={styles.podEntry}>
+      {Object.entries(pod).map(([key, value], index) => {
+        if (typeof value === "string") {
+          return (<a>{key + " " + value}</a>)
+        }
+      })}
+    </div>
+  )
+}
+
+interface IPodItem {
+  pod: PodType | string;
+  onClick: (() => void)
+}
+
+const PodItem = ({ pod, onClick }: IPodItem) => {
+  return (
+    <div style={styles.podItemContainer} onClick={onClick}>
       {typeof pod === "string" ? pod : pod.Name}
     </div>
   );
@@ -89,6 +117,13 @@ const styles: { [key: string]: React.CSSProperties } = {
   addPodButton: {
     width: "40px",
     height: "20px",
+    alignItems: 'center',
+    borderRadius: "10px",
+    justifyContent: 'center',
     backgroundColor: "grey"
+  },
+  podEntry: {
+    width: "100%",
+    height: "100%",
   }
 };
