@@ -1,102 +1,151 @@
-import { Box, Typography, } from "@mui/material"
-import { createStyles } from "./lib"
-import { array } from "firebase/firestore/pipelines"
-
+import { Box, Chip, Typography } from '@mui/material';
+import { createStyles } from '../../lib';
+import { array } from 'firebase/firestore/pipelines';
+import { Key } from '@mui/icons-material';
 
 interface IEntry {
-  keyy: string,
-  value: any[]
+  keyy: string;
+  value: any;
 }
 
 export const Entry = ({ keyy, value }: IEntry) => {
   return (
     <Box sx={styles.container}>
-      <Typography sx={styles.textKeyName}>
-        {keyy}:
-      </Typography>
-      {typeof value === "string" || typeof value === "number" ? (
+      <Typography sx={styles.textKeyName}>{keyy}:</Typography>
+      {typeof value === 'string' || typeof value === 'number' ? (
         <PrimitiveValue value={value} />
       ) : (
-        <>
-          {Array.isArray(value) && value.every(item => typeof item === 'object') ? (
-            <ArrayObjValue val={value} />
-          ) : (
-            <></>
-          )}
-        </>
+        <>{Array.isArray(value) ? <ArrayValue val={value} /> : <></>}</>
       )}
     </Box>
-  )
-}
+  );
+};
 
-const ArrayObjValue = ({ val }: { val: object[] }) => {
+const ArrayValue = ({ val }: { val: any[] }) => {
   return (
-    <Box sx={styles.arrObjValueContainer}>
-      {val.map(item => (
-        <ObjValue val={item} />
-      ))}
-    </Box>
-  )
-}
+    <>
+      {val.every(
+        (item) => typeof item === 'string' || typeof item === 'number'
+      ) ? (
+        <>
+          <Chip
+            label={val.join(', ')}
+            size={'small'}
+            sx={styles.primitiveArrayChipContainer}
+          />
+        </>
+      ) : (
+        <Box sx={styles.arrObjValueContainer}>
+          {val.map((item, index) => (
+            <ObjValue key={index} val={item} />
+          ))}
+        </Box>
+      )}
+    </>
+  );
+};
+
+const PrimitiveValue = ({ value }: { value: number | string }) => {
+  return <Typography sx={styles.textKeyName}>{value}</Typography>;
+};
+
+const PrimitiveValueEditor = () => {};
 
 const ObjValue = ({ val }: { val: object }) => {
   return (
     <Box sx={styles.objValueContainer}>
-      {Object.entries(val).map(([key, value]) => (
-        <></>
-      ))}
+      <Box sx={styles.objValueHeader}>
+        <a>{(val as any).name}</a>
+      </Box>
+      <Box sx={styles.objValuePropsContainer}>
+        {Object.entries(val)
+          .filter(([key]) => key != 'id' && key != 'type' && key != 'name')
+          .map(([key, value]) => (
+            <ObjValueProperty key={key} keyy={key} value={value} />
+          ))}
+      </Box>
     </Box>
-  )
-}
+  );
+};
 
-
-const PrimitiveValue = ({ value }: { value: number | string }) => {
+const ObjValueProperty = ({ keyy, value }: { keyy: string; value: any }) => {
   return (
-    <Typography sx={styles.textKeyName}>
-      {value}
-    </Typography>
-  )
-}
+    <Box sx={styles.objValuePropertyContainer}>
+      <a>{keyy}:</a>
+      {typeof value === 'string' || typeof value === 'number' ? (
+        <PrimitiveValue value={value} />
+      ) : (
+        <>
+          {Array.isArray(value) ? (
+            <ArrayValue val={value} />
+          ) : (
+            <ObjValue val={value} />
+          )}
+        </>
+      )}
+    </Box>
+  );
+};
 
 const styles = createStyles({
   container: {
-    width: "100%",
+    width: '100%',
 
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    padding: "0 10px",
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: '0 10px',
 
     flexShrink: 0,
-    flexWrap: "nowrap",
-    boxSizing: "border-box",
+    flexWrap: 'nowrap',
+    boxSizing: 'border-box',
 
-    borderRadius: "20px",
-    backgroundColor: "yellow",
+    borderRadius: '20px',
+    backgroundColor: 'yellow',
   },
   textKeyName: {
     fontWeight: 'bold',
-    color: '#333'
+    color: '#333',
   },
   arrObjValueContainer: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    boxSizing: "border-box",
-    paddingTop: "5px",
-    paddindBottom: "5px",
-    gap: "5px"
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    boxSizing: 'border-box',
+    mt: '5px',
+    mb: '5px',
+    gap: '5px',
   },
   objValueContainer: {
-    height: "60px",
-    backgroundColor: "green",
-    borderLeftWidth: "3px",
-    borderLeftColor: "black",
-    flexShrink: 0
-  }
-})
-
-
+    display: 'flex',
+    width: '100%',
+    flexDirection: 'column',
+    backgroundColor: 'green',
+    flexShrink: 0,
+  },
+  objValueHeader: {
+    width: '100%',
+    backgroundColor: 'white',
+  },
+  objValuePropsContainer: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: 'blue',
+  },
+  objValuePropertyContainer: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: '2%',
+    boxSizing: 'border-box',
+  },
+  primitiveArrayChipContainer: {
+    backgroundColor: 'grey',
+    m: '5px',
+  },
+});
 
 // interface IObjsList {
 //   objs: object[];

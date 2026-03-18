@@ -9,13 +9,14 @@ export type DeviceType = {
   screen: string;
   mods: string;
   features: string;
-  platforms: (
-    | (PodType & { type: 'tank' | 'pod' })
-    | (TankType & { type: 'tank' | 'pod' })
-  )[];
+  platforms: PlatformType[];
   coilsInContain: CoilInContainType[];
   lonyardInContain: 'есть' | 'нет';
 };
+
+export type PlatformType =
+  | (PodType & { type: 'pod' })
+  | (TankType & { type: 'tank' });
 
 export type CoilInContainType = {
   name: string;

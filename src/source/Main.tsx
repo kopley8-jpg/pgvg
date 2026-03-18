@@ -1,6 +1,6 @@
 import { onValue, push, ref, update } from 'firebase/database';
 import React, { useEffect, useState } from 'react';
-import { Card } from './Card';
+import { Card } from './Card/Card';
 import { toArray } from './lib';
 import type {
   CoilInContainType,
@@ -94,7 +94,7 @@ export default function Main() {
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
-    backgroundColor: '#ff0000',
+    backgroundColor: '#d6d6d6',
 
     width: '100vw',
     height: '100vh',
@@ -103,7 +103,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     flexDirection: 'column',
     alignItems: 'center',
 
-    gap: "16px",
+    gap: '16px',
 
     overflowY: 'auto',
   },
