@@ -26,29 +26,25 @@ export const Card = ({ device, pods }: ICard) => {
 
   return (
     <div style={styles.container}>
-      <div style={styles.photo}>
-        <img
-          src={device.photo}
-          height={'100%'}
-          object-fit={'cover'}
-          style={{ borderRadius: '20px' }}
-        />
-      </div>
+      <img
+        src={device.photo}
+        style={styles.photo}
+      />
       <div style={styles.info}>
         <div style={styles.infoHeader}>
-          {/* <a>{device.brand + ' ' + device.model}</a> */}
+          <a>{device.brand + ' ' + device.model}</a>
         </div>
         <div style={styles.infoEntries}>
-          {/* {Object.entries(device)
+          {Object.entries(device)
             .filter(([key]) => !excludeFields.includes(key))
             .map(([key, value], index) => (
               <Entry
                 key={index}
                 keyy={key}
                 value={value}
-                onValueChange={() => {}}
+                onValueChange={() => { }}
               />
-            ))} */}
+            ))}
         </div>
       </div>
     </div>
@@ -58,34 +54,51 @@ export const Card = ({ device, pods }: ICard) => {
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
     width: '90%',
+    height: "80vh",
+
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+
+    marginTop: "10px",
     borderRadius: '20px',
     backgroundColor: 'grey',
     flexShrink: 0,
   },
   photo: {
-    height: '80vw',
-    maxWidth: '40%',
-    backgroundColor: 'yellow',
+    width: "60%",
+    height: "40%",
+    objectFit: "fill",
+    borderTopLeftRadius: "20px",
+    borderBottomLeftRadius: "20px",
   },
   info: {
-    backgroundColor: 'grey',
-    height: '100%',
+    backgroundColor: 'yellow',
+    height: '60%',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
   },
   infoHeader: {
     width: '100%',
-    minHeight: '10%',
+    height: '10%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    flexShrink: 0,
+    backgroundColor: "green"
   },
   infoEntries: {
     width: '100%',
-    flex: 1,
-    overflowY: 'auto',
-    padding: '10px',
+    height: "90%",
+    backgroundColor: "brown",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    overflowY: "auto",
+    boxSizing: "border-box",
+    paddingTop: "7px",
+    paddingBottom: "7px",
+    gap: "7px",
+    flexWrap: "nowrap"
   },
 };

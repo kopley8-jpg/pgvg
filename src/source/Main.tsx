@@ -39,7 +39,7 @@ export default function Main() {
         const newTanks: TankType[] = dataTanks.map((tank) => ({
           ...tank,
           coils: tank.coils
-            .map((name) => newCoils.filter((coil) => coil.Name === name))
+            .map((name) => newCoils.filter((coil) => coil.name === name))
             .flat(),
         }));
 
@@ -48,7 +48,7 @@ export default function Main() {
           platforms: device.platforms
             .map((name) => [
               ...newPods
-                .filter((pod) => pod.Name === name)
+                .filter((pod) => pod.name === name)
                 .map((pod) => {
                   const type: 'tank' | 'pod' = 'pod';
                   return { ...pod, type: type };
@@ -102,6 +102,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+
+    gap: "16px",
 
     overflowY: 'auto',
   },

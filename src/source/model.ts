@@ -26,9 +26,9 @@ export type CoilInContainType = {
 
 export type PodType = {
   id: string;
-  Name: string;
-  Capacity: number[];
-  Ohms: number[];
+  name: string;
+  capacity: number[];
+  ohms: number[];
 };
 
 export type TankType = {
@@ -40,6 +40,6 @@ export type TankType = {
 
 export type CoilType = {
   id: string;
-  Name: string;
-  Ohms: number[];
+  name: string;
+  ohms: number[];
 };
