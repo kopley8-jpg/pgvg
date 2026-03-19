@@ -1,17 +1,16 @@
 import { ref, update } from 'firebase/database';
-import { DefaultEntry } from './Entries/DefaultEntry';
 import type { DeviceType, PlatformType, PodType } from '../model';
 import { database } from '../firebase';
-import { Entry } from './Entries/PlatformsEntry/PlatformsEntry';
+import { createStyless } from '../lib';
 
-interface ICard {
+interface IDeviceCard {
   device: DeviceType;
   pods: PodType[];
 }
 
 const excludeFields = ['id', 'photo', 'type', 'brand', 'model'];
 
-export const Card = ({ device }: ICard) => {
+export const DeviceCard = ({ device }: IDeviceCard) => {
   const setValue = async (id: string, entryName: string, newValue: string) => {
     try {
       const podikRef = ref(database, `kochegar/podiki/${id}`);
@@ -28,31 +27,15 @@ export const Card = ({ device }: ICard) => {
   return (
     <div style={styles.container}>
       <img src={device.photo} style={styles.photo} />
-      <div style={styles.info}>
-        <div style={styles.infoHeader}>
-          <a>{device.brand + ' ' + device.model}</a>
-        </div>
-        <div style={styles.infoEntries}>
-          {Object.entries(device)
-            .filter(([key]) => !excludeFields.includes(key))
-            .map(([key, value], index) => (
-              <>
-                <Entry
-                  key={index}
-                  keyName={key}
-                  value={value}
-                />
-              </>
-            ))}
-        </div>
-      </div>
+
     </div>
   );
 };
 
-const styles: { [key: string]: React.CSSProperties } = {
+
+
+const styles = createStyless({
   container: {
-    height: '80vh',
     width: '90vw',
     display: 'flex',
     flexDirection: 'row',
@@ -65,7 +48,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderRadius: '20px',
   },
   photo: {
-    height: '100%',
     width: '30%',
     objectFit: "contain",
     borderTopLeftRadius: '20px',
@@ -73,10 +55,10 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   info: {
     height: '100%',
-    width: '70%',
+    width: "100%",
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: '#2a2a2a',
+    backgroundColor: '#ff0000',
     borderTopRightRadius: '20px',
     borderBottomRightRadius: '20px',
   },
@@ -105,4 +87,4 @@ const styles: { [key: string]: React.CSSProperties } = {
     flexWrap: 'nowrap',
     borderBottomRightRadius: '20px',
   },
-};
+});

@@ -17,3 +17,12 @@ export const createStyles = <
 >(
   styles: T
 ): T => styles;
+
+export const createStyless = <
+  T extends Record<
+    string,
+    React.CSSProperties | ((...args: any) => React.CSSProperties)
+  >,
+>(
+  styles: T
+): T => styles;

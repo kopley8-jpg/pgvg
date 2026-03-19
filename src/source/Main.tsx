@@ -1,6 +1,5 @@
 import { onValue, push, ref, update } from 'firebase/database';
 import React, { useEffect, useState } from 'react';
-import { Card } from './Card/Card';
 import { toArray } from './lib';
 import type {
   CoilInContainType,
@@ -10,6 +9,7 @@ import type {
   TankType,
 } from './model';
 import { database } from './firebase';
+import { DeviceCard } from './Card/Card';
 
 export default function Main() {
   const [devices, setDevices] = useState<(DeviceType & { id: string })[]>([]);
@@ -86,7 +86,7 @@ export default function Main() {
   return (
     <div style={styles.container}>
       {devices.map((device, index) => (
-        <Card pods={pods} key={index} device={device} />
+        <DeviceCard pods={pods} key={index} device={device} />
       ))}
     </div>
   );
