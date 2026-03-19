@@ -1,7 +1,7 @@
 import { Box, Button, Chip, IconButton, TextField, Typography } from '@mui/material';
 import { AddTwoTone, Cancel, Delete, Save } from '@mui/icons-material';
-import { useState } from 'react';
-import { createStyles } from '../../lib';
+import { useEffect, useRef, useState } from 'react';
+import { createStyles, createStyless } from '../../lib';
 
 
 interface ArrayObjsValueCase {
@@ -57,18 +57,22 @@ const stylesArrayObjsCase = createStyles({
 
 interface IObjValueCase {
   headerTextDisplay: string,
+  photo?: string,
   value: object,
   ignoreKeyNames: string[]
 }
 
-export const ObjValueCase = ({ headerTextDisplay, value, ignoreKeyNames }: IObjValueCase) => {
+export const ObjValueCase = ({ headerTextDisplay, photo, value, ignoreKeyNames }: IObjValueCase) => {
+
+
   return (
-    <Box sx={stylesObjValueCase.container}>
-      <Box sx={stylesObjValueCase.content}>
-        <Box sx={stylesObjValueCase.header}>
+    <div style={stylesObjValueCase.container}>
+      {photo ? <img style={stylesObjValueCase.photo} src={photo} /> : <></>}
+      <div style={stylesObjValueCase.content}>
+        <div style={stylesObjValueCase.header}>
           <Typography sx={{ ml: "4%" }} fontWeight={600}>{headerTextDisplay}:</Typography>
-        </Box>
-        <Box sx={stylesObjValueCase.props}>
+        </div>
+        <div style={stylesObjValueCase.props}>
           {Object.entries(value)
             .filter(([key]) => ignoreKeyNames.every(ignoreKeyName => key != ignoreKeyName))
             .map(([key, value], index) => (
@@ -93,24 +97,36 @@ export const ObjValueCase = ({ headerTextDisplay, value, ignoreKeyNames }: IObjV
                 )}
               </>
             ))}
-        </Box>
-      </Box>
+        </div>
+      </div>
       <IconButton sx={stylesObjValueCase.buttonsContainer} aria-label="delete" size="small">
         <Delete sx={{ width: "100%" }} />
       </IconButton>
-    </Box>
+    </div>
   )
 }
 
-const stylesObjValueCase = createStyles({
+const stylesObjValueCase = createStyless({
   container: {
+    height: "100%",
     width: "100%",
     display: "flex",
     flexDirection: "row",
     border: "2px solid white",
     borderRadius: "20px",
-    backgroundColor: "#d6d6d6",
-    minHeight: "100px", // добавляем минимальную высоту для контейнера
+  },
+  photo: {
+    width: '30%',
+    objectFit: "contain",
+    borderTopLeftRadius: '20px',
+    borderBottomLeftRadius: '20px',
+  },
+  content: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+
   },
   buttonsContainer: {
     maxWidth: "14%",
@@ -119,15 +135,16 @@ const stylesObjValueCase = createStyles({
     alignItems: "stretch", // растягиваем на всю высоту
     borderRadius: "0 18px 18px 0", // скругляем только правые углы
     borderLeft: "2px solid white",
-    p: 0
   },
-  content: {
-    minWidth: "86%",
+  props: {
+    height: "100%",
     display: "flex",
     flexDirection: "column",
-    borderRadius: "18px 0 0 18px", // скругляем только левые углы
-    backgroundColor: "#d6d6d6",
+    overflowY: "auto",
+    flexWrap: "nowrap",
     boxSizing: "border-box",
+    gap: "5px",
+    pl: "4%"
   },
   header: {
     width: "100%",
@@ -137,14 +154,6 @@ const stylesObjValueCase = createStyles({
     justifyContent: "center",
     borderBottom: "2px solid white"
   },
-  props: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    boxSizing: "border-box",
-    gap: "5px",
-    pl: "4%"
-  }
 })
 
 

@@ -2,6 +2,7 @@ import { ref, update } from 'firebase/database';
 import type { DeviceType, PlatformType, PodType } from '../model';
 import { database } from '../firebase';
 import { createStyless } from '../lib';
+import { ObjValueCase } from './Entries/DefaultEntry';
 
 interface IDeviceCard {
   device: DeviceType;
@@ -26,8 +27,7 @@ export const DeviceCard = ({ device }: IDeviceCard) => {
 
   return (
     <div style={styles.container}>
-      <img src={device.photo} style={styles.photo} />
-
+      <ObjValueCase headerTextDisplay={device.brand} photo={device.photo} value={device} ignoreKeyNames={["id", "photo", "type"]} />
     </div>
   );
 };
@@ -37,15 +37,8 @@ export const DeviceCard = ({ device }: IDeviceCard) => {
 const styles = createStyless({
   container: {
     width: '90vw',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-
-    marginTop: '10px',
-    flexShrink: 0,
-
-    border: '2px solid white',
-    borderRadius: '20px',
+    height: "30vh",
+    marginTop: "5%"
   },
   photo: {
     width: '30%',
@@ -58,7 +51,8 @@ const styles = createStyless({
     width: "100%",
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: '#ff0000',
+    overflowX: "auto",
+    backgroundColor: '#858585',
     borderTopRightRadius: '20px',
     borderBottomRightRadius: '20px',
   },
