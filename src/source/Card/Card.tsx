@@ -2,7 +2,7 @@ import { ref, update } from 'firebase/database';
 import { DefaultEntry } from './Entries/DefaultEntry';
 import type { DeviceType, PlatformType, PodType } from '../model';
 import { database } from '../firebase';
-import { PlatformsEntry } from './Entries/PlatformsEntry/PlatformsEntry';
+import { Entry } from './Entries/PlatformsEntry/PlatformsEntry';
 
 interface ICard {
   device: DeviceType;
@@ -37,18 +37,11 @@ export const Card = ({ device }: ICard) => {
             .filter(([key]) => !excludeFields.includes(key))
             .map(([key, value], index) => (
               <>
-                {key === 'platforms' ? (
-                  <PlatformsEntry
-                    key={index}
-                    platforms={value as PlatformType[]}
-                  />
-                ) : (
-                  <DefaultEntry
-                    key={index}
-                    keyy={key}
-                    value={value as string | number}
-                  />
-                )}
+                <Entry
+                  key={index}
+                  keyName={key}
+                  value={value}
+                />
               </>
             ))}
         </div>
@@ -68,19 +61,19 @@ const styles: { [key: string]: React.CSSProperties } = {
     marginTop: '10px',
     flexShrink: 0,
 
-    border: '2px solid #cecece',
+    border: '2px solid white',
     borderRadius: '20px',
   },
   photo: {
     height: '100%',
-    width: '50%',
-    objectFit: 'cover',
+    width: '30%',
+    objectFit: "contain",
     borderTopLeftRadius: '20px',
     borderBottomLeftRadius: '20px',
   },
   info: {
     height: '100%',
-    width: '50%',
+    width: '70%',
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: '#2a2a2a',
