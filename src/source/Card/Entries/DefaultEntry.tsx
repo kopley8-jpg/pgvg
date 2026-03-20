@@ -6,11 +6,13 @@ import { createStyles, createStyless } from '../../lib';
 
 interface ArrayObjsValueCase {
   keyName: string,
-  value: object[]
+  value: object[],
+  onValueChange: (objPath: string, entryName: string, value: any) => void
 }
 
 //просто крафтим контейнер для массива 
-const ArrayObjsValueCase = ({ keyName, value }: ArrayObjsValueCase) => {
+const ArrayObjsValueCase = ({ keyName, value, onValueChange }: ArrayObjsValueCase) => {
+
   return (
     <Box sx={stylesArrayObjsCase.container}>
       <Box sx={stylesArrayObjsCase.header}>
@@ -18,7 +20,7 @@ const ArrayObjsValueCase = ({ keyName, value }: ArrayObjsValueCase) => {
       </Box>
       <Box sx={stylesArrayObjsCase.propsContainer}>
         {value.map(item => (
-          <ObjValueCase headerTextDisplay={(item as any).name} value={item} ignoreKeyNames={["type", "id", "name"]} />
+          <ObjValueCase onValueChange={() => { }} headerTextDisplay={(item as any).name} value={item} ignoreKeyNames={["type", "id", "name"]} />
         ))}
         <IconButton sx={{ width: "100%", borderRadius: "0px" }} >
           <AddTwoTone />
@@ -59,18 +61,22 @@ interface IObjValueCase {
   headerTextDisplay: string,
   photo?: string,
   value: object,
-  ignoreKeyNames: string[]
+  ignoreKeyNames: string[],
+  onValueChange: (keyName: string, value: any) => void
 }
 
-export const ObjValueCase = ({ headerTextDisplay, photo, value, ignoreKeyNames }: IObjValueCase) => {
+export const ObjValueCase = ({ headerTextDisplay, photo, value, ignoreKeyNames, onValueChange }: IObjValueCase) => {
 
+  const handleValueChange = (entryName: string, value: any) => {
+    onValueChange(entryName, value)
+  }
 
   return (
     <div style={stylesObjValueCase.container}>
       {photo ? <img style={stylesObjValueCase.photo} src={photo} /> : <></>}
       <div style={stylesObjValueCase.content}>
         <div style={stylesObjValueCase.header}>
-          <Typography sx={{ ml: "4%" }} fontWeight={600}>{headerTextDisplay}:</Typography>
+          <Typography sx={{ ml: "2%" }} fontWeight={600}>{headerTextDisplay}:</Typography>
         </div>
         <div style={stylesObjValueCase.props}>
           {Object.entries(value)
@@ -79,7 +85,7 @@ export const ObjValueCase = ({ headerTextDisplay, photo, value, ignoreKeyNames }
               <>
                 {typeof value === "string" || typeof value === "number" ? (
                   // случай примитивного значения просто текст нахуй 
-                  <PrimitiveValueCase keyName={key} value={value} />
+                  <PrimitiveValueCase onValueChange={() => { }} keyName={key} value={value} />
                 ) : (
                   <>
                     {Array.isArray(value) ? (
@@ -89,7 +95,7 @@ export const ObjValueCase = ({ headerTextDisplay, photo, value, ignoreKeyNames }
                           <ArrayPrimitiveValueCase keyName={key} value={value} />
                         ) : (
                           //не примитив, не массив примитивов? значит МАССИВ ОБЪЕКТОВ! (пока остальные типы не юзаются и быть здесь не может)
-                          <ArrayObjsValueCase keyName={key} value={value} />
+                          <ArrayObjsValueCase onValueChange={() => { }} keyName={key} value={value} />
                         )}
                       </>
                     ) : (<></>)}
@@ -116,7 +122,6 @@ const stylesObjValueCase = createStyless({
     borderRadius: "20px",
   },
   photo: {
-    width: '30%',
     objectFit: "contain",
     borderTopLeftRadius: '20px',
     borderBottomLeftRadius: '20px',
@@ -129,7 +134,7 @@ const stylesObjValueCase = createStyless({
 
   },
   buttonsContainer: {
-    maxWidth: "14%",
+    width: "4%",
     display: "flex", // добавляем display
     flexDirection: "column",
     alignItems: "stretch", // растягиваем на всю высоту
@@ -144,7 +149,7 @@ const stylesObjValueCase = createStyless({
     flexWrap: "nowrap",
     boxSizing: "border-box",
     gap: "5px",
-    pl: "4%"
+    paddingLeft: "2%",
   },
   header: {
     width: "100%",
@@ -152,7 +157,7 @@ const stylesObjValueCase = createStyless({
     paddingY: "1%",
     flexDirection: "column",
     justifyContent: "center",
-    borderBottom: "2px solid white"
+    borderBottom: "2px solid white",
   },
 })
 
@@ -170,7 +175,6 @@ const ArrayPrimitiveValueCase = ({ keyName, value }: IArrayPrimitiveValueCase) =
     <Box sx={stylesArrayPrimitiveValueCase.container}>
       <Typography fontWeight={600}>{keyName}:</Typography>
       <Chip label={value.join(", ")} size='small' />
-
     </Box>
   )
 }
@@ -189,12 +193,21 @@ const stylesArrayPrimitiveValueCase = createStyles({
 
 interface IPrimitiveValueCase {
   keyName: string,
-  value: string | number
+  value: string | number,
+  onValueChange: (entryName: string, value: string) => void
 }
 
-const PrimitiveValueCase = ({ keyName, value }: IPrimitiveValueCase) => {
+const PrimitiveValueCase = ({ keyName, value, onValueChange }: IPrimitiveValueCase) => {
   const [isEditing, setIsEditing] = useState(false)
-  const [localValue, setLocalValue] = useState("")
+  const [localValue, setLocalValue] = useState(value.toString)
+
+  const handleCancelButtonPress = () => {
+    setIsEditing(false)
+  }
+
+  const handleConfirmButtonPress = () => {
+    setIsEditing(false)
+  }
 
   return (
     <Box sx={stylesPrimitiveValueCase.container}>
@@ -204,7 +217,7 @@ const PrimitiveValueCase = ({ keyName, value }: IPrimitiveValueCase) => {
           <Typography fontWeight={600}>{value}</Typography>
         </div>
       ) : (
-        <PrimitiveValueCaseEditor />
+        <PrimitiveValueCaseEditor onChange={v => setLocalValue(v)} value={localValue.toString()} onConfirmButtonPress={handleConfirmButtonPress} onCancelButtonPress={handleCancelButtonPress} />
       )}
     </Box>
   )
@@ -212,15 +225,18 @@ const PrimitiveValueCase = ({ keyName, value }: IPrimitiveValueCase) => {
 
 interface IPrimitiveValueCaseEditor {
   value: string,
+  onChange: (val: string) => void,
   onCancelButtonPress: () => void,
   onConfirmButtonPress: () => void
 }
 
-const PrimitiveValueCaseEditor = () => {
+const PrimitiveValueCaseEditor = ({ value, onChange, onCancelButtonPress, onConfirmButtonPress }: IPrimitiveValueCaseEditor) => {
 
   return (
     <>
       <TextField
+        onChange={p => onChange(p.target.value)}
+        value={value}
         size='small'
         sx={{
           width: "50%",
@@ -235,10 +251,10 @@ const PrimitiveValueCaseEditor = () => {
           }
         }}
       />
-      <IconButton onClick={() => { }}>
+      <IconButton onClick={onCancelButtonPress}>
         <Cancel />
       </IconButton>
-      <IconButton>
+      <IconButton onClick={onConfirmButtonPress}>
         <Save />
       </IconButton>
     </>
@@ -248,7 +264,6 @@ const PrimitiveValueCaseEditor = () => {
 const stylesPrimitiveValueCase = createStyles({
   container: {
     width: "100%",
-    backgroundColor: "red",
     display: "flex",
     flexDirection: "row",
     alignItems: "center",

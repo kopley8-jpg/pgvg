@@ -27,7 +27,7 @@ export const DeviceCard = ({ device }: IDeviceCard) => {
 
   return (
     <div style={styles.container}>
-      <ObjValueCase headerTextDisplay={device.brand} photo={device.photo} value={device} ignoreKeyNames={["id", "photo", "type"]} />
+      <ObjValueCase onValueChange={() => { }} headerTextDisplay={device.brand} photo={device.photo} value={device} ignoreKeyNames={["id", "photo", "type", "brand"]} />
     </div>
   );
 };
@@ -37,7 +37,7 @@ export const DeviceCard = ({ device }: IDeviceCard) => {
 const styles = createStyless({
   container: {
     width: '90vw',
-    height: "30vh",
+    height: "40vh",
     marginTop: "5%"
   },
   photo: {
