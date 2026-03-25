@@ -1,272 +1,372 @@
-import { Box, Button, Chip, IconButton, TextField, Typography } from '@mui/material';
-import { AddTwoTone, Cancel, Delete, Save } from '@mui/icons-material';
-import { useEffect, useRef, useState } from 'react';
-import { createStyles, createStyless } from '../../lib';
+import {
+  Box,
+  Button,
+  Chip,
+  IconButton,
+  Modal,
+  Stack,
+  TextField,
+} from '@mui/material';
+import { styleSheetCreate } from '../../lib';
+import { Add, Close, Delete, Save } from '@mui/icons-material';
+import type React from 'react';
+import { useState } from 'react';
 
-
-interface ArrayObjsValueCase {
-  keyName: string,
-  value: object[],
-  onValueChange: (objPath: string, entryName: string, value: any) => void
+interface IObjCard<TObj extends Record<string, any>> {
+  photo?: string;
+  data: TObj;
+  renderHeaderItem: () => React.ReactNode;
+  renderArrayObj?: <K extends keyof TObj>(
+    key: keyof TObj,
+    value: TObj[K] extends object[] ? TObj[K] : never
+  ) => React.ReactNode;
+  filterProps: string[];
 }
 
-//просто крафтим контейнер для массива 
-const ArrayObjsValueCase = ({ keyName, value, onValueChange }: ArrayObjsValueCase) => {
-
+export const ObjCard = <TObj extends Record<string, any>>({
+  photo,
+  filterProps,
+  data,
+  renderArrayObj,
+  renderHeaderItem,
+}: IObjCard<TObj>) => {
   return (
-    <Box sx={stylesArrayObjsCase.container}>
-      <Box sx={stylesArrayObjsCase.header}>
-        <Typography fontWeight={600}>{keyName}</Typography>
-      </Box>
-      <Box sx={stylesArrayObjsCase.propsContainer}>
-        {value.map(item => (
-          <ObjValueCase onValueChange={() => { }} headerTextDisplay={(item as any).name} value={item} ignoreKeyNames={["type", "id", "name"]} />
-        ))}
-        <IconButton sx={{ width: "100%", borderRadius: "0px" }} >
-          <AddTwoTone />
-        </IconButton>
-      </Box>
-    </Box>
-  )
-}
+    <div
+      style={{ ...ObjCardStyles.container, ...(!photo && { height: 'auto' }) }}
+    >
+      {photo && <img src={photo} style={ObjCardStyles.photo} />}
+      <div style={ObjCardStyles.content}>
+        <div style={ObjCardStyles.obj}>
+          <div style={ObjCardStyles.header}>
+            <div style={ObjCardStyles.headerCenter}>{renderHeaderItem()}</div>
+            <div style={ObjCardStyles.headerSides}>
+              <svg
+                style={{ width: '30%', aspectRatio: 1 / 1 }}
+                fill="none"
+                viewBox="0 0 10 10"
+                stroke-width="1.5"
+                stroke="red"
+                preserveAspectRatio="none"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M0,0 L10,10 M0,10 L10,0"
+                />
+              </svg>
+            </div>
+          </div>
+          <div style={ObjCardStyles.propsContainer}>
+            {Object.entries(data)
+              .filter(([key]) =>
+                filterProps.every((filteredKey) => key != filteredKey)
+              )
+              .map(([key, value]) => {
+                const typedKey = key as keyof TObj;
 
-const stylesArrayObjsCase = createStyles({
-  container: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    flexWrap: "nowrap",
-    boxSizing: "border-box"
-  },
-  header: {
-    width: "100%",
-  },
-  propsContainer: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    flexWrap: "nowrap",
-    boxSizing: "border-box",
-    p: "10px",
-    gap: "16px",
-    borderLeft: "2px solid white",
-    borderRadius: "20px",
-  }
-})
+                // Примитивные значения (string, number)
+                if (typeof value === 'string' || typeof value === 'number') {
+                  return (
+                    <PrimitiveValue
+                      key={key}
+                      keyName={key}
+                      value={value}
+                      showKeyName={true}
+                    />
+                  );
+                }
 
+                // Массивы
+                if (Array.isArray(value)) {
+                  // Массив примитивов (string[] или number[])
+                  if (
+                    value.length === 0 ||
+                    value.every((item) => typeof item === 'string') ||
+                    value.every((item) => typeof item === 'number')
+                  ) {
+                    return (
+                      <ArrayPrimitiveValue
+                        data={value as string[] | number[]}
+                        keyName={key}
+                      />
+                    );
+                  }
 
+                  // Массив объектов - используем renderArrayObj
+                  return <>{renderArrayObj?.(typedKey, value as any)}</>;
+                }
 
-
-interface IObjValueCase {
-  headerTextDisplay: string,
-  photo?: string,
-  value: object,
-  ignoreKeyNames: string[],
-  onValueChange: (keyName: string, value: any) => void
-}
-
-export const ObjValueCase = ({ headerTextDisplay, photo, value, ignoreKeyNames, onValueChange }: IObjValueCase) => {
-
-  const handleValueChange = (entryName: string, value: any) => {
-    onValueChange(entryName, value)
-  }
-
-  return (
-    <div style={stylesObjValueCase.container}>
-      {photo ? <img style={stylesObjValueCase.photo} src={photo} /> : <></>}
-      <div style={stylesObjValueCase.content}>
-        <div style={stylesObjValueCase.header}>
-          <Typography sx={{ ml: "2%" }} fontWeight={600}>{headerTextDisplay}:</Typography>
-        </div>
-        <div style={stylesObjValueCase.props}>
-          {Object.entries(value)
-            .filter(([key]) => ignoreKeyNames.every(ignoreKeyName => key != ignoreKeyName))
-            .map(([key, value], index) => (
-              <>
-                {typeof value === "string" || typeof value === "number" ? (
-                  // случай примитивного значения просто текст нахуй 
-                  <PrimitiveValueCase onValueChange={() => { }} keyName={key} value={value} />
-                ) : (
-                  <>
-                    {Array.isArray(value) ? (
-                      //случай массива примитивов (19.03.2026 0:46) щас хандлить этот случай нахуй не нужно но вдруг надо будет
-                      <>
-                        {value.every(item => typeof item === "string") || value.every(item => typeof item === "number") ? (
-                          <ArrayPrimitiveValueCase keyName={key} value={value} />
-                        ) : (
-                          //не примитив, не массив примитивов? значит МАССИВ ОБЪЕКТОВ! (пока остальные типы не юзаются и быть здесь не может)
-                          <ArrayObjsValueCase onValueChange={() => { }} keyName={key} value={value} />
-                        )}
-                      </>
-                    ) : (<></>)}
-                  </>
-                )}
-              </>
-            ))}
+                // Другие типы (объекты и т.д.)
+                return null;
+              })}
+          </div>
         </div>
       </div>
-      <IconButton sx={stylesObjValueCase.buttonsContainer} aria-label="delete" size="small">
-        <Delete sx={{ width: "100%" }} />
-      </IconButton>
     </div>
-  )
-}
+  );
+};
 
-const stylesObjValueCase = createStyless({
+const ObjCardStyles = styleSheetCreate({
   container: {
-    height: "100%",
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    border: "2px solid white",
-    borderRadius: "20px",
+    width: '95%',
+    height: '45%',
+    display: 'flex',
+    flexDirection: 'row',
+
+    flexShrink: 0,
+    borderRadius: '20px',
+    border: '2px, white solid',
   },
   photo: {
-    objectFit: "contain",
+    height: '100%',
     borderTopLeftRadius: '20px',
     borderBottomLeftRadius: '20px',
+    objectFit: 'contain',
+    borderRight: '2px white solid',
   },
-  content: {
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
+  obj: {
+    width: '100%',
+    height: '100%',
 
-  },
-  buttonsContainer: {
-    width: "4%",
-    display: "flex", // добавляем display
-    flexDirection: "column",
-    alignItems: "stretch", // растягиваем на всю высоту
-    borderRadius: "0 18px 18px 0", // скругляем только правые углы
-    borderLeft: "2px solid white",
-  },
-  props: {
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    overflowY: "auto",
-    flexWrap: "nowrap",
-    boxSizing: "border-box",
-    gap: "5px",
-    paddingLeft: "2%",
+    display: 'flex',
+    flexDirection: 'column',
   },
   header: {
-    width: "100%",
-    display: "flex",
-    paddingY: "1%",
-    flexDirection: "column",
-    justifyContent: "center",
-    borderBottom: "2px solid white",
+    width: '100%',
+    paddingTop: '2.5px',
+    paddingBottom: '2.5px',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderBottom: '2px white solid',
   },
-})
+  headerSides: {
+    width: '20%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerCenter: {
+    height: '100%',
+    width: '80%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '5px',
+  },
+  content: {
+    height: '100%',
+    width: '100%',
 
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  propsContainer: {
+    height: '100%',
+    width: '100%',
 
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
 
+    paddingTop: '1%',
+    paddingBottom: '1%',
+    paddingLeft: '5%',
+    gap: '5px',
+    boxSizing: 'border-box',
+    overflowY: 'auto',
+  },
+  deleteButton: {
+    height: '100%',
+    width: '10%',
 
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
 
-interface IArrayPrimitiveValueCase {
-  keyName: string,
-  value: string[] | number[]
+    borderLeft: '2px white solid',
+    borderRadius: 0,
+  },
+});
+
+interface IArrayObj<T> {
+  value: T[];
+  keyName: string;
+  renderItem: (item: T, index: number) => React.ReactNode;
 }
 
-const ArrayPrimitiveValueCase = ({ keyName, value }: IArrayPrimitiveValueCase) => {
+export const ArrayObj = <T,>({ value, keyName, renderItem }: IArrayObj<T>) => {
   return (
-    <Box sx={stylesArrayPrimitiveValueCase.container}>
-      <Typography fontWeight={600}>{keyName}:</Typography>
-      <Chip label={value.join(", ")} size='small' />
-    </Box>
-  )
-}
+    <div style={ArrayObjStyles.container}>
+      <div style={ArrayObjStyles.header}>{keyName}:</div>
+      <div style={ArrayObjStyles.content}>
+        {value.map((item, index) => (
+          <>{renderItem(item, index)}</>
+        ))}
+        <IconButton>
+          <Add />
+        </IconButton>
+      </div>
+    </div>
+  );
+};
 
-const stylesArrayPrimitiveValueCase = createStyles({
+const ArrayObjStyles = styleSheetCreate({
   container: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    flexWrap: "wrap"
-  }
-})
+    width: '90%',
+    display: 'flex',
+    flexDirection: 'column',
+    flexShrink: 0,
+  },
+  header: {
+    width: '100%',
+    marginBottom: '4px',
+  },
+  content: {
+    width: '100%',
+    height: '100%',
 
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
 
+    paddingTop: '2.5%',
+    gap: '1%',
+    paddingBottom: '2.5%',
 
-interface IPrimitiveValueCase {
-  keyName: string,
-  value: string | number,
-  onValueChange: (entryName: string, value: string) => void
+    overflowY: 'auto',
+    borderRadius: '20px',
+    borderLeft: '2px white solid',
+  },
+});
+
+interface IArrayPrimitiveValue {
+  data: string[] | number[];
+  keyName: string;
 }
 
-const PrimitiveValueCase = ({ keyName, value, onValueChange }: IPrimitiveValueCase) => {
-  const [isEditing, setIsEditing] = useState(false)
-  const [localValue, setLocalValue] = useState(value.toString)
-
-  const handleCancelButtonPress = () => {
-    setIsEditing(false)
-  }
-
-  const handleConfirmButtonPress = () => {
-    setIsEditing(false)
-  }
+const ArrayPrimitiveValue = ({ data, keyName }: IArrayPrimitiveValue) => {
+  const [isEditing, setIsEditing] = useState(false);
 
   return (
-    <Box sx={stylesPrimitiveValueCase.container}>
-      <Typography fontWeight={600}>{keyName}:</Typography>
-      {!isEditing ? (
-        <div onClick={() => { setIsEditing(true) }} style={{ cursor: "alias" }}>
-          <Typography fontWeight={600}>{value}</Typography>
-        </div>
-      ) : (
-        <PrimitiveValueCaseEditor onChange={v => setLocalValue(v)} value={localValue.toString()} onConfirmButtonPress={handleConfirmButtonPress} onCancelButtonPress={handleCancelButtonPress} />
-      )}
-    </Box>
-  )
+    <div style={ArrayPrimitiveValueStyles.container}>
+      <a style={ArrayPrimitiveValueStyles.key}>{keyName}:</a>
+      <div>
+        {isEditing ? (
+          <ArrayPrimitiveEditor values={data} open={isEditing} />
+        ) : (
+          <div onClick={() => setIsEditing(true)}>
+            <Chip label={data.join(', ')} size="small" />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+interface IArrayPrimitiveEditor {
+  values: string[] | number[];
+  open: boolean;
+  // onSave: (newValues: (string | number)[]) => void;
+  // onCancel: () => void;
 }
 
-interface IPrimitiveValueCaseEditor {
-  value: string,
-  onChange: (val: string) => void,
-  onCancelButtonPress: () => void,
-  onConfirmButtonPress: () => void
-}
-
-const PrimitiveValueCaseEditor = ({ value, onChange, onCancelButtonPress, onConfirmButtonPress }: IPrimitiveValueCaseEditor) => {
-
+const ArrayPrimitiveEditor = () => {
   return (
-    <>
-      <TextField
-        onChange={p => onChange(p.target.value)}
-        value={value}
-        size='small'
-        sx={{
-          width: "50%",
-          // Убираем лишние отступы
-          '& .MuiInputBase-root': {
-            height: '30px',           // фикс высота
-            padding: '0 8px',         // убираем вертикальные отступы
+    <div
+      style={{
+        position: 'absolute',
+        width: '100px',
+        height: '100px',
+        backgroundColor: 'red',
+      }}
+    ></div>
+  );
+};
+
+const ArrayPrimitiveEditorStyles = styleSheetCreate({
+  container: {
+    width: '50vw',
+    height: '50vh',
+    backgroundColor: 'grey',
+  },
+});
+
+const ArrayPrimitiveValueStyles = styleSheetCreate({
+  container: {
+    width: '90%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: '8px',
+  },
+  key: {},
+  value: {
+    color: '#333',
+  },
+});
+
+interface IPrimitiveValue {
+  keyName: string;
+  value: number | string;
+  showKeyName: boolean;
+}
+
+export const PrimitiveValue = ({
+  keyName,
+  value,
+  showKeyName,
+}: IPrimitiveValue) => {
+  return (
+    <div style={PrimitiveValueStyles.container}>
+      {showKeyName && <a style={PrimitiveValueStyles.key}>{keyName}:</a>}
+      <a>{value}</a>
+    </div>
+  );
+};
+
+interface IPrimitiveValueEditor {
+  value: number | string;
+}
+
+const PrimitiveValueEditor = ({ value }: IPrimitiveValueEditor) => {
+  return (
+    <TextField
+      value={value}
+      size="small"
+      slotProps={{
+        input: {
+          style: {
+            width: 'auto',
+            minWidth: '20px',
           },
-          '& .MuiInputBase-input': {
-            padding: '0',              // убираем внутренние отступы
-            height: '100%',
-          }
-        }}
-      />
-      <IconButton onClick={onCancelButtonPress}>
-        <Cancel />
-      </IconButton>
-      <IconButton onClick={onConfirmButtonPress}>
-        <Save />
-      </IconButton>
-    </>
-  )
-}
+        },
+      }}
+      sx={{
+        width: 'auto',
+        '& .MuiInputBase-root': {
+          height: 'auto',
+          width: 'auto',
+          minWidth: '20px',
+        },
+        '& .MuiInputBase-input': { padding: 0 },
+      }}
+    />
+  );
+};
 
-const stylesPrimitiveValueCase = createStyles({
+const PrimitiveValueStyles = styleSheetCreate({
   container: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: "5px",
-  }
-})
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  key: {},
+  value: {
+    color: '#333',
+  },
+});

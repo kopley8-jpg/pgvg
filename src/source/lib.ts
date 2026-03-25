@@ -18,7 +18,7 @@ export const createStyles = <
   styles: T
 ): T => styles;
 
-export const createStyless = <
+export const styleSheetCreate = <
   T extends Record<
     string,
     React.CSSProperties | ((...args: any) => React.CSSProperties)

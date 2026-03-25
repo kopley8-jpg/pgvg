@@ -1,21 +1,22 @@
-import { onValue, push, ref, update } from 'firebase/database';
-import React, { useEffect, useState } from 'react';
-import { toArray } from './lib';
+import { onValue, ref } from 'firebase/database';
+import { useEffect, useState } from 'react';
+import { styleSheetCreate, toArray } from './lib';
 import type {
   CoilInContainType,
   CoilType,
   DeviceType,
+  PlatformType,
   PodType,
   TankType,
 } from './model';
 import { database } from './firebase';
-import { DeviceCard } from './Card/Card';
+import { ArrayObj, ObjCard, PrimitiveValue } from './Card/Entries/DefaultEntry';
 
 export default function Main() {
   const [devices, setDevices] = useState<(DeviceType & { id: string })[]>([]);
-  const [pods, setPods] = useState<(PodType & { id: string })[]>([]);
-  const [tanks, setTanks] = useState<(TankType & { id: string })[]>([]);
-  const [coils, setCoils] = useState<(CoilType & { id: string })[]>([]);
+  const [_pods, setPods] = useState<(PodType & { id: string })[]>([]);
+  const [_tanks, setTanks] = useState<(TankType & { id: string })[]>([]);
+  const [_coils, setCoils] = useState<(CoilType & { id: string })[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export default function Main() {
           Omit<TankType, 'coils'> & { coils: string[] }
         >(data.platform.tanks);
         const newCoils = toArray<CoilType>(data.platform.coils);
-        const dataDevice = toArray<
+        const dataDevices = toArray<
           Omit<DeviceType, 'platforms' | 'coilsInContain'> & {
             platforms: string[];
             coilsInContain: '' | CoilInContainType[];
@@ -43,7 +44,7 @@ export default function Main() {
             .flat(),
         }));
 
-        const newDevices: DeviceType[] = dataDevice.map((device) => ({
+        const newDevices: DeviceType[] = dataDevices.map((device) => ({
           ...device,
           platforms: device.platforms
             .map((name) => [
@@ -85,14 +86,110 @@ export default function Main() {
 
   return (
     <div style={styles.container}>
-      {devices.map((device, index) => (
-        <DeviceCard pods={pods} key={index} device={device} />
+      {devices.map((device) => (
+        <ObjCard
+          data={device}
+          renderHeaderItem={() => (
+            <>
+              <PrimitiveValue
+                keyName=""
+                showKeyName={false}
+                value={device.brand}
+              />
+              <PrimitiveValue
+                keyName=""
+                showKeyName={false}
+                value={device.model}
+              />
+            </>
+          )}
+          renderArrayObj={(key, value) => (
+            <>
+              {key === 'platforms' ? (
+                <>
+                  <ArrayObj
+                    keyName="Платформы"
+                    value={value as PlatformType[]}
+                    renderItem={(platform) => (
+                      <>
+                        {platform.type === 'pod' ? (
+                          <ObjCard
+                            renderHeaderItem={() => (
+                              <PrimitiveValue
+                                keyName=""
+                                showKeyName={false}
+                                value={platform.name}
+                              />
+                            )}
+                            key={platform.name}
+                            data={platform}
+                            filterProps={['type', 'id', 'name']}
+                          />
+                        ) : (
+                          <>
+                            {platform.type === 'tank' ? (
+                              <>
+                                <ObjCard
+                                  renderHeaderItem={() => (
+                                    <PrimitiveValue
+                                      keyName=""
+                                      showKeyName={false}
+                                      value={platform.name}
+                                    />
+                                  )}
+                                  renderArrayObj={(key, value) => (
+                                    <>
+                                      {key === 'coils' ? (
+                                        <ArrayObj
+                                          keyName={'Серии испариков:'}
+                                          value={value as CoilType[]}
+                                          renderItem={(item) => (
+                                            <ObjCard
+                                              data={item}
+                                              renderHeaderItem={() => (
+                                                <PrimitiveValue
+                                                  keyName=""
+                                                  showKeyName={false}
+                                                  value={item.name}
+                                                />
+                                              )}
+                                              filterProps={['id', 'name']}
+                                            />
+                                          )}
+                                        />
+                                      ) : (
+                                        <></>
+                                      )}
+                                    </>
+                                  )}
+                                  key={platform.name}
+                                  data={platform as TankType}
+                                  filterProps={['type', 'id', 'name']}
+                                />
+                              </>
+                            ) : (
+                              <></>
+                            )}
+                          </>
+                        )}
+                      </>
+                    )}
+                  />
+                </>
+              ) : (
+                <></>
+              )}
+            </>
+          )}
+          photo={device.photo}
+          filterProps={['photo', 'brand', 'model', 'id', 'type']}
+        />
       ))}
     </div>
   );
 }
 
-const styles: { [key: string]: React.CSSProperties } = {
+const styles = styleSheetCreate({
   container: {
     backgroundColor: '#d6d6d6',
 
@@ -102,9 +199,11 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    paddingTop: '5%',
+    boxSizing: 'border-box',
 
-    gap: '16px',
+    gap: '5%',
 
     overflowY: 'auto',
   },
-};
+});
