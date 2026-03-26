@@ -4,5 +4,7 @@ import { getDatabase } from 'firebase/database';
 import { firebaseConfig } from '@shared/api/firebase/config';
 
 const app = initializeApp(firebaseConfig);
-export const database = getDatabase(firebaseConfig);
+const database = getDatabase(app);
 const analytics = getAnalytics(app);
+
+export default database;
