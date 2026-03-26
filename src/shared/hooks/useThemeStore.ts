@@ -5,6 +5,7 @@ import { colors } from '@shared/constants/colors';
 interface IUseTheme {
   isDark: boolean;
   colors: typeof colors.light;
+
   toggleTheme: () => void;
 }
 
