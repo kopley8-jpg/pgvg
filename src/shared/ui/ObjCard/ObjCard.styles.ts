@@ -19,7 +19,7 @@ export const useStyles = () => {
       width: '100%',
 
       display: 'flex',
-      justifyContent: 'space-between',
+      alignItems: 'center',
 
       paddingLeft: '2%',
       paddingRight: '2%',

@@ -9,7 +9,7 @@ export const useStyles = () => {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-      padding: '1%',
+      padding: '1.2%',
       gap: '3%',
     },
 
