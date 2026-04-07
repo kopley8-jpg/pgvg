@@ -2,13 +2,14 @@ import { useThemeStore } from "@/shared/hooks/useThemeStore"
 import { useStyles } from "./styles"
 import { usePodSeriesesStore } from "@/entities/pods/model/store/podsStore"
 import { useEffect } from "react"
-import { PodSeriesCard } from "@/entities/pods/ui/podSeriesCard/podSeriesCard.component"
+import { PodSeriesCard } from "@/widgets/PodSeriesCard/PodSeriesCard.component"
 
 
 
 export const DevicesPage = () => {
   const styles = useStyles()
   const { toggleTheme } = useThemeStore()
+
   const { podSerieses, loading, subscribeToPods, unsubscribeFromPods } = usePodSeriesesStore()
 
   useEffect(() => {
@@ -19,15 +20,14 @@ export const DevicesPage = () => {
     }
   }, [])
 
-  if (loading) return (
-    <div style={styles.container} onClick={toggleTheme}>
-      <a>Загрузка...</a>
-    </div>
+  if (loading || (!podSerieses || podSerieses.length === 0)) return (
+    <a>Загрузка...</a>
   )
 
+
   return (
-    <div style={styles.container} onClick={toggleTheme}>
-      <PodSeriesCard />
+    <div style={styles.container} >
+      <PodSeriesCard podSeries={podSerieses[0]} />
     </div>
   )
 }
