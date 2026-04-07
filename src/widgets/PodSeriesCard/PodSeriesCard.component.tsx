@@ -1,5 +1,6 @@
 import type { PodSeriesType } from "@/entities/pods/model/types"
 import { updatePodSeriesEntryById } from "@/features/updatePodSeriesEntryById/model/updatePodSeriesEntryById"
+import { ArrayPrimitiveValue } from "@/shared/ui/ArrayPrimitiveValue/ArrayPrimitiveValue"
 import { ObjCard } from "@/shared/ui/ObjCard/ObjCard"
 import { PrimitiveValueEditor } from "@/shared/ui/PrimitiveValue/PrimitiveValueEditor/PrimitiveValueEditor"
 import { useState } from "react"
@@ -16,7 +17,6 @@ export const PodSeriesCard = ({ podSeries }: IPodSeriesCard) => {
   const updatePodSeries = (keyName: string, value: any) => {
     updatePodSeriesEntryById(podSeries.id, keyName, value)
     setEditingEntryName(null)
-    alert(value)
   }
 
   return (
@@ -32,12 +32,8 @@ export const PodSeriesCard = ({ podSeries }: IPodSeriesCard) => {
       )}
       renderInPropsContainer={() => (
         <>
-          <div style={{ width: "100%", backgroundColor: "red", }}>
-            Емкость: {podSeries.capacity}
-          </div>
-          <div style={{ width: "100%", backgroundColor: "red", }}>
-            Сопротивления: {podSeries.ohms}
-          </div>
+          <ArrayPrimitiveValue keyName={"Емкость"} value={podSeries.capacity} />
+          <ArrayPrimitiveValue keyName={"Сопротивления"} value={podSeries.ohms} />
         </>
       )} />
   )

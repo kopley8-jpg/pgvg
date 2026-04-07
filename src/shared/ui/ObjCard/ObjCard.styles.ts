@@ -37,6 +37,8 @@ export const useStyles = () => {
       display: 'flex',
       flexDirection: 'column',
       boxSizing: 'border-box',
+      gap: '2%',
+      paddingTop: '1%',
     },
   });
 };
