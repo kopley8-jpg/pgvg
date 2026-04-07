@@ -32,8 +32,8 @@ export const PodSeriesCard = ({ podSeries }: IPodSeriesCard) => {
       )}
       renderInPropsContainer={() => (
         <>
-          <ArrayPrimitiveValue keyName={"Емкость"} value={podSeries.capacity} />
-          <ArrayPrimitiveValue keyName={"Сопротивления"} value={podSeries.ohms} />
+          <ArrayPrimitiveValue onChangesSaved={(p) => updatePodSeries("capacity", p)} value={podSeries.capacity} keyName="Емкости" onClick={() => setEditingEntryName("capacity")} />
+          <ArrayPrimitiveValue onChangesSaved={(p) => updatePodSeries("ohms", p)} keyName={"Сопротивления"} value={podSeries.ohms} />
         </>
       )} />
   )
