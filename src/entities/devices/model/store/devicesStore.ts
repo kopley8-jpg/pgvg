@@ -1,18 +1,18 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import type { IPodSeriesesStore, PodSeriesType } from '../types';
+import type { DeviceType, IDevicesStore } from '../types';
 import { DataSnapshot, off, onValue, ref } from 'firebase/database';
 import database from '@shared/api/firebase/client';
 
-export const usePodSeriesesStore = create<IPodSeriesesStore>()(
+export const useDevicesStore = create<IDevicesStore>()(
   immer((set, get) => ({
-    podSerieses: [],
+    devices: [],
     loading: false,
     error: null,
 
     unsubscribe: null,
 
-    subscribeToPods: () => {
+    subscribeToDevices: () => {
       if (get().unsubscribe) {
         return;
       }
@@ -25,15 +25,15 @@ export const usePodSeriesesStore = create<IPodSeriesesStore>()(
         const data = snaphot.val();
         console.log('data', data);
 
-        const podSerieses: PodSeriesType[] = data
+        const devices: DeviceType[] = data
           ? Object.entries(data).map(([key, value]) => ({
-              ...(value as PodSeriesType),
+              ...(value as DeviceType),
               id: key,
             }))
           : [];
 
         set({
-          podSerieses,
+          devices,
           loading: false,
           error: null,
         });
@@ -44,12 +44,12 @@ export const usePodSeriesesStore = create<IPodSeriesesStore>()(
       set({
         unsubscribe: () => {
           off(podsSeriesesRef, 'value', handler);
-          set({ podSerieses: [], loading: false, unsubscribe: null });
+          set({ devices: [], loading: false, unsubscribe: null });
         },
       });
     },
 
-    unsubscribeFromPods: () => {
+    unsubscribeFromDevices: () => {
       const { unsubscribe } = get();
 
       if (unsubscribe) {

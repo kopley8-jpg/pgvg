@@ -1,8 +1,6 @@
-import type { PodSeriesType } from '@/entities/pods/model/types';
-
-export interface IPodSeriesesStore {
+export interface IDevicesStore {
   //данные
-  podSerieses: PodSeriesType[];
+  devices: DeviceType[];
 
   //ui состояние
   loading: boolean;
@@ -12,57 +10,46 @@ export interface IPodSeriesesStore {
   unsubscribe: (() => void) | null;
 
   //действия
-  subscribeToPods: () => void;
-  unsubscribeFromPods: () => void;
+  subscribeToDevices: () => void;
+  unsubscribeFromDevices: () => void;
   clearError: () => void;
 }
 
-export type deviceType<TPlatfomType extends ("magnetic"|"510")> = {
+export type DeviceType = {
   id: string;
-  photoURL: string;
 
+  photoURL: string | null;
   brand: string;
   model: string;
 
-  battery: batteryType;
-  adjustableAirflow: boolean;
+  adjustmentAirflow: boolean;
+  modes: string[];
   features: string[];
-  modes:string[];
-  screen: 'полноценный' | 'индикация' | 'нет';
+  screen: 'индикация' | 'полноценный' | 'нет';
+  battery: BatteryType;
   minCoilResistance: number;
-  platform: Platform;
 
-  kit: 
-    
+  platforms: MagneticPlatType | { type: '510' | 'boro' | 'dot' | 'squonk' };
+  kit: {
+    pods?: (PodType & { count: number })[];
+    tanks?: { name: string; count: number }[];
+    coils?: { name: string; resistance: number | string }[];
+    somethingElse: string;
+    lonyard: boolean;
+  };
 };
 
-type batteryType =
-  | { type: 'встроенный'; capacity: number }
-  | { type: 'сменный'; format: '18650' | '21700' | '20700' | '18350' };
-
-type Platform =
-  | {
-      platformType: 'magnetic';
-      tankNames?: string[];
-      podNames?: string[];
-      adapters?: string[];
-    }
-  | { platformType: '510' | 'boro' | 'dot' | 'squonk' };
-
-type coilType = {
-  type: 'coil';
-  name: string;
-  resistance: number;
-};
-
-type podType = {
-  type: 'pod';
+type PodType = {
   name: string;
   capacity: number;
   resistance: number;
 };
 
-type tankType = {
-  type: 'tank';
-  name: string;
+type MagneticPlatType = {
+  type: 'магнит';
+  compatiblePlats: { type: 'pod' | 'tank'; name: string }[];
 };
+
+type BatteryType =
+  | { type: 'встроенный'; capacity: number }
+  | { type: 'сменный'; format: '21700' | '18650' | '20700' | '18350' };
