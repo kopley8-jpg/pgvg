@@ -19,7 +19,7 @@ export const useDevicesStore = create<IDevicesStore>()(
 
       set({ loading: true, error: null });
 
-      const podsSeriesesRef = ref(database, '/kochegar/platform/cartridges');
+      const podsSeriesesRef = ref(database, '/kochegar/devices');
 
       const handler = (snaphot: DataSnapshot) => {
         const data = snaphot.val();

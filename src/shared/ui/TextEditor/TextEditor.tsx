@@ -1,4 +1,4 @@
-import { IconButton, InputAdornment, TextField } from '@mui/material';
+import { IconButton, TextField } from '@mui/material';
 import { Cancel, Save } from '@mui/icons-material';
 import { useStyles } from './styles';
 import { useState } from 'react';
@@ -11,7 +11,7 @@ interface IPrimitiveValueEditor {
   onCancelButtonPress?: () => void;
 }
 
-export const PrimitiveValueEditor = ({
+export const TextEditor = ({
   keyName,
   value,
   onCancelButtonPress,
@@ -24,6 +24,7 @@ export const PrimitiveValueEditor = ({
     <div style={styles.container}>
       <TextField
         onChange={(p) => setLocalValue(p.target.value)}
+        onBlur={() => onCancelButtonPress?.()}
         variant="outlined"
         {...(keyName ? { label: keyName } : {})}
         slotProps={{
@@ -42,13 +43,6 @@ export const PrimitiveValueEditor = ({
         sx={styles.TextField}
         value={localValue}
       />
-      <IconButton
-        size="small"
-        style={styles.button}
-        onClick={() => onCancelButtonPress?.()}
-      >
-        <Cancel fontSize="small" />
-      </IconButton>
     </div>
   );
 };

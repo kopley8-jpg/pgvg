@@ -1,34 +1,29 @@
-import { useThemeStore } from "@/shared/hooks/useThemeStore"
-import { useStyles } from "./styles"
-import { usePodSeriesesStore } from "@/entities/pods/model/store/podsStore"
-import { useEffect } from "react"
-import { PodSeriesCard } from "@/widgets/PodSeriesCard/PodSeriesCard.component"
-
-
+import { useThemeStore } from '@/shared/hooks/useThemeStore';
+import { useStyles } from './styles';
+import { useEffect } from 'react';
+import { useDevicesStore } from '@/entities/devices/model/store/devicesStore';
+import { DeviceCard } from '@/widgets/DeviceCard/ui/DeviceCard/DeviceCard';
 
 export const DevicesPage = () => {
-  const styles = useStyles()
-  const { toggleTheme } = useThemeStore()
+  const styles = useStyles();
+  const { toggleTheme } = useThemeStore();
 
-  const { podSerieses, loading, subscribeToPods, unsubscribeFromPods } = usePodSeriesesStore()
+  const { devices, loading, subscribeToDevices, unsubscribeFromDevices } =
+    useDevicesStore();
 
   useEffect(() => {
-    subscribeToPods()
+    subscribeToDevices();
 
     return () => {
-      unsubscribeFromPods()
-    }
-  }, [])
+      unsubscribeFromDevices();
+    };
+  }, []);
 
-  if (loading || (!podSerieses || podSerieses.length === 0)) return (
-    <a>Загрузка...</a>
-  )
-
+  if (loading || !devices || devices.length === 0) return <a>Загрузка...</a>;
 
   return (
-    <div style={styles.container} >
-      <PodSeriesCard podSeries={podSerieses[0]} />
+    <div style={styles.container}>
+      <DeviceCard device={devices[0]} />
     </div>
-  )
-}
-
+  );
+};

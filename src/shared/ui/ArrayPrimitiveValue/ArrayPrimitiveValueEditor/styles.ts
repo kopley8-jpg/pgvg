@@ -7,9 +7,11 @@ export const useStyles = () => {
       left: 0,
       zIndex: 1000,
       backgroundColor: 'white',
+      width: '36vw',
+      minHeight: '13vh',
       borderRadius: '8px',
-      minWidth: '200px',
       boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+      fontSize: '3.5vw',
     },
     header: {
       display: 'flex',

@@ -6,39 +6,63 @@ export const useStyles = () => {
 
   return createStyles({
     container: {
-      width: '90%',
-      aspectRatio: 3 / 2,
-
+      width: '95vw',
       display: 'flex',
-      flexDirection: 'column',
-
+      flexDirection: 'row',
+      boxSizing: 'content-box',
       borderRadius: '20px',
       border: `2px ${colors.primary} solid`,
     },
+    photo: {
+      width: '30%',
+      objectFit: 'contain',
+      borderTopLeftRadius: '20px',
+      borderBottomLeftRadius: '20px',
+      borderRight: `2px ${colors.primary} solid`,
+    },
+    infoContainer: {
+      height: '100%',
+      width: '100%',
+      boxSizing: 'content-box',
+      display: 'flex',
+      flexDirection: 'column',
+    },
     header: {
       width: '100%',
-
       display: 'flex',
       alignItems: 'center',
-
-      paddingLeft: '2%',
-      paddingRight: '2%',
-
       boxSizing: 'border-box',
+      paddingLeft: '0.5vh',
+      paddingRight: '0.5vh',
 
       color: colors.primary,
-      fontSize: '3vw',
+      fontSize: '5vw',
       borderBottom: `2px ${colors.primary} solid`,
     },
     content: {
-      width: '100%',
+      boxSizing: 'border-box',
       height: '100%',
-
+      width: '100%',
       display: 'flex',
       flexDirection: 'column',
-      boxSizing: 'border-box',
-      gap: '2%',
-      paddingTop: '1%',
+      paddingTop: '1vh',
+      paddingLeft: '1vh',
+      paddingRight: '1vh',
+      overflowY: 'auto',
+      gap: '3%',
+    },
+    propContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      fontSize: '5vw',
+    },
+    propKeyName: {
+      width: '40%',
+      flexShrink: 0, // Запрещаем сжатие
+      whiteSpace: 'normal', // Разрешаем перенос текста
+      wordBreak: 'break-word', // Перенос длинных слов
+      overflowWrap: 'break-word',
     },
   });
 };
