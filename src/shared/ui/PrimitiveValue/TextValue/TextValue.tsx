@@ -5,29 +5,37 @@ import { convertToNumber } from '@/shared/lib/convertToNumber';
 
 interface IPrimitiveValueEditor {
   value: string | number;
+  fontSize?: any;
   onSaveButtonPress?: (newValue: string | number) => void;
 }
 
 export const TextValue = ({
   value,
   onSaveButtonPress,
+  fontSize,
 }: IPrimitiveValueEditor) => {
   const styles = useStyles();
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   return (
-    <div style={styles.container}>
+    <>
       {isEditing ? (
         <TextEditor
           value={value}
           onCancelButtonPress={() => setIsEditing(false)}
-          onSaveButtonPress={(p) => onSaveButtonPress?.(convertToNumber(p))}
+          onSaveButtonPress={(p) => {
+            onSaveButtonPress?.(convertToNumber(p));
+            setIsEditing(false);
+          }}
         />
       ) : (
-        <a style={styles.text} onClick={() => setIsEditing(true)}>
+        <span
+          style={{ ...styles.text, fontSize: fontSize ? fontSize : undefined }}
+          onClick={() => setIsEditing(true)}
+        >
           {value}
-        </a>
+        </span>
       )}
-    </div>
+    </>
   );
 };

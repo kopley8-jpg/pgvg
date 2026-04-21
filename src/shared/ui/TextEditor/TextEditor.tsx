@@ -24,7 +24,6 @@ export const TextEditor = ({
     <div style={styles.container}>
       <TextField
         onChange={(p) => setLocalValue(p.target.value)}
-        onBlur={() => onCancelButtonPress?.()}
         variant="outlined"
         {...(keyName ? { label: keyName } : {})}
         slotProps={{
@@ -43,6 +42,13 @@ export const TextEditor = ({
         sx={styles.TextField}
         value={localValue}
       />
+      <IconButton
+        size="small"
+        style={styles.button}
+        onClick={() => onCancelButtonPress?.()}
+      >
+        <Cancel fontSize="small" />
+      </IconButton>
     </div>
   );
 };

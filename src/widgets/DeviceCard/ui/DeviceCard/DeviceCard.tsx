@@ -1,16 +1,17 @@
 import { ObjCard } from '@/shared/ui/ObjCard/ObjCard';
 import type { IDeviceCard } from './model/types';
 import { TextValue } from '@/shared/ui/PrimitiveValue/TextValue/TextValue';
-import { TextEditor } from '@/shared/ui/TextEditor/TextEditor';
 import type { DeviceType } from '@/entities/devices/model/types';
 import { ArrayPrimitiveValue } from '@/shared/ui/ArrayPrimitiveValue/ArrayPrimitiveValue';
 import { Switch } from '@mui/material';
+import { createRenderConfig } from '@/shared/lib/createRenderConfig';
+import { BatteryEntry } from './ui/BatteryEntry/BatteryEntry';
+import { updateDeviceById } from '@/features/devices/updateDeviceEntryById/model/updateDeviceEntryById';
+import { PlatformEntry } from './ui/PlatformEntry/PlatformEntry';
 
 export const DeviceCard = ({ device }: IDeviceCard) => {
   const deviceConfig = createRenderConfig<DeviceType>(device);
-  const huy = deviceConfig.forKeys(['minCoilResistance'], (key, value) => (
-    <></>
-  ));
+
   return (
     <ObjCard
       photoURL={device.photoURL}
@@ -25,14 +26,46 @@ export const DeviceCard = ({ device }: IDeviceCard) => {
       renderForKeys={[
         ...deviceConfig.forKeys(
           ['minCoilResistance', 'screen'],
-          (key, value) => <TextValue value={value} />
+          (key, value) => (
+            <TextValue
+              value={value}
+              onSaveButtonPress={(newVal) =>
+                updateDeviceById(device.id, key, newVal)
+              }
+            />
+          )
         ),
         ...deviceConfig.forKeys(['features', 'modes'], (key, value) => (
-          <ArrayPrimitiveValue value={value} onChangesSaved={() => {}} />
+          <ArrayPrimitiveValue
+            value={value}
+            onChangesSaved={(newVal) =>
+              updateDeviceById(device.id, key, newVal)
+            }
+          />
         )),
         ...deviceConfig.forKeys(['adjustmentAirflow'], (key, value) => (
-          <Switch value={value} onClick={() => {}} />
+          <Switch
+            checked={value}
+            onClick={() => updateDeviceById(device.id, key, !value)}
+          />
         )),
+        ...deviceConfig.forKeys(
+          ['battery'],
+          (key, value) => (
+            <BatteryEntry
+              battery={value}
+              onChange={(newVal) => updateDeviceById(device.id, key, newVal)}
+            />
+          ),
+          { hideKeyName: true }
+        ),
+        ...deviceConfig.forKeys(
+          ['platforms'],
+          (key, value) => (
+            <PlatformEntry platform={value} onChange={() => {}} />
+          ),
+          { hideKeyName: true }
+        ),
       ]}
     />
   );
@@ -52,21 +85,3 @@ const translate: Record<keyof DeviceType, string> = {
   minCoilResistance: 'Мин. сопрот', // +
   screen: 'Экран', // +
 };
-
-export function createRenderConfig<T extends Record<string, any>>(data: T) {
-  return {
-    forKeys: <K extends keyof T>(
-      keys: K[],
-      renderItem: (key: K, value: T[K]) => React.ReactNode,
-      options?: { hideKeyName?: boolean }
-    ) => {
-      return keys.map((key) => ({
-        options: options,
-        key: key,
-        renderItem: () => renderItem(key, data[key]),
-      }));
-    },
-  };
-}
-
-const render = <T extends Record<string, any>>() => {};

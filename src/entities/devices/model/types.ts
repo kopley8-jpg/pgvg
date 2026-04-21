@@ -29,7 +29,7 @@ export type DeviceType = {
   battery: BatteryType;
   minCoilResistance: number;
 
-  platforms: MagneticPlatType | { type: '510' | 'boro' | 'dot' | 'squonk' };
+  platforms: PlatformType;
   kit: {
     pods?: (PodType & { count: number })[];
     tanks?: { name: string; count: number }[];
@@ -39,17 +39,29 @@ export type DeviceType = {
   };
 };
 
+export const BATTERY_FORMATS = ['18350', '18650', '20700', '21700'] as const;
+
+export type PlatformType =
+  | {
+      type: 'магнит';
+      compatiblePlats: { type: 'pod' | 'tank'; name: string }[];
+    }
+  | { type: '510' }
+  | { type: 'boro' }
+  | { type: 'dot' }
+  | { type: 'squonk' };
+
 type PodType = {
   name: string;
   capacity: number;
   resistance: number;
 };
 
-type MagneticPlatType = {
+export type MagneticPlatType = {
   type: 'магнит';
   compatiblePlats: { type: 'pod' | 'tank'; name: string }[];
 };
 
-type BatteryType =
+export type BatteryType =
   | { type: 'встроенный'; capacity: number }
-  | { type: 'сменный'; format: '21700' | '18650' | '20700' | '18350' };
+  | { type: 'сменный'; format: (typeof BATTERY_FORMATS)[number] };
