@@ -59,3 +59,14 @@ export const useDevicesStore = create<IDevicesStore>()(
     clearError: () => {},
   }))
 );
+
+const checkThePropAtObj = <K extends string, Type>(
+  obj: unknown,
+  propName: K
+): obj is Record<K, Type> => {
+  if (obj && typeof obj === 'object' && propName in obj) {
+    return true;
+  } else {
+    return false;
+  }
+};

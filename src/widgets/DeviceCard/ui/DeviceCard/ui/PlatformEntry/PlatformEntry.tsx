@@ -29,10 +29,11 @@ export const PlatformEntry = ({ platform, onChange }: IPlatformEntry) => {
               value={'магнит'}
               data={['магнит', 'dot', 'boro', 'squonk', '510']}
               onPick={(picked) =>
-                picked === 'магнит' ? undefined : onChange({ type: picked })
+                picked === 'магнит' ? {} : onChange({ type: picked })
               }
             />
           )),
+
         ]}
       />
     );

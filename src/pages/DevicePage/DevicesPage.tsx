@@ -23,7 +23,9 @@ export const DevicesPage = () => {
 
   return (
     <div style={styles.container}>
-      <DeviceCard device={devices[0]} />
+      {devices.map(device => (
+        <DeviceCard key={device.id} device={device} />
+      ))}
     </div>
   );
 };

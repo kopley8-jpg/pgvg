@@ -6,7 +6,8 @@ export const useStyles = () => {
 
   return createStyles({
     container: {
-      width: '95vw',
+      width: '96%',
+      maxHeight: '70%',
       display: 'flex',
       flexDirection: 'row',
       boxSizing: 'content-box',

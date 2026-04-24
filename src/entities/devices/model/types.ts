@@ -18,38 +18,36 @@ export interface IDevicesStore {
 export type DeviceType = {
   id: string;
 
-  photoURL: string | null;
-  brand: string;
-  model: string;
+  photoURL?: string;
+  brand?: string;
+  model?: string;
 
-  adjustmentAirflow: boolean;
-  modes: string[];
-  features: string[];
-  screen: 'индикация' | 'полноценный' | 'нет';
-  battery: BatteryType;
-  minCoilResistance: number;
+  adjustmentAirflow?: boolean;
+  modes?: string[];
+  features?: string[];
+  screen?: 'индикация' | 'полноценный' | 'нет';
+  battery?: BatteryType;
+  minCoilResistance?: number;
 
-  platforms: PlatformType;
-  kit: {
+  platforms?: PlatformType;
+  kit?: {
     pods?: (PodType & { count: number })[];
     tanks?: { name: string; count: number }[];
     coils?: { name: string; resistance: number | string }[];
-    somethingElse: string;
-    lonyard: boolean;
+    somethingElse?: string;
+    lonyard?: boolean;
   };
 };
 
 export const BATTERY_FORMATS = ['18350', '18650', '20700', '21700'] as const;
+export const PLATFORM_FORMATS = ['510', 'boro', 'dot', 'squonk', 'магнит'];
 
 export type PlatformType =
   | {
-      type: 'магнит';
+      type?: 'магнит';
       compatiblePlats: { type: 'pod' | 'tank'; name: string }[];
     }
-  | { type: '510' }
-  | { type: 'boro' }
-  | { type: 'dot' }
-  | { type: 'squonk' };
+  | { type: '510' | 'boro' | 'dot' | 'squonk' };
 
 type PodType = {
   name: string;
@@ -63,5 +61,5 @@ export type MagneticPlatType = {
 };
 
 export type BatteryType =
-  | { type: 'встроенный'; capacity: number }
-  | { type: 'сменный'; format: (typeof BATTERY_FORMATS)[number] };
+  | { type?: 'встроенный'; capacity?: number }
+  | { type?: 'сменный'; format?: (typeof BATTERY_FORMATS)[number] };

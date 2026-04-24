@@ -1,79 +1,44 @@
-import {
-  BATTERY_FORMATS,
-  type BatteryType,
-} from '@/entities/devices/model/types';
-import { useThemeStore } from '@/shared/hooks/useThemeStore';
+import { BATTERY_FORMATS } from '@/entities/devices/model/types';
 import { createRenderConfig } from '@/shared/lib/createRenderConfig';
-import { createStyles } from '@/shared/lib/createStyles';
 import { DropDownList } from '@/shared/ui/DropDownList/DropDownList';
-import { ObjEntry } from '@/shared/ui/ObjEntry/ObjEntry';
+import { ObjEntryTwo } from '@/shared/ui/ObjEntry/ObjEntry';
 import { TextValue } from '@/shared/ui/PrimitiveValue/TextValue/TextValue';
-import { useTheme } from '@emotion/react';
+import type { IBatteryEntry } from './model/batteryEntry.types';
+import { useBatteryEntry } from './model/useBatteryEntry';
 
-interface IBatteryEntry {
-  battery: BatteryType;
-  onChange: (newValue: BatteryType) => void;
-}
 
 export const BatteryEntry = ({ battery, onChange }: IBatteryEntry) => {
-  if (battery.type === 'встроенный') {
-    const batteryConfig = createRenderConfig(battery);
 
-    return (
-      <ObjEntry
-        translatedNamesForKeys={translate}
-        entryName="АКБ"
-        data={battery}
-        renderForKeys={[
-          ...batteryConfig.forKeys(['type'], (key, value) => (
-            <span
-              style={{ fontSize: '5vw', cursor: 'pointer' }}
-              onClick={() => onChange({ type: 'сменный', format: '18650' })}
-            >
-              встроенный
-            </span>
-          )),
-          ...batteryConfig.forKeys(['capacity'], (key, value) => (
-            <TextValue
-              value={value}
-              fontSize={'5vw'}
-              onSaveButtonPress={(newValue) =>
-                onChange({ ...battery, capacity: Number(newValue) })
-              }
-            />
-          )),
-        ]}
-      />
-    );
-  } else if (battery.type === 'сменный') {
-    const batteryConfig = createRenderConfig(battery);
+  const {
+    handleDropDownPicked,
+    handleCapacityChanged,
+    handleCapacityErrorTextClick,
+    handleFormatPicked
+  } = useBatteryEntry({ battery, onChange })
 
-    return (
-      <ObjEntry
-        translatedNamesForKeys={translate}
-        entryName="АКБ"
-        data={battery}
-        renderForKeys={[
-          ...batteryConfig.forKeys(['type'], (key, value) => (
-            <span
-              style={{ fontSize: '5vw', cursor: 'pointer' }}
-              onClick={() => onChange({ type: 'встроенный', capacity: 0 })}
-            >
-              сменный
-            </span>
+  return (
+    <>
+      {battery ? (
+        <ObjEntryTwo entryName='АКБ' translatedNamesForKeys={translate} renderForKeys={[
+          ...createRenderConfig(battery).forKeys(["type"], (_key, value) => (
+            <DropDownList value={value} data={["встроенный", "сменный"]} onPick={handleDropDownPicked} />
           )),
-          ...batteryConfig.forKeys(['format'], (key, value) => (
-            <DropDownList
-              value={value}
-              data={BATTERY_FORMATS}
-              onPick={(picked) => onChange({ type: 'сменный', format: picked })}
-            />
-          )),
-        ]}
-      />
-    );
-  }
-};
+          ...(battery.type === "встроенный"
+            ? createRenderConfig(battery).forKeys(["capacity"], (_key, value) => (
+              <TextValue fontSize={"5vw"} value={value} errorOptions={{ errorText: "емкость?", onErrorTextClick: handleCapacityErrorTextClick }} onSaveButtonPress={handleCapacityChanged} />
+            ))
+            : battery.type === "сменный" ?
+              createRenderConfig(battery).forKeys(["format"], (_key, value) => (
+                <DropDownList value={value} data={BATTERY_FORMATS} onPick={handleFormatPicked} />
+              ))
+              : [null])
+        ]} />
+      ) : (
+        <span style={{ cursor: "pointer" }} onClick={() => onChange({ type: "сменный" })}>АКБ?</span>
+      )}
+    </>
+  )
+}
 
 const translate = {
   type: 'Тип',

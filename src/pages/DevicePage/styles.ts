@@ -12,7 +12,9 @@ export const useStyles = () => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'center',
+      gap: '3.5%',
+      paddingTop: '7%',
+      overflowY: 'auto',
 
       backgroundColor: colors.background,
       color: colors.primary,

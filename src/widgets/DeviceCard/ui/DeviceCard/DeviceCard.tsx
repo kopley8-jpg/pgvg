@@ -8,6 +8,8 @@ import { createRenderConfig } from '@/shared/lib/createRenderConfig';
 import { BatteryEntry } from './ui/BatteryEntry/BatteryEntry';
 import { updateDeviceById } from '@/features/devices/updateDeviceEntryById/model/updateDeviceEntryById';
 import { PlatformEntry } from './ui/PlatformEntry/PlatformEntry';
+import { useErrorOptions } from '@/shared/hooks/useErrorOptions';
+import { translate } from '@/shared/constants/translatesKeys';
 
 export const DeviceCard = ({ device }: IDeviceCard) => {
   const deviceConfig = createRenderConfig<DeviceType>(device);
@@ -17,8 +19,8 @@ export const DeviceCard = ({ device }: IDeviceCard) => {
       photoURL={device.photoURL}
       renderInHeader={() => (
         <>
-          <TextValue value={device.brand} onSaveButtonPress={() => {}} />
-          <TextValue value={device.model} onSaveButtonPress={() => {}} />
+          <TextValue value={device.brand} onSaveButtonPress={() => { }} />
+          <TextValue value={device.model} onSaveButtonPress={() => { }} />
         </>
       )}
       data={device}
@@ -32,6 +34,7 @@ export const DeviceCard = ({ device }: IDeviceCard) => {
               onSaveButtonPress={(newVal) =>
                 updateDeviceById(device.id, key, newVal)
               }
+              errorOptions={useErrorOptions(device.id)[key]}
             />
           )
         ),
@@ -41,6 +44,7 @@ export const DeviceCard = ({ device }: IDeviceCard) => {
             onChangesSaved={(newVal) =>
               updateDeviceById(device.id, key, newVal)
             }
+            errorOptions={useErrorOptions(device.id)[key]}
           />
         )),
         ...deviceConfig.forKeys(['adjustmentAirflow'], (key, value) => (
@@ -59,29 +63,17 @@ export const DeviceCard = ({ device }: IDeviceCard) => {
           ),
           { hideKeyName: true }
         ),
-        ...deviceConfig.forKeys(
-          ['platforms'],
-          (key, value) => (
-            <PlatformEntry platform={value} onChange={() => {}} />
-          ),
-          { hideKeyName: true }
-        ),
+        // ...deviceConfig.forKeys(
+        //   ['platforms'],
+        //   (key, value) => (
+        //     <PlatformEntry platform={value} onChange={() => { }} />
+        //   ),
+        //   { hideKeyName: true }
+        // ),
       ]}
     />
   );
 };
 
-const translate: Record<keyof DeviceType, string> = {
-  id: 'id', // +
-  photoURL: 'photoURL', // +
-  brand: 'Бренд', // +
-  model: 'Модель', // +
-  adjustmentAirflow: 'Регулировка обдува', // +
-  modes: 'Режимы', // +
-  features: 'Фичи', // +
-  battery: 'Батарея',
-  platforms: 'Платформа',
-  kit: 'Комплект',
-  minCoilResistance: 'Мин. сопрот', // +
-  screen: 'Экран', // +
-};
+
+
