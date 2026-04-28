@@ -18,24 +18,24 @@ export interface IDevicesStore {
 export type DeviceType = {
   id: string;
 
-  photoURL?: string;
-  brand?: string;
-  model?: string;
+  photoURL: string | null;
+  brand: string | null;
+  model: string | null;
 
-  adjustmentAirflow?: boolean;
-  modes?: string[];
-  features?: string[];
-  screen?: 'индикация' | 'полноценный' | 'нет';
-  battery?: BatteryType;
-  minCoilResistance?: number;
+  adjustmentAirflow: boolean | null;
+  modes: string[] | null;
+  features: string[] | null;
+  screen: ('индикация' | 'полноценный' | 'нет') | null;
+  battery: BatteryType | null;
+  minCoilResistance: number | null;
 
-  platforms?: PlatformType;
-  kit?: {
-    pods?: (PodType & { count: number })[];
-    tanks?: { name: string; count: number }[];
-    coils?: { name: string; resistance: number | string }[];
-    somethingElse?: string;
-    lonyard?: boolean;
+  platforms: PlatformType | null;
+  kit: {
+    pods: (PodType & { count: number })[] | null;
+    tanks: { name: string; count: number }[] | null;
+    coils: { name: string; resistance: number | string }[] | null;
+    somethingElse: string | null;
+    lonyard: boolean | null;
   };
 };
 
@@ -44,10 +44,13 @@ export const PLATFORM_FORMATS = ['510', 'boro', 'dot', 'squonk', 'магнит']
 
 export type PlatformType =
   | {
-      type?: 'магнит';
-      compatiblePlats: { type: 'pod' | 'tank'; name: string }[];
+      type: 'магнит';
+      compatiblePlats:
+        | { type: 'pod' | 'tank'; name: string; idFromPlatforms: number }[]
+        | null;
     }
-  | { type: '510' | 'boro' | 'dot' | 'squonk' };
+  | { type: '510' | 'boro' | 'dot' | 'squonk' }
+  | { type: null };
 
 type PodType = {
   name: string;
@@ -57,9 +60,17 @@ type PodType = {
 
 export type MagneticPlatType = {
   type: 'магнит';
-  compatiblePlats: { type: 'pod' | 'tank'; name: string }[];
+  compatiblePlats: {
+    type: 'pod' | 'tank';
+    name: string;
+    idFromPlatforms: number;
+  }[];
 };
 
 export type BatteryType =
-  | { type?: 'встроенный'; capacity?: number }
-  | { type?: 'сменный'; format?: (typeof BATTERY_FORMATS)[number] };
+  | { type: 'встроенный'; capacity: number | null }
+  | {
+      type: 'сменный';
+      format: (typeof BATTERY_FORMATS)[number] | null;
+    }
+  | { type: null };

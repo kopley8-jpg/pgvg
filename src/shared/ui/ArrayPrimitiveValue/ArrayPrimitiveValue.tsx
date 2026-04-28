@@ -4,21 +4,21 @@ import { ArrayPrimitiveValueEditor } from './ArrayPrimitiveValueEditor/ArrayPrim
 import { useStyles } from './styles';
 
 interface IArrayPrimitiveValue {
-  value?: (string | number)[];
+  value?: (string | number)[] | null;
   onChangesSaved: (newValue: (string | number)[]) => void;
   onClick?: () => void;
   errorOptions?: {
-    errorText: string,
-    errorTextFontSize: any,
-    onErrorTextClick: () => void
-  }
+    errorText: string;
+    errorTextFontSize: any;
+    onErrorTextClick: () => void;
+  };
 }
 
 export const ArrayPrimitiveValue = ({
   value,
   onClick,
   onChangesSaved,
-  errorOptions
+  errorOptions,
 }: IArrayPrimitiveValue) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -31,8 +31,8 @@ export const ArrayPrimitiveValue = ({
 
   return (
     <>
-      {value ?
-        (<>
+      {value ? (
+        <>
           {isOpen ? (
             <ArrayPrimitiveValueEditor
               value={value}
@@ -49,14 +49,14 @@ export const ArrayPrimitiveValue = ({
               <span style={styles.text}>{value.join(', ')}</span>
             </div>
           )}
-        </>) : (
-          <>
-            <span
-              onClick={() => errorOptions?.onErrorTextClick?.()}>
-              {errorOptions ? errorOptions.errorText : "undefined"}
-            </span>
-          </>
-        )}
+        </>
+      ) : (
+        <>
+          <span onClick={() => errorOptions?.onErrorTextClick?.()}>
+            {errorOptions ? errorOptions.errorText : 'undefined'}
+          </span>
+        </>
+      )}
     </>
   );
 };

@@ -19,8 +19,8 @@ export const DeviceCard = ({ device }: IDeviceCard) => {
       photoURL={device.photoURL}
       renderInHeader={() => (
         <>
-          <TextValue value={device.brand} onSaveButtonPress={() => { }} />
-          <TextValue value={device.model} onSaveButtonPress={() => { }} />
+          <TextValue value={device.brand} onSaveButtonPress={() => {}} />
+          <TextValue value={device.model} onSaveButtonPress={() => {}} />
         </>
       )}
       data={device}
@@ -49,7 +49,7 @@ export const DeviceCard = ({ device }: IDeviceCard) => {
         )),
         ...deviceConfig.forKeys(['adjustmentAirflow'], (key, value) => (
           <Switch
-            checked={value}
+            checked={value ? value : undefined}
             onClick={() => updateDeviceById(device.id, key, !value)}
           />
         )),
@@ -63,17 +63,19 @@ export const DeviceCard = ({ device }: IDeviceCard) => {
           ),
           { hideKeyName: true }
         ),
-        // ...deviceConfig.forKeys(
-        //   ['platforms'],
-        //   (key, value) => (
-        //     <PlatformEntry platform={value} onChange={() => { }} />
-        //   ),
-        //   { hideKeyName: true }
-        // ),
+        ...deviceConfig.forKeys(
+          ['platforms'],
+          (key, value) => (
+            <PlatformEntry
+              platform={value ? value : { type: null }}
+              onChange={(newValue) =>
+                updateDeviceById(device.id, key, newValue)
+              }
+            />
+          ),
+          { hideKeyName: true }
+        ),
       ]}
     />
   );
 };
-
-
-

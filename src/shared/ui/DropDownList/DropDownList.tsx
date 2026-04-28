@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { IDropDownList } from './DropDown.types';
 import { useStyles } from './DropDown.styles';
 
-export const DropDownList = <T extends string | undefined>({
+export const DropDownList = <T extends string | undefined | null>({
   value,
   data,
   onPick,
@@ -32,7 +32,7 @@ export const DropDownList = <T extends string | undefined>({
           onClick={() => setIsOpen(true)}
           style={{ fontSize: '5vw', cursor: 'pointer' }}
         >
-          {value ? value : "..."}
+          {value ? value : '...'}
         </span>
       )}
     </div>

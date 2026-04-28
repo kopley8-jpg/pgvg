@@ -4,20 +4,20 @@ import { TextEditor } from '../../TextEditor/TextEditor';
 import { convertToNumber } from '@/shared/lib/convertToNumber';
 
 interface IPrimitiveValueEditor {
-  value?: string | number;
+  value?: string | number | null;
   fontSize?: any;
   onSaveButtonPress?: (newValue: string | number) => void;
   errorOptions?: {
-    errorText: string,
-    onErrorTextClick: () => void
-  }
+    errorText: string;
+    onErrorTextClick: () => void;
+  };
 }
 
 export const TextValue = ({
   value,
   onSaveButtonPress,
   fontSize,
-  errorOptions
+  errorOptions,
 }: IPrimitiveValueEditor) => {
   const styles = useStyles();
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -37,7 +37,10 @@ export const TextValue = ({
             />
           ) : (
             <span
-              style={{ ...styles.text, fontSize: fontSize ? fontSize : undefined }}
+              style={{
+                ...styles.text,
+                fontSize: fontSize ? fontSize : undefined,
+              }}
               onClick={() => setIsEditing(true)}
             >
               {value}
@@ -47,8 +50,9 @@ export const TextValue = ({
       ) : (
         <span
           style={{ ...styles.text, fontSize: fontSize ? fontSize : undefined }}
-          onClick={() => errorOptions?.onErrorTextClick?.()}>
-          {errorOptions ? errorOptions.errorText : "undefined"}
+          onClick={() => errorOptions?.onErrorTextClick?.()}
+        >
+          {errorOptions ? errorOptions.errorText : 'undefined'}
         </span>
       )}
     </>

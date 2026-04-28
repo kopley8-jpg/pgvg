@@ -12,11 +12,11 @@ export const useStyles = () => {
       fontSize: '3vw',
     },
     entryName: {
-      width: '100%',
       fontSize: '5vw',
       boxSizing: 'border-box',
     },
     propsContainer: {
+      width: '100%',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'flex-start',
@@ -26,9 +26,12 @@ export const useStyles = () => {
       borderLeft: `3px ${colors.primary} solid`,
     },
     propContainer: {
+      width: '100%',
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
+      justifyContent: 'flex-start',
+      gap: '2%',
     },
   });
 };
