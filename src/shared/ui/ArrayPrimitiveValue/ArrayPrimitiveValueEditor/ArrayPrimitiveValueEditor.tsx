@@ -25,7 +25,7 @@ export const ArrayPrimitiveValueEditor = ({
   };
 
   const handleAddButtonClick = () => {
-    setLocalValues((prev) => [...prev, 0]);
+    setLocalValues((prev) => [...prev, "?"]);
   };
 
   const handleDeleteItemButtonClick = (id: number) => {

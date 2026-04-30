@@ -1,29 +1,31 @@
 import type React from 'react';
 import { useStyles } from './ObjCard.styles';
 import type { IObjCard } from './types';
-import { Key } from '@mui/icons-material';
 
 export const ObjCard = <T extends Record<string, any>>({
   photoURL,
   data,
   translatedNamesForKeys,
   renderInHeader,
+  style,
   renderForKeys,
 }: IObjCard<T>) => {
   const styles = useStyles();
 
   return (
-    <div style={styles.container}>
-      <img src={photoURL ? photoURL : ''} style={styles.photo} />
-      <div style={styles.infoContainer}>
-        <div style={styles.header}>{renderInHeader()}</div>
-        <div style={styles.content}>
+    <div style={{ ...styles.container, ...style?.container }}>
+      {photoURL ? (
+        <img src={photoURL ? photoURL : ''} style={styles.photo} />
+      ) : (<></>)}
+      <div style={{ ...styles.infoContainer, ...style?.infoContainer }}>
+        <div style={{ ...styles.header, ...style?.header }}>{renderInHeader()}</div>
+        <div style={{ ...styles.content, ...style?.content }}>
           {renderForKeys.map((renderForKey) => (
-            <div style={styles.propContainer}>
+            <div style={{ ...styles.propContainer, ...style?.propContainer }}>
               {renderForKey.options && renderForKey.options.hideKeyName ? (
                 <></>
               ) : (
-                <a style={styles.propKeyName}>
+                <a style={{ ...styles.propKeyName, ...style?.propKeyName }}>
                   {translatedNamesForKeys
                     ? translatedNamesForKeys[renderForKey.key]
                     : renderForKey.key.toString()}

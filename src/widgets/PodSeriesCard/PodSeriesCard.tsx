@@ -1,0 +1,57 @@
+import type { PodSeriesType } from "@/entities/pods/model/types"
+import { useThemeStore } from "@/shared/hooks/useThemeStore"
+import { createRenderConfig } from "@/shared/lib/createRenderConfig"
+import { ArrayPrimitiveValue } from "@/shared/ui/ArrayPrimitiveValue/ArrayPrimitiveValue"
+import { ObjCard } from "@/shared/ui/ObjCard/ObjCard"
+import type { ObjCardStyles } from "@/shared/ui/ObjCard/types"
+import type { IPodSeriesCard } from "./model/types"
+import { usePodSeriesCard } from "./model/usePodSeriesCard"
+
+
+
+export const PodSeriesCard = ({ platform }: IPodSeriesCard) => {
+
+  const styles = useStyles()
+
+  const { handleValueChange } = usePodSeriesCard({ platform })
+
+  return (
+    <ObjCard
+      style={styles}
+      translatedNamesForKeys={translate}
+      data={platform.plat}
+      renderInHeader={() => (
+        <span>{platform.plat.name}</span>
+      )}
+      renderForKeys={[
+        ...createRenderConfig(platform.plat).forKeys(["capacity", "ohms"], (key, value) => (
+          <ArrayPrimitiveValue value={value} onChangesSaved={(newValue) => handleValueChange(key, newValue)} />
+        ))
+      ]}
+    />
+  )
+}
+
+
+const useStyles = (): ObjCardStyles => {
+  const { colors } = useThemeStore()
+  return ({
+    container: {
+      backgroundColor: colors.background,
+      width: "60%",
+      height: "30%"
+    },
+    content: {
+    }
+  })
+}
+
+
+const translate = {
+  id: "",
+  name: "Название",
+  capacities: "Емкости",
+  compatibleCoilSerieses: "Поддерживает",
+  capacity: "Емкость",
+  ohms: "Сопроты"
+}

@@ -6,8 +6,7 @@ export const useStyles = () => {
 
   return createStyles({
     container: {
-      width: '96%',
-      maxHeight: '70%',
+      maxHeight: '50%',
       display: 'flex',
       flexDirection: 'row',
       boxSizing: 'content-box',
@@ -15,7 +14,6 @@ export const useStyles = () => {
       border: `2px ${colors.primary} solid`,
     },
     photo: {
-      width: '30%',
       objectFit: 'contain',
       borderTopLeftRadius: '20px',
       borderBottomLeftRadius: '20px',
@@ -23,13 +21,11 @@ export const useStyles = () => {
     },
     infoContainer: {
       height: '100%',
-      width: '100%',
       boxSizing: 'content-box',
       display: 'flex',
       flexDirection: 'column',
     },
     header: {
-      width: '100%',
       display: 'flex',
       alignItems: 'center',
       boxSizing: 'border-box',
@@ -43,7 +39,6 @@ export const useStyles = () => {
     content: {
       boxSizing: 'border-box',
       height: '100%',
-      width: '100%',
       display: 'flex',
       flexDirection: 'column',
       paddingTop: '1vh',
@@ -59,11 +54,11 @@ export const useStyles = () => {
       fontSize: '5vw',
     },
     propKeyName: {
-      width: '40%',
-      flexShrink: 0, // Запрещаем сжатие
+      width: '50%',
       whiteSpace: 'normal', // Разрешаем перенос текста
       wordBreak: 'break-word', // Перенос длинных слов
       overflowWrap: 'break-word',
+      color: colors.primary,
     },
   });
 };

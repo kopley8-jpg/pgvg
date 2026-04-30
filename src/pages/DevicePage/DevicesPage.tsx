@@ -2,7 +2,7 @@ import { useThemeStore } from '@/shared/hooks/useThemeStore';
 import { useStyles } from './styles';
 import { useEffect } from 'react';
 import { useDevicesStore } from '@/entities/devices/model/store/devicesStore';
-import { DeviceCard } from '@/widgets/DeviceCard/ui/DeviceCard/DeviceCard';
+import { DeviceCard } from '@/widgets/DeviceCard/DeviceCard';
 
 export const DevicesPage = () => {
   const styles = useStyles();
