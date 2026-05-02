@@ -3,7 +3,7 @@ export interface IPodSeriesesStore {
   podSerieses: PodSeriesType[];
 
   //ui состояние
-  loading: boolean;
+  loadingPods: boolean;
   error: string | null;
 
   // для управления подпиской

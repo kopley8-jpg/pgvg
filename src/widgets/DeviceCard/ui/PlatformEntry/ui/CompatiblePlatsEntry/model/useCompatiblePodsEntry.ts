@@ -12,6 +12,8 @@ export const useCompatiblePlatsEntry = ({
     id: number;
   } | null>(null);
 
+  const [openAddPlatMenu, setOpenAddPlatMenu] = useState(false);
+
   const handlePlatPick = (type: 'pod' | 'tank', id: number) => {
     setOpenPlat({ type, id });
   };
@@ -28,10 +30,16 @@ export const useCompatiblePlatsEntry = ({
     );
   };
 
+  const handleAddCompactiblePlatBittonClick = () => {
+    setOpenAddPlatMenu(true);
+  };
+
   return {
     openPlat,
+    openAddPlatMenu,
     handlePlatPick,
     handleBackdropModalClick,
     handlePlatItemDeleteButtonClick,
+    handleAddCompactiblePlatBittonClick,
   };
 };

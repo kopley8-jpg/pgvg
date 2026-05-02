@@ -7,7 +7,7 @@ import database from '@shared/api/firebase/client';
 export const usePodSeriesesStore = create<IPodSeriesesStore>()(
   immer((set, get) => ({
     podSerieses: [],
-    loading: false,
+    loadingPods: false,
     error: null,
 
     unsubscribe: null,
@@ -17,7 +17,7 @@ export const usePodSeriesesStore = create<IPodSeriesesStore>()(
         return;
       }
 
-      set({ loading: true, error: null });
+      set({ loadingPods: true, error: null });
 
       const podsSeriesesRef = ref(database, '/kochegar/platform/pods');
 
@@ -34,7 +34,7 @@ export const usePodSeriesesStore = create<IPodSeriesesStore>()(
 
         set({
           podSerieses,
-          loading: false,
+          loadingPods: false,
           error: null,
         });
       };
@@ -44,7 +44,7 @@ export const usePodSeriesesStore = create<IPodSeriesesStore>()(
       set({
         unsubscribe: () => {
           off(podsSeriesesRef, 'value', handler);
-          set({ podSerieses: [], loading: false, unsubscribe: null });
+          set({ podSerieses: [], loadingPods: false, unsubscribe: null });
         },
       });
     },
