@@ -9,6 +9,7 @@ export const useStyles = () => {
       maxHeight: '50%',
       display: 'flex',
       flexDirection: 'row',
+      justifyContent: 'stretch',
       boxSizing: 'content-box',
       borderRadius: '20px',
       border: `2px ${colors.primary} solid`,
@@ -24,6 +25,7 @@ export const useStyles = () => {
       boxSizing: 'content-box',
       display: 'flex',
       flexDirection: 'column',
+      alignItems: 'stretch',
     },
     header: {
       display: 'flex',
@@ -41,6 +43,7 @@ export const useStyles = () => {
       height: '100%',
       display: 'flex',
       flexDirection: 'column',
+      alignItems: 'stretch',
       paddingTop: '1vh',
       paddingLeft: '1vh',
       paddingRight: '1vh',
@@ -50,6 +53,7 @@ export const useStyles = () => {
     propContainer: {
       display: 'flex',
       flexDirection: 'row',
+      justifyContent: 'stretch',
       alignItems: 'center',
       fontSize: '5vw',
     },
