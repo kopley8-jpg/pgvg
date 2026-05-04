@@ -1,7 +1,9 @@
-import { MenuItem, Modal, Popover } from '@mui/material';
+import { Button, IconButton, MenuItem, Modal, Popover } from '@mui/material';
 import { useState } from 'react';
 import PopupState from 'material-ui-popup-state';
 import React from 'react';
+import { PodSeriesCard } from '../PodSeriesCard/PodSeriesCard';
+import { Add, Cancel } from '@mui/icons-material';
 
 interface ICreatePodSeriesModal {
   open: boolean;
@@ -9,6 +11,8 @@ interface ICreatePodSeriesModal {
 }
 
 export const CreatePodSeriesModal = (props: ICreatePodSeriesModal) => {
+  const { open, onClose } = props;
+
   const [podSeries, setPodSeries] = useState({
     name: 'Название?',
     capacity: [0],
@@ -16,34 +20,47 @@ export const CreatePodSeriesModal = (props: ICreatePodSeriesModal) => {
   });
 
   return (
-    <div
-      style={{
-        height: '300px',
-        backgroundColor: 'purple',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
+    <Modal
+      open={open}
+      onClose={onClose}
+      style={{}}
+      slotProps={{
+        root: {
+          style: {
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+        },
       }}
     >
       <div
         style={{
-          width: '200px',
-          height: '50px',
-          backgroundColor: 'red',
+          width: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'stretch',
         }}
-      />
-      <div
-        style={{
-          height: '50px',
-          backgroundColor: 'green',
-        }}
-      />
-    </div>
+      >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+          }}
+        >
+          <IconButton>
+            <Cancel />
+          </IconButton>
+          <IconButton>
+            <Add />
+          </IconButton>
+        </div>
+        <PodSeriesCard platform={{ ...podSeries, id: '0' }} />
+      </div>
+    </Modal>
   );
 };
-
-if (import.meta.hot) {
-  import.meta.hot.accept();
-}
 
 export default CreatePodSeriesModal;

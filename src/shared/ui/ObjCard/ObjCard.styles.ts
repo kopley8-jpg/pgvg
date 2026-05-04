@@ -9,10 +9,11 @@ export const useStyles = () => {
       maxHeight: '50%',
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'stretch',
+      alignItems: 'stretch',
       boxSizing: 'content-box',
       borderRadius: '20px',
       border: `2px ${colors.primary} solid`,
+      backgroundColor: 'red',
     },
     photo: {
       objectFit: 'contain',
@@ -21,11 +22,10 @@ export const useStyles = () => {
       borderRight: `2px ${colors.primary} solid`,
     },
     infoContainer: {
-      height: '100%',
       boxSizing: 'content-box',
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'stretch',
+      width: '100%',
     },
     header: {
       display: 'flex',

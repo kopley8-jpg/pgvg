@@ -18,7 +18,7 @@ import { Add, Close, Search } from '@mui/icons-material';
 import type { IAddCompactiblePlatMenu } from './model/types';
 import { useAddCompatiblePlats } from './model/useAddCompactiblePlats';
 import { useState } from 'react';
-import CreatePodSeriesModal from '@/widgets/createPodSeriesModal/createPodSeriesModal';
+import { CreatePodSeriesModal } from '@/widgets/createPodSeriesModal/CreatePodSeriesModal';
 
 export const AddCompactiblePlatMenu = ({ onPick }: IAddCompactiblePlatMenu) => {
   const {
@@ -91,13 +91,10 @@ export const AddCompactiblePlatMenu = ({ onPick }: IAddCompactiblePlatMenu) => {
                     + Создать серию
                   </MenuItem>
 
-                  <Popover open={modalOpen} onClose={() => setModalOpen(false)}>
-                    <CreatePodSeriesModal
-                      key={Math.random()}
-                      open={modalOpen}
-                      onClose={() => setModalOpen(false)}
-                    />
-                  </Popover>
+                  <CreatePodSeriesModal
+                    open={modalOpen}
+                    onClose={() => setModalOpen(false)}
+                  />
 
                   {filteredSerieses.map((pod) => (
                     <MenuItem key={pod.name} onClick={() => popupState.close()}>

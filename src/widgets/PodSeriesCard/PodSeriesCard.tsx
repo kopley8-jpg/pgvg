@@ -39,8 +39,8 @@ const useStyles = (): ObjCardStyles => {
   return {
     container: {
       backgroundColor: colors.background,
-      width: '60%',
-      height: '30%',
+      width: '50vw',
+      height: '50vh',
     },
     content: {},
   };
