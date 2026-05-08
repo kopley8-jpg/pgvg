@@ -39,8 +39,7 @@ export const ArrayPrimitiveValue = ({
             onClose={() => setIsOpen(false)}
             value={value}
             onSaveButtonClick={handleChangesSaved}
-            onCancelButtonClick={() => setIsOpen(false)}
-            anchorEl={anchorRef.current} // Передаем anchorEl
+            anchorEl={anchorRef.current}
           />
           <div
             ref={anchorRef} // Привязываем ref

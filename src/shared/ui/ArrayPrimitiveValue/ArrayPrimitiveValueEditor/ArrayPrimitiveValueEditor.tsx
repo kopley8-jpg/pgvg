@@ -3,44 +3,26 @@ import { Divider, IconButton, Menu, MenuItem, Popover } from '@mui/material';
 import { useState } from 'react';
 import { useStyles } from './styles';
 import { TextValue } from '../../PrimitiveValue/TextValue/TextValue';
+import type { IArrayPrimitiveValueEditor } from './model/types';
+import { useArrayPrimitiveValueEditor } from './model/useArrayPrimitiveValueEditor';
+import { TextEditor } from '../../TextEditor/TextEditor';
 
-interface IArrayPrimitiveValueEditor {
-  value: (string | number)[];
-  onSaveButtonClick: (newValue: (string | number)[]) => void;
-  onCancelButtonClick: () => void;
-  open: boolean;
-  onClose: () => void;
-  anchorEl: HTMLElement | null;
-}
+
 
 export const ArrayPrimitiveValueEditor = (
   props: IArrayPrimitiveValueEditor
 ) => {
   const styles = useStyles();
-  const { value, onClose, onSaveButtonClick } = props;
-  const [localValues, setLocalValues] = useState<(string | number)[]>(value);
 
-  const handleValueChanged = (id: number, newValue: string | number) => {
-    setLocalValues((prev) =>
-      prev.map((res, index) => (index === id ? newValue : res))
-    );
-  };
+  const { value } = props
 
-  const handleAddButtonClick = () => {
-    setLocalValues((prev) => [...prev, '?']);
-  };
+  const {
+    localValues,
+    pickedValueId,
+    createHandler
+  } = useArrayPrimitiveValueEditor(props)
 
-  const handleDeleteItemButtonClick = (id: number) => {
-    setLocalValues((p) => p.filter((_res, index) => index != id));
-  };
-
-  const handleCancelButtonClick = () => {
-    onClose();
-  };
-
-  const handleSaveButtonClick = () => {
-    onSaveButtonClick(localValues);
-  };
+  const handler = createHandler()
 
   return (
     <Popover
@@ -54,14 +36,36 @@ export const ArrayPrimitiveValueEditor = (
       }}
     >
       <div style={styles.header}>
-        <IconButton size="small">
+        <IconButton size='small' {...handler.exitButton}>
+          <Cancel fontSize='small' />
+        </IconButton>
+        <IconButton size="small" {...handler.saveButton}>
           <Save fontSize="small" />
         </IconButton>
+
       </div>
       <Divider />
-      {value.map((val) => (
-        <MenuItem>{val}</MenuItem>
+      {localValues.map((val, index) => (
+        <>
+          {index === pickedValueId ? (
+            <div style={styles.item}>
+              <TextEditor
+                value={val}
+                {...handler.editing.textField}
+              />
+              <IconButton size='small' sx={styles.button} {...handler.editing.deleteButton}>
+                <Delete fontSize='small' />
+              </IconButton>
+            </div>
+          ) : (
+            <MenuItem onClick={() => handler.item.onClick(index)}>{val}</MenuItem>
+          )}
+        </>
       ))}
+
+      <IconButton sx={{ borderRadius: 0 }} size='small' {...handler.addButton}>
+        <Add fontSize='small' />
+      </IconButton>
     </Popover>
   );
 };
