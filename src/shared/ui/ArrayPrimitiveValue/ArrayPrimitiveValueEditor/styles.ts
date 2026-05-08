@@ -3,17 +3,15 @@ import { createStyles } from '@/shared/lib/createStyles';
 export const useStyles = () => {
   return createStyles({
     container: {
-      position: 'absolute', // 👈 не влияет на родителя
-      left: 0,
-      zIndex: 1000,
-      backgroundColor: 'white',
-      borderRadius: '8px',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-      fontSize: '3.5vw',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'stretch',
+      minWidth: '15vw',
     },
     header: {
       display: 'flex',
       flexDirection: 'row',
+      justifyContent: 'flex-end',
     },
     item: {
       display: 'flex',

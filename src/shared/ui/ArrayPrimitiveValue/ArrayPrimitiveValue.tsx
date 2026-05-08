@@ -1,5 +1,5 @@
 import { Chip, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { ArrayPrimitiveValueEditor } from './ArrayPrimitiveValueEditor/ArrayPrimitiveValueEditor';
 import { useStyles } from './styles';
 
@@ -21,6 +21,7 @@ export const ArrayPrimitiveValue = ({
   errorOptions,
 }: IArrayPrimitiveValue) => {
   const [isOpen, setIsOpen] = useState(false);
+  const anchorRef = useRef<HTMLDivElement>(null); // Добавляем ref
 
   const styles = useStyles();
 
@@ -33,22 +34,23 @@ export const ArrayPrimitiveValue = ({
     <>
       {value ? (
         <>
-          {isOpen ? (
-            <ArrayPrimitiveValueEditor
-              value={value}
-              onSaveButtonClick={handleChangesSaved}
-              onCancelButtonClick={() => setIsOpen(false)}
-            />
-          ) : (
-            <div
-              onClick={() => {
-                setIsOpen(true);
-              }}
-              style={styles.container}
-            >
-              <span style={styles.text}>{value.join(', ')}</span>
-            </div>
-          )}
+          <ArrayPrimitiveValueEditor
+            open={isOpen}
+            onClose={() => setIsOpen(false)}
+            value={value}
+            onSaveButtonClick={handleChangesSaved}
+            onCancelButtonClick={() => setIsOpen(false)}
+            anchorEl={anchorRef.current} // Передаем anchorEl
+          />
+          <div
+            ref={anchorRef} // Привязываем ref
+            onClick={() => {
+              setIsOpen(true);
+            }}
+            style={styles.container}
+          >
+            <span style={styles.text}>{value.join(', ')}</span>
+          </div>
         </>
       ) : (
         <>

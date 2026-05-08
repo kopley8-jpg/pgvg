@@ -13,7 +13,6 @@ export const useStyles = () => {
       boxSizing: 'content-box',
       borderRadius: '20px',
       border: `2px ${colors.primary} solid`,
-      backgroundColor: 'red',
     },
     photo: {
       objectFit: 'contain',
@@ -31,8 +30,6 @@ export const useStyles = () => {
       display: 'flex',
       alignItems: 'center',
       boxSizing: 'border-box',
-      paddingLeft: '0.5vh',
-      paddingRight: '0.5vh',
 
       color: colors.primary,
       fontSize: '5vw',
