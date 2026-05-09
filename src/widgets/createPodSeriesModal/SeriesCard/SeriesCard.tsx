@@ -1,24 +1,22 @@
-import type { PodSeriesType } from "@/entities/pods/model/types";
-import { useThemeStore } from "@/shared/hooks/useThemeStore";
-import { createRenderConfig } from "@/shared/lib/createRenderConfig";
-import { createStyles } from "@/shared/lib/createStyles";
-import { ArrayPrimitiveValue } from "@/shared/ui/ArrayPrimitiveValue/ArrayPrimitiveValue";
-import { ObjCard } from "@/shared/ui/ObjCard/ObjCard"
-import { TextValue } from "@/shared/ui/PrimitiveValue/TextValue/TextValue";
-import { Cancel, Save } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
-
-interface ISeriesCard {
-  podSeries: Omit<PodSeriesType, "id">
-}
+import { useThemeStore } from '@/shared/hooks/useThemeStore';
+import { createRenderConfig } from '@/shared/lib/createRenderConfig';
+import { createStyles } from '@/shared/lib/createStyles';
+import { ArrayPrimitiveValue } from '@/shared/ui/ArrayPrimitiveValue/ArrayPrimitiveValue';
+import { ObjCard } from '@/shared/ui/ObjCard/ObjCard';
+import { TextValue } from '@/shared/ui/PrimitiveValue/TextValue/TextValue';
+import { Cancel, Save } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
+import type { ISeriesCard } from './model/types';
+import { useSeriesCard } from './model/useSeriesCard';
 
 export const SeriesCard = (props: ISeriesCard) => {
-
-  const { podSeries } = props
+  const { podSeries } = props;
 
   const styles = useStyles();
 
-  const podSeriesConfig = createRenderConfig(podSeries)
+  const { handler } = useSeriesCard(props);
+
+  const podSeriesConfig = createRenderConfig(podSeries);
 
   return (
     <ObjCard
@@ -30,12 +28,12 @@ export const SeriesCard = (props: ISeriesCard) => {
       translatedNamesForKeys={translate}
       renderInHeader={() => (
         <>
-          <TextValue value={podSeries.name} />
+          <TextValue value={podSeries.name} {...handler.header.textField} />
           <div style={styles.objCardHeaderButtons}>
-            <IconButton>
+            <IconButton {...handler.header.exitButton}>
               <Cancel />
             </IconButton>
-            <IconButton>
+            <IconButton {...handler.header.saveButton}>
               <Save />
             </IconButton>
           </div>
@@ -43,12 +41,17 @@ export const SeriesCard = (props: ISeriesCard) => {
       )}
       renderForKeys={[
         ...podSeriesConfig.forKeys(['capacity', 'ohms'], (key, value) => (
-          <ArrayPrimitiveValue value={value} onChangesSaved={() => { }} />
+          <ArrayPrimitiveValue
+            value={value}
+            onChangesSaved={(p) =>
+              handler.arrayPrimitiveValue.onSaveButtonPress(key, p)
+            }
+          />
         )),
       ]}
     />
-  )
-}
+  );
+};
 
 const translate = {
   name: 'Название',

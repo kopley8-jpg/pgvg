@@ -8,8 +8,8 @@ export const useStyles = () => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'stretch',
-      minWidth: '15vw',
-      maxWidth: '20vw',
+      minWidth: '20vw',
+      maxWidth: '30vw',
     },
     header: {
       display: 'flex',
