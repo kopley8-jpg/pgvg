@@ -1,4 +1,3 @@
-import type { PodSeriesType } from '@/entities/pods/model/types';
 import { useThemeStore } from '@/shared/hooks/useThemeStore';
 import { createRenderConfig } from '@/shared/lib/createRenderConfig';
 import { ArrayPrimitiveValue } from '@/shared/ui/ArrayPrimitiveValue/ArrayPrimitiveValue';
@@ -7,20 +6,26 @@ import type { ObjCardStyles } from '@/shared/ui/ObjCard/types';
 import type { IPodSeriesCard } from './model/types';
 import { usePodSeriesCard } from './model/usePodSeriesCard';
 import { TextValue } from '@/shared/ui/PrimitiveValue/TextValue/TextValue';
+import { createStyles } from '@/shared/lib/createStyles';
 
-export const PodSeriesCard = ({ platform }: IPodSeriesCard) => {
+export const PodSeriesCard = (props: IPodSeriesCard) => {
   const styles = useStyles();
-
-  const { handleValueChange } = usePodSeriesCard({ platform });
+  const { podSeries, headerRightRender } = props
+  const { handleValueChange } = usePodSeriesCard(props);
 
   return (
     <ObjCard
-      style={styles}
+      style={{ ...styles }}
       translatedNamesForKeys={translate}
-      data={platform}
-      renderInHeader={() => <TextValue value={platform.name} />}
+      data={podSeries}
+      renderInHeader={() => (
+        <>
+          <TextValue value={podSeries.name} />
+          {typeof headerRightRender === "function" ? headerRightRender() : headerRightRender}
+        </>
+      )}
       renderForKeys={[
-        ...createRenderConfig(platform).forKeys(
+        ...createRenderConfig(podSeries).forKeys(
           ['capacity', 'ohms'],
           (key, value) => (
             <ArrayPrimitiveValue
@@ -38,11 +43,19 @@ const useStyles = (): ObjCardStyles => {
   const { colors } = useThemeStore();
   return {
     container: {
+      height: '25vh',
       backgroundColor: colors.background,
-      width: '50vw',
-      height: '50vh',
     },
-    content: {},
+    header: {
+      display: 'flex',
+      flexDirection: 'row',
+      paddingLeft: '4%',
+      justifyContent: 'space-between',
+      fontSize: "4vw"
+    },
+    content: {
+      fontSize: "4vw"
+    }
   };
 };
 

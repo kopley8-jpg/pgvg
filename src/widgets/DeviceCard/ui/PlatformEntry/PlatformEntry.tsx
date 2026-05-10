@@ -9,6 +9,7 @@ export const PlatformEntry = ({ platform, onChange }: IPlatformEntry) => {
   const { handlePlatformTypeChanged } = usePlatformEntry({
     platform,
     onChange,
+
   });
 
   return (

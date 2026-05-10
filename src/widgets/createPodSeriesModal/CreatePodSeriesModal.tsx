@@ -6,7 +6,7 @@ import { SeriesCard } from './SeriesCard/SeriesCard';
 import { Modal } from '@mui/material';
 
 export const CreatePodSeriesModal = (props: ICreatePodSeriesModal) => {
-  const { podSeries } = useCreatePodSeriesModal(props);
+  const { podSeries, handler } = useCreatePodSeriesModal(props);
   const styles = useStyles();
 
   return (
@@ -18,7 +18,7 @@ export const CreatePodSeriesModal = (props: ICreatePodSeriesModal) => {
         },
       }}
     >
-      <SeriesCard podSeries={podSeries} />
+      <SeriesCard podSeries={podSeries} {...handler.seriesCard} />
     </Modal>
   );
 };

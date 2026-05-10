@@ -1,24 +1,29 @@
 import * as React from 'react';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import PopupState, { bindMenu } from 'material-ui-popup-state';
+import PopupState, { bindMenu, bindPopover, bindTrigger } from 'material-ui-popup-state';
 import {
   Box,
   Button,
   Divider,
   IconButton,
   InputAdornment,
+  Modal,
   Popover,
   Tab,
   Tabs,
   TextField,
   Typography,
 } from '@mui/material';
-import { Add, Close, Search } from '@mui/icons-material';
+import { Add, Close, Delete, MenuBook, MoreVert, Search } from '@mui/icons-material';
 import type { IAddCompactiblePlatMenu } from './model/types';
 import { useAddCompatiblePlats } from './model/useAddCompactiblePlats';
 import { useState } from 'react';
 import { CreatePodSeriesModal } from '@/widgets/createPodSeriesModal/CreatePodSeriesModal';
+import type { PopupState as PopupStateType } from 'material-ui-popup-state/hooks';
+import type { PodSeriesType } from '@/entities/pods/model/types';
+import type { TankSeriesType } from '@/entities/tanks/model/types';
+import { PodSeriesCard } from '@/widgets/PodSeriesCard/PodSeriesCard';
 
 export const AddCompactiblePlatMenu = ({ onPick }: IAddCompactiblePlatMenu) => {
   const {
@@ -37,14 +42,9 @@ export const AddCompactiblePlatMenu = ({ onPick }: IAddCompactiblePlatMenu) => {
 
   const [modalOpen, setModalOpen] = useState(false);
 
-  const filteredSerieses =
-    pickedTab === 'pods'
-      ? podSerieses.filter((s) =>
-          s.name.toLocaleLowerCase().includes(searchedText.toLowerCase())
-        )
-      : tankSerieses.filter((s) =>
-          s.name.toLocaleLowerCase().includes(searchedText.toLowerCase())
-        );
+  const filteredSerieses = <T extends TankSeriesType | PodSeriesType>(series: T[]) => {
+    return series.filter((s) => s.name.toLocaleLowerCase().includes(searchedText.toLowerCase()))
+  }
 
   return (
     <React.Fragment>
@@ -84,41 +84,14 @@ export const AddCompactiblePlatMenu = ({ onPick }: IAddCompactiblePlatMenu) => {
             </Tabs>
           </Box>
           <Box sx={{ overflowY: 'auto' }}>
-            <CustomTabPanel value={pickedTab} index={'pods'}>
-              {podSerieses.length !== 0 && !loadingPods ? (
-                <>
-                  <MenuItem onClick={() => setModalOpen(true)}>
-                    + Создать серию
-                  </MenuItem>
-
-                  <CreatePodSeriesModal
-                    open={modalOpen}
-                    onClose={() => setModalOpen(false)}
-                  />
-
-                  {filteredSerieses.map((pod) => (
-                    <MenuItem key={pod.name} onClick={() => popupState.close()}>
-                      {pod.name}
-                    </MenuItem>
-                  ))}
-                </>
-              ) : (
-                <MenuItem>Загрузка...</MenuItem>
-              )}
-            </CustomTabPanel>
-            <CustomTabPanel value={pickedTab} index={'tanks'}>
-              {tankSerieses && tankSerieses.length !== 0 && !loadingTanks ? (
-                <>
-                  {filteredSerieses.map((tank) => (
-                    <MenuItem onClick={() => popupState.close()}>
-                      {tank.name}
-                    </MenuItem>
-                  ))}
-                </>
-              ) : (
-                <MenuItem>Загрузка...</MenuItem>
-              )}
-            </CustomTabPanel>
+            {pickedTab === "pods" ? (
+              <Box>
+                <CreateSeriesButton type='pod' />
+                {filteredSerieses(podSerieses).map(podSeries => (
+                  <SeriesMenuItem series={{ type: "pod", series: podSeries }} popupState={popupState} />
+                ))}
+              </Box>
+            ) : (<></>)}
           </Box>
         </>
       </Popover>
@@ -126,23 +99,85 @@ export const AddCompactiblePlatMenu = ({ onPick }: IAddCompactiblePlatMenu) => {
   );
 };
 
-interface ICustomTabPanel<T> {
-  value: T;
-  index: T;
-  children?: React.ReactNode;
+
+
+
+
+const SeriesMenuItem = (props: { series: { type: "pod", series: PodSeriesType } | { type: "tank", series: TankSeriesType }, popupState: PopupStateType }) => {
+  const { series, popupState } = props
+  return (
+    <PopupState variant='popover'>
+      {state => (
+        <>
+          <MenuItem key={series.series.name} onClick={() => state.open()}>
+            {series.series.name}
+          </MenuItem>
+          {series.type === "pod" ? (
+            <PodSeriesDialog series={series.series} open={state.isOpen} onClose={() => state.close()} />
+          ) : (
+            <></>
+          )}
+        </>
+      )}
+    </PopupState>
+  )
 }
 
-const CustomTabPanel = <T extends any>(props: ICustomTabPanel<T>) => {
-  const { value, index, children } = props;
+const PodSeriesDialog = (props: { series: PodSeriesType, open: boolean, onClose: () => void }) => {
+
+  const { series, open, onClose } = props
 
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-    >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  );
-};
+    <Modal
+      {...props}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: 'center',
+        justifyContent: "center"
+      }}>
+      <PodSeriesCard
+        podSeries={series}
+        headerRightRender={() => (
+          <IconButton>
+            <Add />
+          </IconButton>
+        )} />
+    </Modal>
+  )
+}
+
+const CreateSeriesButton = ({ type }: { type: "pod" | "tank" }) => {
+  return (
+    <PopupState variant='popover'>
+      {state => (
+        <>
+          <MenuItem {...bindTrigger(state)}>{type === "pod" ? "+ Создать серию подов" : "+ Создать серию танков"}</MenuItem>
+          <CreatePodSeriesModal open={state.isOpen} onClose={() => state.close()} />
+        </>
+      )}
+    </PopupState>
+  )
+}
+
+
+// interface ICustomTabPanel<T> {
+//   value: T;
+//   index: T;
+//   children?: React.ReactNode;
+// }
+
+// const CustomTabPanel = <T extends any>(props: ICustomTabPanel<T>) => {
+//   const { value, index, children } = props;
+
+//   return (
+//     <div
+//       role="tabpanel"
+//       hidden={value !== index}
+//       id={`simple-tabpanel-${index}`}
+//       aria-labelledby={`simple-tab-${index}`}
+//     >
+//       {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+//     </div>
+//   );
+// };
