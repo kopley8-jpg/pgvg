@@ -10,7 +10,7 @@ import { createStyles } from '@/shared/lib/createStyles';
 
 export const PodSeriesCard = (props: IPodSeriesCard) => {
   const styles = useStyles();
-  const { podSeries, headerRightRender } = props
+  const { podSeries, headerRightRender } = props;
   const { handleValueChange } = usePodSeriesCard(props);
 
   return (
@@ -20,8 +20,13 @@ export const PodSeriesCard = (props: IPodSeriesCard) => {
       data={podSeries}
       renderInHeader={() => (
         <>
-          <TextValue value={podSeries.name} />
-          {typeof headerRightRender === "function" ? headerRightRender() : headerRightRender}
+          <TextValue
+            value={podSeries.name}
+            onSaveButtonPress={(p) => handleValueChange('name', p)}
+          />
+          {typeof headerRightRender === 'function'
+            ? headerRightRender()
+            : headerRightRender}
         </>
       )}
       renderForKeys={[
@@ -44,6 +49,7 @@ const useStyles = (): ObjCardStyles => {
   return {
     container: {
       height: '25vh',
+      width: '53vw',
       backgroundColor: colors.background,
     },
     header: {
@@ -51,11 +57,11 @@ const useStyles = (): ObjCardStyles => {
       flexDirection: 'row',
       paddingLeft: '4%',
       justifyContent: 'space-between',
-      fontSize: "4vw"
+      fontSize: '4vw',
     },
     content: {
-      fontSize: "4vw"
-    }
+      fontSize: '4vw',
+    },
   };
 };
 

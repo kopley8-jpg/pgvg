@@ -16,6 +16,7 @@ export interface IPodSeriesesStore {
 }
 
 export type TankSeriesType = {
+  id: string;
   name: string;
   capacities: string[];
   compatibleCoilSerieses: string[];

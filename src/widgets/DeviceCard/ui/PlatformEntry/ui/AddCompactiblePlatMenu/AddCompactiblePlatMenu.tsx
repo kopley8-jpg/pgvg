@@ -1,7 +1,11 @@
 import * as React from 'react';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import PopupState, { bindMenu, bindPopover, bindTrigger } from 'material-ui-popup-state';
+import PopupState, {
+  bindMenu,
+  bindPopover,
+  bindTrigger,
+} from 'material-ui-popup-state';
 import {
   Box,
   Button,
@@ -15,7 +19,14 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Add, Close, Delete, MenuBook, MoreVert, Search } from '@mui/icons-material';
+import {
+  Add,
+  Close,
+  Delete,
+  MenuBook,
+  MoreVert,
+  Search,
+} from '@mui/icons-material';
 import type { IAddCompactiblePlatMenu } from './model/types';
 import { useAddCompatiblePlats } from './model/useAddCompactiblePlats';
 import { useState } from 'react';
@@ -32,6 +43,7 @@ export const AddCompactiblePlatMenu = ({ onPick }: IAddCompactiblePlatMenu) => {
     loadingPods,
     tankSerieses,
     loadingTanks,
+    handlePick,
     popupState,
     handleTabsChange,
   } = useAddCompatiblePlats({
@@ -42,9 +54,13 @@ export const AddCompactiblePlatMenu = ({ onPick }: IAddCompactiblePlatMenu) => {
 
   const [modalOpen, setModalOpen] = useState(false);
 
-  const filteredSerieses = <T extends TankSeriesType | PodSeriesType>(series: T[]) => {
-    return series.filter((s) => s.name.toLocaleLowerCase().includes(searchedText.toLowerCase()))
-  }
+  const filteredSerieses = <T extends TankSeriesType | PodSeriesType>(
+    series: T[]
+  ) => {
+    return series.filter((s) =>
+      s.name.toLocaleLowerCase().includes(searchedText.toLowerCase())
+    );
+  };
 
   return (
     <React.Fragment>
@@ -84,14 +100,22 @@ export const AddCompactiblePlatMenu = ({ onPick }: IAddCompactiblePlatMenu) => {
             </Tabs>
           </Box>
           <Box sx={{ overflowY: 'auto' }}>
-            {pickedTab === "pods" ? (
+            {pickedTab === 'pods' ? (
               <Box>
-                <CreateSeriesButton type='pod' />
-                {filteredSerieses(podSerieses).map(podSeries => (
-                  <SeriesMenuItem series={{ type: "pod", series: podSeries }} popupState={popupState} />
+                <CreateSeriesButton type="pod" />
+                {filteredSerieses(podSerieses).map((podSeries) => (
+                  <SeriesMenuItem
+                    onPick={() =>
+                      handlePick({ type: 'pod', series: podSeries })
+                    }
+                    series={{ type: 'pod', series: podSeries }}
+                    popupState={popupState}
+                  />
                 ))}
               </Box>
-            ) : (<></>)}
+            ) : (
+              <></>
+            )}
           </Box>
         </>
       </Popover>
@@ -99,67 +123,110 @@ export const AddCompactiblePlatMenu = ({ onPick }: IAddCompactiblePlatMenu) => {
   );
 };
 
-
-
-
-
-const SeriesMenuItem = (props: { series: { type: "pod", series: PodSeriesType } | { type: "tank", series: TankSeriesType }, popupState: PopupStateType }) => {
-  const { series, popupState } = props
+const SeriesMenuItem = (props: {
+  series:
+    | { type: 'pod'; series: PodSeriesType }
+    | { type: 'tank'; series: TankSeriesType };
+  popupState: PopupStateType;
+  onPick: () => void;
+}) => {
+  const { series, popupState, onPick } = props;
   return (
-    <PopupState variant='popover'>
-      {state => (
+    <PopupState variant="popover">
+      {(state) => (
         <>
           <MenuItem key={series.series.name} onClick={() => state.open()}>
             {series.series.name}
           </MenuItem>
-          {series.type === "pod" ? (
-            <PodSeriesDialog series={series.series} open={state.isOpen} onClose={() => state.close()} />
+          {series.type === 'pod' ? (
+            <PodSeriesDialog
+              onPick={onPick}
+              series={series.series}
+              open={state.isOpen}
+              onClose={() => state.close()}
+            />
           ) : (
             <></>
           )}
         </>
       )}
     </PopupState>
-  )
-}
+  );
+};
 
-const PodSeriesDialog = (props: { series: PodSeriesType, open: boolean, onClose: () => void }) => {
-
-  const { series, open, onClose } = props
+const PodSeriesDialog = (props: {
+  series: PodSeriesType;
+  open: boolean;
+  onClose: () => void;
+  onPick: () => void;
+}) => {
+  const { series, open, onClose, onPick } = props;
 
   return (
     <Modal
       {...props}
       sx={{
-        display: "flex",
-        flexDirection: "column",
+        display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: "center"
-      }}>
+        justifyContent: 'center',
+      }}
+    >
       <PodSeriesCard
         podSeries={series}
         headerRightRender={() => (
-          <IconButton>
-            <Add />
-          </IconButton>
-        )} />
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <PopupState variant="popover">
+              {(state) => (
+                <>
+                  <IconButton {...bindTrigger(state)}>
+                    <MoreVert />
+                  </IconButton>
+                  <Menu {...bindPopover(state)}>
+                    <MenuItem
+                      sx={{
+                        color: 'red',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        gap: '5px',
+                      }}
+                    >
+                      <Delete />
+                      Удалить серию
+                    </MenuItem>
+                  </Menu>
+                </>
+              )}
+            </PopupState>
+            <IconButton onClick={onPick}>
+              <Add />
+            </IconButton>
+          </div>
+        )}
+      />
     </Modal>
-  )
-}
+  );
+};
 
-const CreateSeriesButton = ({ type }: { type: "pod" | "tank" }) => {
+const CreateSeriesButton = ({ type }: { type: 'pod' | 'tank' }) => {
   return (
-    <PopupState variant='popover'>
-      {state => (
+    <PopupState variant="popover">
+      {(state) => (
         <>
-          <MenuItem {...bindTrigger(state)}>{type === "pod" ? "+ Создать серию подов" : "+ Создать серию танков"}</MenuItem>
-          <CreatePodSeriesModal open={state.isOpen} onClose={() => state.close()} />
+          <MenuItem {...bindTrigger(state)}>
+            {type === 'pod'
+              ? '+ Создать серию подов'
+              : '+ Создать серию танков'}
+          </MenuItem>
+          <CreatePodSeriesModal
+            open={state.isOpen}
+            onClose={() => state.close()}
+          />
         </>
       )}
     </PopupState>
-  )
-}
-
+  );
+};
 
 // interface ICustomTabPanel<T> {
 //   value: T;

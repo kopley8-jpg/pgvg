@@ -5,11 +5,15 @@ import type { IPlatformEntry } from './model/platformEntry.types';
 import { usePlatformEntry } from './model/usePlatformEntry';
 import { CompactiblePlatsEntry } from './ui/CompatiblePlatsEntry/CompactiblePlatsEntry';
 
-export const PlatformEntry = ({ platform, onChange }: IPlatformEntry) => {
+export const PlatformEntry = ({
+  platform,
+  onChange,
+  deviceId,
+}: IPlatformEntry) => {
   const { handlePlatformTypeChanged } = usePlatformEntry({
     platform,
     onChange,
-
+    deviceId,
   });
 
   return (
@@ -26,10 +30,16 @@ export const PlatformEntry = ({ platform, onChange }: IPlatformEntry) => {
         )),
         ...(platform.type === 'магнит'
           ? createRenderConfig(platform).forKeys(
-            ['compatiblePlats'],
-            (key, value) => <CompactiblePlatsEntry compactiblePlats={value} onChange={() => { }} />,
-            { hideKeyName: true }
-          )
+              ['compatiblePlats'],
+              (key, value) => (
+                <CompactiblePlatsEntry
+                  deviceId={deviceId}
+                  compactiblePlats={value}
+                  onChange={(newPlats) => {}}
+                />
+              ),
+              { hideKeyName: true }
+            )
           : [null]),
       ]}
     />

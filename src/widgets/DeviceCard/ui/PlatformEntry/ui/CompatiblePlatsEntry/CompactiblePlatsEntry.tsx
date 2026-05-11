@@ -7,11 +7,11 @@ import { PlatformModal } from '../PlatformModal/PlatformModal';
 import { IconButton } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { AddCompactiblePlatMenu } from '../AddCompactiblePlatMenu/AddCompactiblePlatMenu';
+import { updateDeviceById } from '@/features/devices/updateDeviceEntryById/model/updateDeviceEntryById';
 
-export const CompactiblePlatsEntry = ({
-  compactiblePlats,
-  onChange,
-}: ICompactiblePlatsEntry) => {
+export const CompactiblePlatsEntry = (props: ICompactiblePlatsEntry) => {
+  const { compactiblePlats, onChange } = props;
+
   const {
     openPlat,
     openAddPlatMenu,
@@ -19,7 +19,8 @@ export const CompactiblePlatsEntry = ({
     handleBackdropModalClick,
     handlePlatItemDeleteButtonClick,
     handleAddCompactiblePlatBittonClick,
-  } = useCompatiblePlatsEntry({ compactiblePlats, onChange });
+    handleNewPlatPicked,
+  } = useCompatiblePlatsEntry(props);
 
   return (
     <ObjEntryTwo
@@ -41,8 +42,12 @@ export const CompactiblePlatsEntry = ({
                   />
                   <PlatItem
                     platform={plat}
-                    onClick={handlePlatPick}
-                    onDeleteButtonClick={handlePlatItemDeleteButtonClick}
+                    onClick={() =>
+                      handlePlatPick(plat.type, plat.idFromPlatforms)
+                    }
+                    onDeleteButtonClick={() =>
+                      handlePlatItemDeleteButtonClick(plat.idFromPlatforms)
+                    }
                   />
                 </>
               ),
@@ -52,7 +57,7 @@ export const CompactiblePlatsEntry = ({
           .flat(),
         ...createRenderConfig({ aaa: 3 }).forKeys(
           ['aaa'],
-          () => <AddCompactiblePlatMenu onPick={() => {}} />,
+          () => <AddCompactiblePlatMenu onPick={handleNewPlatPicked} />,
           { hideKeyName: true }
         ),
       ]}

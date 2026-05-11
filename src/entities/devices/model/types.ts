@@ -46,7 +46,7 @@ export type PlatformType =
   | {
       type: 'магнит';
       compatiblePlats:
-        | { type: 'pod' | 'tank'; name: string; idFromPlatforms: number }[]
+        | { type: 'pod' | 'tank'; name: string; idFromPlatforms: string }[]
         | null;
     }
   | { type: '510' | 'boro' | 'dot' | 'squonk' }
@@ -63,7 +63,7 @@ export type MagneticPlatType = {
   compatiblePlats: {
     type: 'pod' | 'tank';
     name: string;
-    idFromPlatforms: number;
+    idFromPlatforms: string;
   }[];
 };
 

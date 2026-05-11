@@ -2,15 +2,12 @@ import { useThemeStore } from '@/shared/hooks/useThemeStore';
 import { createStyles } from '@/shared/lib/createStyles';
 import { Delete } from '@mui/icons-material';
 import { Button, IconButton } from '@mui/material';
+import type { compactiblePlat } from '../CompatiblePlatsEntry/model/types';
 
 interface IPlatItem {
-  platform: {
-    type: 'pod' | 'tank';
-    name: string;
-    idFromPlatforms: number;
-  };
-  onClick: (type: 'pod' | 'tank', id: number) => void;
-  onDeleteButtonClick: (id: number) => void;
+  platform: compactiblePlat;
+  onClick: (type: 'pod' | 'tank', id: string) => void;
+  onDeleteButtonClick: (id: string) => void;
 }
 
 export const PlatItem = ({

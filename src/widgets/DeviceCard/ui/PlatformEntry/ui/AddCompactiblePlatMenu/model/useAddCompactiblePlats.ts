@@ -3,6 +3,8 @@ import type { IAddCompactiblePlatMenu } from './types';
 import { usePodSeriesesStore } from '@/entities/pods/model/store/podsStore';
 import { usePopupState } from 'material-ui-popup-state/hooks';
 import { useTanksSeriesesStore } from '@/entities/tanks/model/store/tanksStore';
+import type { PodSeriesType } from '@/entities/pods/model/types';
+import type { TankSeriesType } from '@/entities/tanks/model/types';
 
 export const useAddCompatiblePlats = ({ onPick }: IAddCompactiblePlatMenu) => {
   const { podSerieses, loadingPods, subscribeToPods, unsubscribeFromPods } =
@@ -34,6 +36,15 @@ export const useAddCompatiblePlats = ({ onPick }: IAddCompactiblePlatMenu) => {
     setPickedTab(picked === 0 ? 'pods' : 'tanks');
   };
 
+  const handlePick = (
+    series:
+      | { type: 'pod'; series: PodSeriesType }
+      | { type: 'tank'; series: TankSeriesType }
+  ) => {
+    onPick(series);
+    popupState.close();
+  };
+
   return {
     pickedTab,
     handleTabsChange,
@@ -41,6 +52,7 @@ export const useAddCompatiblePlats = ({ onPick }: IAddCompactiblePlatMenu) => {
     loadingPods,
     tankSerieses,
     loadingTanks,
+    handlePick,
     popupState,
   };
 };

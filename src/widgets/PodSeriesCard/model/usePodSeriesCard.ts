@@ -5,13 +5,16 @@ export const usePodSeriesCard = (props: IPodSeriesCard) => {
   const { podSeries } = props;
 
   const handleValueChange = (
-    entryName: 'capacity' | 'ohms',
-    newValue: (string | number)[]
+    entryName: 'capacity' | 'ohms' | 'name',
+    newValue: (string | number)[] | string | number
   ) => {
     updatePodSeriesEntryById({
       id: podSeries.id,
       entryName,
-      newValue: newValue.map((val) => Number(val)),
+      newValue:
+        typeof newValue === 'string' || typeof newValue === 'number'
+          ? newValue.toString()
+          : newValue.map((val) => Number(val)),
     });
   };
 

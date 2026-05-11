@@ -67,6 +67,7 @@ export const DeviceCard = ({ device }: IDeviceCard) => {
           ['platforms'],
           (key, value) => (
             <PlatformEntry
+              deviceId={device.id}
               platform={value ? value : { type: null }}
               onChange={(newValue) =>
                 updateDeviceById(device.id, key, newValue)

@@ -22,7 +22,7 @@ export const PlatformModal = ({
   return (
     <Modal sx={styles.modal} open={isOpen} onClose={onBackdropClick}>
       {platform.type === 'pod' ? (
-        <PodSeriesCard platform={platform.plat} />
+        <PodSeriesCard podSeries={platform.plat} headerRightRender />
       ) : (
         <></>
       )}
@@ -41,7 +41,7 @@ const useStyles = () => {
   });
 };
 
-const usePlatform = (plat: { type: 'pod' | 'tank'; id: number }) => {
+const usePlatform = (plat: { type: 'pod' | 'tank'; id: string }) => {
   const [platform, setPlatform] = useState<
     | { plat: PodSeriesType; type: 'pod' }
     | { plat: TankSeriesType; type: 'tank' }
@@ -60,7 +60,7 @@ const usePlatform = (plat: { type: 'pod' | 'tank'; id: number }) => {
         plat.type === 'pod'
           ? {
               plat: {
-                id: plat.id.toString(),
+                id: plat.id,
                 name: data.name || '',
                 capacity: data.capacity || [],
                 ohms: data.ohms || [],
@@ -69,6 +69,7 @@ const usePlatform = (plat: { type: 'pod' | 'tank'; id: number }) => {
             }
           : {
               plat: {
+                id: plat.id,
                 name: data.name || '',
                 capacities: data.capacities || '0',
                 compatibleCoilSerieses: data.compatibleCoilSerieses || [],
