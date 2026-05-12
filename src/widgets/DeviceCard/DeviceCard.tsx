@@ -19,8 +19,8 @@ export const DeviceCard = ({ device }: IDeviceCard) => {
       photoURL={device.photoURL}
       renderInHeader={() => (
         <>
-          <TextValue value={device.brand} onSaveButtonPress={() => {}} />
-          <TextValue value={device.model} onSaveButtonPress={() => {}} />
+          <TextValue value={device.brand} onSaveButtonPress={() => { }} />
+          <TextValue value={device.model} onSaveButtonPress={() => { }} />
         </>
       )}
       data={device}
@@ -42,7 +42,7 @@ export const DeviceCard = ({ device }: IDeviceCard) => {
           <ArrayPrimitiveValue
             value={value}
             onChangesSaved={(newVal) =>
-              updateDeviceById(device.id, key, newVal)
+              updateDeviceById(device.id, key, newVal.map(val => val.toString()))
             }
             errorOptions={useErrorOptions(device.id)[key]}
           />

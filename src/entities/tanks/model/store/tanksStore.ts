@@ -29,9 +29,9 @@ export const useTanksSeriesesStore = create<IPodSeriesesStore>()(
           ? Object.entries(data).map(([key, value]) => ({
               ...(value as TankSeriesType),
               id: key,
-              capacities: Array.isArray((value as TankSeriesType).capacities)
-                ? (value as TankSeriesType).capacities
-                : [(value as any).capacities as string],
+              capacity: Array.isArray((value as TankSeriesType).capacity)
+                ? (value as TankSeriesType).capacity
+                : [(value as any).capacity as number],
             }))
           : [];
 

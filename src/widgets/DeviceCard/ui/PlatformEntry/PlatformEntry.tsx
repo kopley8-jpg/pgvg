@@ -30,16 +30,16 @@ export const PlatformEntry = ({
         )),
         ...(platform.type === 'магнит'
           ? createRenderConfig(platform).forKeys(
-              ['compatiblePlats'],
-              (key, value) => (
-                <CompactiblePlatsEntry
-                  deviceId={deviceId}
-                  compactiblePlats={value}
-                  onChange={(newPlats) => {}}
-                />
-              ),
-              { hideKeyName: true }
-            )
+            ['compatiblePlats'],
+            (key, value) => (
+              <CompactiblePlatsEntry
+                deviceId={deviceId}
+                compactiblePlats={value}
+                onChange={(newPlats) => onChange({ type: "магнит", compatiblePlats: newPlats })}
+              />
+            ),
+            { hideKeyName: true }
+          )
           : [null]),
       ]}
     />

@@ -49,6 +49,7 @@ export const ObjEntry = <T extends Record<string, any>>({
 interface IObjEntryTwo {
   translatedNamesForKeys: Record<string, string>;
   entryName: string;
+  style?: ObjEntryStyles
   renderForKeys: (
     {
       key: string;
@@ -58,27 +59,35 @@ interface IObjEntryTwo {
   )[];
 }
 
+export type ObjEntryStyles = {
+  container?: React.CSSProperties,
+  entryName?: React.CSSProperties,
+  propsContainer?: React.CSSProperties,
+  propContainer?: React.CSSProperties,
+}
+
 export const ObjEntryTwo = ({
   entryName,
+  style,
   translatedNamesForKeys,
   renderForKeys,
 }: IObjEntryTwo) => {
   const styles = useStyles();
 
   return (
-    <div style={styles.container}>
-      <div style={styles.entryName}>
+    <div style={{ ...styles.container, ...style?.container }}>
+      <div style={{ ...styles.entryName, ...style?.entryName }}>
         <span>{entryName}</span>
       </div>
-      <div style={styles.propsContainer}>
+      <div style={{ ...styles.propsContainer, ...style?.propsContainer }}>
         {renderForKeys.map((key) => (
           <>
             {key ? (
-              <div style={styles.propContainer}>
+              <div style={{ ...styles.propContainer, ...style?.propContainer }}>
                 {key.options?.hideKeyName ? (
                   <></>
                 ) : (
-                  <span style={styles.entryName}>
+                  <span style={{ ...styles.entryName, ...style?.entryName }}>
                     {translatedNamesForKeys
                       ? translatedNamesForKeys[key.key]
                       : key.key.toString()}

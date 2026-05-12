@@ -17,7 +17,7 @@ export const useStyles = () => {
     propsContainer: {
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'flex-start',
+      alignItems: 'stretch',
       paddingLeft: '8%',
       borderRadius: '10px',
       boxSizing: 'border-box',

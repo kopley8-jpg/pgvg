@@ -1,33 +1,33 @@
+import type { CompatibleCoilSeriesesType } from '@/entities/tanks/model/types';
 import { useThemeStore } from '@/shared/hooks/useThemeStore';
 import { createStyles } from '@/shared/lib/createStyles';
 import { Delete } from '@mui/icons-material';
 import { Button, IconButton } from '@mui/material';
-import type { compactiblePlat } from '../CompatiblePlatsEntry/model/types';
 
-interface IPlatItem {
-  platform: compactiblePlat;
-  onClick: (type: 'pod' | 'tank', id: string) => void;
+interface ICoilItem {
+  compatibleCoilSeries: CompatibleCoilSeriesesType;
+  onClick: () => void;
   onDeleteButtonClick: (id: string) => void;
 }
 
-export const PlatItem = ({
-  platform,
+export const CoilItem = ({
+  compatibleCoilSeries,
   onClick,
   onDeleteButtonClick,
-}: IPlatItem) => {
+}: ICoilItem) => {
   const styles = useStyles();
 
   return (
     <div style={styles.container}>
       <Button
         sx={styles.text}
-        onClick={() => onClick(platform.type, platform.idFromPlatforms)}
+        onClick={() => onClick()}
       >
-        <span style={styles.text}>{platform.name}</span>
+        <span style={styles.text}>{compatibleCoilSeries.name}</span>
       </Button>
       <IconButton
         sx={styles.button}
-        onClick={() => onDeleteButtonClick(platform.idFromPlatforms)}
+        onClick={() => onDeleteButtonClick(compatibleCoilSeries.idFromPlatforms)}
       >
         <Delete />
       </IconButton>

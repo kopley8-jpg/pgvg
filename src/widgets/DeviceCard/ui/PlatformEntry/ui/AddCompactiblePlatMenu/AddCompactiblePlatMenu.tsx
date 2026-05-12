@@ -35,6 +35,7 @@ import type { PopupState as PopupStateType } from 'material-ui-popup-state/hooks
 import type { PodSeriesType } from '@/entities/pods/model/types';
 import type { TankSeriesType } from '@/entities/tanks/model/types';
 import { PodSeriesCard } from '@/widgets/PodSeriesCard/PodSeriesCard';
+import { TankSeriesCard } from '@/widgets/TankSeriesCard/TankSeriesCard';
 
 export const AddCompactiblePlatMenu = ({ onPick }: IAddCompactiblePlatMenu) => {
   const {
@@ -64,7 +65,7 @@ export const AddCompactiblePlatMenu = ({ onPick }: IAddCompactiblePlatMenu) => {
 
   return (
     <React.Fragment>
-      <IconButton onClick={popupState.open}>
+      <IconButton onClick={popupState.open} sx={{ width: "100%" }}>
         <Add />
       </IconButton>
       <Popover
@@ -114,7 +115,18 @@ export const AddCompactiblePlatMenu = ({ onPick }: IAddCompactiblePlatMenu) => {
                 ))}
               </Box>
             ) : (
-              <></>
+              <Box>
+                <CreateSeriesButton type="tank" />
+                {filteredSerieses(tankSerieses).map((tankSeries) => (
+                  <SeriesMenuItem
+                    onPick={() =>
+                      handlePick({ type: 'tank', series: tankSeries })
+                    }
+                    series={{ type: 'tank', series: tankSeries }}
+                    popupState={popupState}
+                  />
+                ))}
+              </Box>
             )}
           </Box>
         </>
@@ -125,8 +137,8 @@ export const AddCompactiblePlatMenu = ({ onPick }: IAddCompactiblePlatMenu) => {
 
 const SeriesMenuItem = (props: {
   series:
-    | { type: 'pod'; series: PodSeriesType }
-    | { type: 'tank'; series: TankSeriesType };
+  | { type: 'pod'; series: PodSeriesType }
+  | { type: 'tank'; series: TankSeriesType };
   popupState: PopupStateType;
   onPick: () => void;
 }) => {
@@ -146,13 +158,72 @@ const SeriesMenuItem = (props: {
               onClose={() => state.close()}
             />
           ) : (
-            <></>
+            <TankSeriesDialog
+              onPick={onPick}
+              series={series.series}
+              open={state.isOpen}
+              onClose={() => state.close()} />
           )}
         </>
       )}
     </PopupState>
   );
 };
+
+const TankSeriesDialog = (props: {
+  series: TankSeriesType;
+  open: boolean;
+  onClose: () => void;
+  onPick: () => void;
+}) => {
+  const { series, open, onClose, onPick } = props;
+
+  return (
+    <Modal
+      {...props}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <TankSeriesCard
+        tankSeries={series}
+        headerRightRender={() => (
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <PopupState variant="popover">
+              {(state) => (
+                <>
+                  <IconButton {...bindTrigger(state)}>
+                    <MoreVert />
+                  </IconButton>
+                  <Menu {...bindPopover(state)}>
+                    <MenuItem
+                      sx={{
+                        color: 'red',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        gap: '5px',
+                      }}
+                    >
+                      <Delete />
+                      Удалить серию
+                    </MenuItem>
+                  </Menu>
+                </>
+              )}
+            </PopupState>
+            <IconButton onClick={onPick}>
+              <Add />
+            </IconButton>
+          </div>
+        )}
+      />
+    </Modal>
+  );
+};
+
 
 const PodSeriesDialog = (props: {
   series: PodSeriesType;

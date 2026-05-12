@@ -59,28 +59,28 @@ const usePlatform = (plat: { type: 'pod' | 'tank'; id: string }) => {
       setPlatform(
         plat.type === 'pod'
           ? {
-              plat: {
-                id: plat.id,
-                name: data.name || '',
-                capacity: data.capacity || [],
-                ohms: data.ohms || [],
-              },
-              type: 'pod',
-            }
+            plat: {
+              id: plat.id,
+              name: data.name || '',
+              capacity: data.capacity || [],
+              ohms: data.ohms || [],
+            },
+            type: 'pod',
+          }
           : {
-              plat: {
-                id: plat.id,
-                name: data.name || '',
-                capacities: data.capacities || '0',
-                compatibleCoilSerieses: data.compatibleCoilSerieses || [],
-              },
-              type: 'tank',
-            }
+            plat: {
+              id: plat.id,
+              name: data.name || '',
+              capacity: data.capacities || '0',
+              compatibleCoilSerieses: data.compatibleCoilSerieses || [],
+            },
+            type: 'tank',
+          }
       );
     });
 
     return () => {
-      off(platRef, 'value', () => {});
+      off(platRef, 'value', () => { });
     };
   }, []);
 
