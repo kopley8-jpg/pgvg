@@ -1,4 +1,3 @@
-import { updatePodSeriesEntryById } from '@/features/devices/pods/update/model/updatePodSeriesEntryById';
 import type { ICoilSeriesCard } from './types';
 import type { CoilSeriesType } from '@/entities/coils/model/types';
 import { ref, update } from 'firebase/database';
@@ -24,7 +23,7 @@ export const useCoilSeriesCard = (props: ICoilSeriesCard) => {
       return;
     } else {
       return handleValueChange(
-        'resistances',
+        'ohms',
         newValue.map((val) => Number(val))
       );
     }

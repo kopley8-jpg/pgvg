@@ -1,12 +1,12 @@
+import type { CompactiblePlatType } from '@/entities/devices/model/types';
 import { useThemeStore } from '@/shared/hooks/useThemeStore';
 import { createStyles } from '@/shared/lib/createStyles';
 import { Delete } from '@mui/icons-material';
 import { Button, IconButton } from '@mui/material';
-import type { compactiblePlat } from '../CompatiblePlatsEntry/model/types';
 
 interface IPlatItem {
-  platform: compactiblePlat;
-  onClick: (type: 'pod' | 'tank', id: string) => void;
+  platform: CompactiblePlatType;
+  onClick: () => void;
   onDeleteButtonClick: (id: string) => void;
 }
 
@@ -21,7 +21,7 @@ export const PlatItem = ({
     <div style={styles.container}>
       <Button
         sx={styles.text}
-        onClick={() => onClick(platform.type, platform.idFromPlatforms)}
+        onClick={() => onClick()}
       >
         <span style={styles.text}>{platform.name}</span>
       </Button>

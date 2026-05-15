@@ -6,7 +6,6 @@ import type { ObjCardStyles } from '@/shared/ui/ObjCard/types';
 import { TextValue } from '@/shared/ui/PrimitiveValue/TextValue/TextValue';
 import type { ITankSeriesCard } from './model/types';
 import { useTankSeriesCard } from './model/useTankSeriesCard';
-import { ObjEntryTwo } from '@/shared/ui/ObjEntry/ObjEntry';
 import { CompactibleCoilSeriesesEntry } from './CompactibleCoilSeriesEntry/CompactibleCoilSeriesEntry';
 
 export const TankSeriesCard = (props: ITankSeriesCard) => {
@@ -42,7 +41,7 @@ export const TankSeriesCard = (props: ITankSeriesCard) => {
         ),
         ...createRenderConfig(tankSeries).forKeys(["compatibleCoilSerieses"], (key, compatibleCoilSerieses) => (
           <CompactibleCoilSeriesesEntry compatibleCoilSerieses={compatibleCoilSerieses} />
-        ), { hideKeyName: true })
+        ), { hideKeyName: true }),
       ]}
     />
   );
@@ -52,7 +51,7 @@ const useStyles = (): ObjCardStyles => {
   const { colors } = useThemeStore();
   return {
     container: {
-      height: '25vh',
+      height: '34vh',
       width: '53vw',
       backgroundColor: colors.background,
     },

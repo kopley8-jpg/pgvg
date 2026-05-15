@@ -30,12 +30,12 @@ import {
 import type { IAddCompactiblePlatMenu } from './model/types';
 import { useAddCompatiblePlats } from './model/useAddCompactiblePlats';
 import { useState } from 'react';
-import { CreatePodSeriesModal } from '@/widgets/createPodSeriesModal/CreatePodSeriesModal';
 import type { PopupState as PopupStateType } from 'material-ui-popup-state/hooks';
 import type { PodSeriesType } from '@/entities/pods/model/types';
 import type { TankSeriesType } from '@/entities/tanks/model/types';
-import { PodSeriesCard } from '@/widgets/PodSeriesCard/PodSeriesCard';
-import { TankSeriesCard } from '@/widgets/TankSeriesCard/TankSeriesCard';
+import { TankSeriesCard } from '@/widgets/Tank/TankSeriesCard/TankSeriesCard';
+import { PodSeriesCard } from '@/widgets/pod/PodSeriesCard/PodSeriesCard';
+import { CreatePodSeriesModal } from '@/widgets/pod/createPodSeriesModal/CreatePodSeriesModal';
 
 export const AddCompactiblePlatMenu = ({ onPick }: IAddCompactiblePlatMenu) => {
   const {
@@ -289,10 +289,12 @@ const CreateSeriesButton = ({ type }: { type: 'pod' | 'tank' }) => {
               ? '+ Создать серию подов'
               : '+ Создать серию танков'}
           </MenuItem>
-          <CreatePodSeriesModal
-            open={state.isOpen}
-            onClose={() => state.close()}
-          />
+          {type === "pod" ? (
+            <CreatePodSeriesModal
+              open={state.isOpen}
+              onClose={() => state.close()}
+            />
+          ) : (<></>)}
         </>
       )}
     </PopupState>

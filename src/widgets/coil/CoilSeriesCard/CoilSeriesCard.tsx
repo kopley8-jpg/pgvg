@@ -6,7 +6,6 @@ import type { ObjCardStyles } from '@/shared/ui/ObjCard/types';
 import type { ICoilSeriesCard } from './model/types';
 import { useCoilSeriesCard } from './model/useCoilSeriesCard';
 import { TextValue } from '@/shared/ui/PrimitiveValue/TextValue/TextValue';
-import { createStyles } from '@/shared/lib/createStyles';
 
 export const CoilSeriesCard = (props: ICoilSeriesCard) => {
   const styles = useStyles();
@@ -31,7 +30,7 @@ export const CoilSeriesCard = (props: ICoilSeriesCard) => {
       )}
       renderForKeys={[
         ...createRenderConfig(coilSeries).forKeys(
-          ['resistances'],
+          ['ohms'],
           (key, value) => (
             <ArrayPrimitiveValue
               value={value}
@@ -49,7 +48,7 @@ const useStyles = (): ObjCardStyles => {
   return {
     container: {
       height: '25vh',
-      width: '53vw',
+      width: '60vw',
       backgroundColor: colors.background,
     },
     header: {
@@ -68,5 +67,5 @@ const useStyles = (): ObjCardStyles => {
 const translate = {
   id: '',
   name: 'Название',
-  resistances: "Сопроты"
+  ohms: "Сопроты"
 };

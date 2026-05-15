@@ -1,13 +1,10 @@
-import type { DeviceType } from '@/entities/devices/model/types';
+import type {
+  CompactiblePlatType,
+  DeviceType,
+} from '@/entities/devices/model/types';
 
 export interface ICompactiblePlatsEntry {
   deviceId: string;
-  compactiblePlats: compactiblePlat[] | null;
-  onChange: (plats: compactiblePlat[]) => void;
+  compactiblePlats: CompactiblePlatType[] | null;
+  onChange: (plats: CompactiblePlatType[]) => void;
 }
-
-export type compactiblePlat = {
-  type: 'pod' | 'tank';
-  name: string;
-  idFromPlatforms: string;
-};

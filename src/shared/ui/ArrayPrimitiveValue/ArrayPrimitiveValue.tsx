@@ -21,7 +21,7 @@ export const ArrayPrimitiveValue = ({
   errorOptions,
 }: IArrayPrimitiveValue) => {
   const [isOpen, setIsOpen] = useState(false);
-  const anchorRef = useRef<HTMLDivElement>(null); // Добавляем ref
+  const anchorRef = useRef<HTMLDivElement>(null);
 
   const styles = useStyles();
 

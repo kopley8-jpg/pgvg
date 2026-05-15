@@ -9,7 +9,7 @@ export const usePlatformEntry = ({ platform, onChange }: IPlatformEntry) => {
       if (picked === platform.type) return;
       onChange(
         picked === 'магнит'
-          ? { type: 'магнит', compatiblePlats: null }
+          ? { type: 'магнит', compatiblePlats: [] }
           : { type: picked ? picked : null }
       );
     },

@@ -45,12 +45,16 @@ export const PLATFORM_FORMATS = ['510', 'boro', 'dot', 'squonk', 'магнит']
 export type PlatformType =
   | {
       type: 'магнит';
-      compatiblePlats:
-        | { type: 'pod' | 'tank'; name: string; idFromPlatforms: string }[]
-        | null;
+      compatiblePlats: CompactiblePlatType[];
     }
   | { type: '510' | 'boro' | 'dot' | 'squonk' }
   | { type: null };
+
+export type CompactiblePlatType = {
+  type: 'pod' | 'tank';
+  name: string;
+  idFromPlatforms: string;
+};
 
 type PodType = {
   name: string;

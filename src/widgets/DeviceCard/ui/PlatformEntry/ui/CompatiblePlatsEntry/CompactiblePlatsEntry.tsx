@@ -3,11 +3,10 @@ import type { ICompactiblePlatsEntry } from './model/types';
 import { createRenderConfig } from '@/shared/lib/createRenderConfig';
 import { PlatItem } from '../PlatItem/PlatItem';
 import { useCompatiblePlatsEntry } from './model/useCompatiblePodsEntry';
-import { PlatformModal } from '../PlatformModal/PlatformModal';
-import { IconButton } from '@mui/material';
-import { Add } from '@mui/icons-material';
 import { AddCompactiblePlatMenu } from '../AddCompactiblePlatMenu/AddCompactiblePlatMenu';
-import { updateDeviceById } from '@/features/devices/updateDeviceEntryById/model/updateDeviceEntryById';
+import { TankSeriesCardModal } from '@/widgets/Tank/TankSeriesCardModal/TankSeriesCardModal';
+import PopupState, { bindMenu } from 'material-ui-popup-state';
+import { PodSeriesCardModal } from '@/widgets/pod/PodSeriesCardModal/PodSeriesCardModal';
 
 export const CompactiblePlatsEntry = (props: ICompactiblePlatsEntry) => {
   const { compactiblePlats, onChange } = props;
@@ -32,24 +31,26 @@ export const CompactiblePlatsEntry = (props: ICompactiblePlatsEntry) => {
             createRenderConfig({ plat }).forKeys(
               ['plat'],
               (key, value) => (
-                <>
-                  <PlatformModal
-                    isOpen={
-                      openPlat?.id === value.idFromPlatforms ? true : false
-                    }
-                    plat={{ ...plat, id: plat.idFromPlatforms }}
-                    onBackdropClick={handleBackdropModalClick}
-                  />
-                  <PlatItem
-                    platform={plat}
-                    onClick={() =>
-                      handlePlatPick(plat.type, plat.idFromPlatforms)
-                    }
-                    onDeleteButtonClick={() =>
-                      handlePlatItemDeleteButtonClick(plat.idFromPlatforms)
-                    }
-                  />
-                </>
+                <PopupState variant='popover'>
+                  {state => (
+                    <>
+                      {value.type === "tank" ? (
+                        <TankSeriesCardModal compatiblePlat={value} {...bindMenu(state)} />
+                      ) : (
+                        <PodSeriesCardModal compatiblePlat={value} {...bindMenu(state)} />
+                      )}
+                      <PlatItem
+                        platform={plat}
+                        onClick={() =>
+                          state.open()
+                        }
+                        onDeleteButtonClick={() =>
+                          handlePlatItemDeleteButtonClick(plat.idFromPlatforms)
+                        }
+                      />
+                    </>
+                  )}
+                </PopupState>
               ),
               { hideKeyName: true }
             )

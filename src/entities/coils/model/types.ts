@@ -1,7 +1,7 @@
 export type CoilSeriesType = {
   id: string;
   name: string;
-  resistances: number[];
+  ohms: number[];
 };
 
 export interface ICoilSeriesesStore {

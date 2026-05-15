@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import type { compactiblePlat, ICompactiblePlatsEntry } from './types';
+import type { ICompactiblePlatsEntry } from './types';
 import type { PodSeriesType } from '@/entities/pods/model/types';
 import type { TankSeriesType } from '@/entities/tanks/model/types';
-import { updateDeviceById } from '@/features/devices/updateDeviceEntryById/model/updateDeviceEntryById';
+import type { CompactiblePlatType } from '@/entities/devices/model/types';
 
 export const useCompatiblePlatsEntry = ({
   compactiblePlats,
@@ -48,7 +48,7 @@ export const useCompatiblePlatsEntry = ({
           series: TankSeriesType;
         }
   ) => {
-    const newPlat: compactiblePlat = {
+    const newPlat: CompactiblePlatType = {
       type: newSeries.type,
       name: newSeries.series.name,
       idFromPlatforms: newSeries.series.id,

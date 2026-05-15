@@ -6,7 +6,7 @@ import { Button, IconButton } from '@mui/material';
 
 interface ICoilItem {
   compatibleCoilSeries: CompatibleCoilSeriesesType;
-  onClick: () => void;
+  onClick: (id: string) => void;
   onDeleteButtonClick: (id: string) => void;
 }
 
@@ -21,7 +21,7 @@ export const CoilItem = ({
     <div style={styles.container}>
       <Button
         sx={styles.text}
-        onClick={() => onClick()}
+        onClick={() => onClick(compatibleCoilSeries.idFromPlatforms)}
       >
         <span style={styles.text}>{compatibleCoilSeries.name}</span>
       </Button>
