@@ -4,19 +4,16 @@ import { useEffect, useState } from 'react';
 import { subscribeToCoilSeriesById } from '@/shared/api/firebase/coils';
 
 export const useCoilSeriesCardModal = (props: ICoilSeriesCardModal) => {
-  const { compatibleCoilSeries, clickedCoilSeriesId } = props;
+  const { open, coilSeriesId } = props;
   const [coilSeries, setCoilSeries] = useState<CoilSeriesType | null>(null);
 
   useEffect(() => {
-    if (clickedCoilSeriesId != compatibleCoilSeries.idFromPlatforms) return;
+    if (!open || !coilSeriesId) return;
     const unsubscribe = subscribeToCoilSeriesById(
-      compatibleCoilSeries.idFromPlatforms,
+      coilSeriesId!,
       (searchedCoilSeries) => {
         if (!searchedCoilSeries) {
-          alert(
-            'чето не нашел я такого испарика: ' +
-              compatibleCoilSeries.idFromPlatforms
-          );
+          alert('чето не нашел я такого испарика: ' + coilSeriesId);
           return;
         } else {
           setCoilSeries(searchedCoilSeries);
@@ -27,7 +24,7 @@ export const useCoilSeriesCardModal = (props: ICoilSeriesCardModal) => {
     return () => {
       unsubscribe();
     };
-  }, [clickedCoilSeriesId]);
+  }, [open]);
 
   return {
     coilSeries,

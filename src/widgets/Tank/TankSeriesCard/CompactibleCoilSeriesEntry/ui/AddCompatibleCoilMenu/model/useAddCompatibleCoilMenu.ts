@@ -4,7 +4,7 @@ import type { CoilSeriesType } from '@/entities/coils/model/types';
 import { subscribeToCoils } from '@/shared/api/firebase/coils';
 
 export const useAddCompatibleCoilMenu = (props: IAddCompatibleCoilMenu) => {
-  const { open } = props;
+  const { open, onPick, onClose } = props;
 
   const [coilSerieses, setCoilSerieses] = useState<CoilSeriesType[]>([]);
 
@@ -31,7 +31,17 @@ export const useAddCompatibleCoilMenu = (props: IAddCompatibleCoilMenu) => {
     };
   }, [open]);
 
+  const handler = {
+    coilItem: {
+      onPick: (coilSeries: CoilSeriesType) => {
+        onPick({ name: coilSeries.name, idFromPlatforms: coilSeries.id });
+        onClose();
+      },
+    },
+  };
+
   return {
     coilSerieses,
+    handler,
   };
 };

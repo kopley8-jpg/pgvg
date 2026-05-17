@@ -1,10 +1,10 @@
 import type { ICoilSeriesCard } from './types';
 import type { CoilSeriesType } from '@/entities/coils/model/types';
-import { ref, update } from 'firebase/database';
+import { ref, remove, update } from 'firebase/database';
 import database from '@/shared/api/firebase/client';
 
 export const useCoilSeriesCard = (props: ICoilSeriesCard) => {
-  const { coilSeries } = props;
+  const { coilSeries, onDelete } = props;
 
   const handleValueChange = async <K extends keyof CoilSeriesType>(
     entryName: K,
@@ -15,6 +15,14 @@ export const useCoilSeriesCard = (props: ICoilSeriesCard) => {
       `kochegar/platform/coils/${coilSeries.id}`
     );
     await update(coilSeriesRef, { [entryName]: newValue });
+  };
+
+  const deleteSeries = async () => {
+    const coilSeriesRef = ref(
+      database,
+      `kochegar/platform/coils/${coilSeries.id}`
+    );
+    remove(coilSeriesRef);
   };
 
   const handleResistancesChange = (newValue: (string | number)[]) => {
@@ -40,6 +48,12 @@ export const useCoilSeriesCard = (props: ICoilSeriesCard) => {
     resistances: {
       onChangesSaved: (newValue: (string | number)[]) =>
         handleResistancesChange(newValue),
+    },
+    delete: {
+      onClick: () => {
+        deleteSeries();
+        onDelete?.();
+      },
     },
   };
 
