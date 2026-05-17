@@ -1,8 +1,4 @@
-export type CoilSeriesType = {
-  id: string;
-  name: string;
-  ohms: number[];
-};
+import type { CoilSeriesType } from '@/shared/types/coil-series';
 
 export interface ICoilSeriesesStore {
   //данные

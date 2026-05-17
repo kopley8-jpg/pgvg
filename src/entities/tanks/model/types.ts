@@ -1,4 +1,6 @@
-export interface IPodSeriesesStore {
+import type { TankSeriesType } from '@/shared/types/tank-series';
+
+export interface ITankSeriesesStore {
   //данные
   tankSerieses: TankSeriesType[];
 
@@ -14,15 +16,3 @@ export interface IPodSeriesesStore {
   unsubscribeFromTanks: () => void;
   clearError: () => void;
 }
-
-export type TankSeriesType = {
-  id: string;
-  name: string;
-  capacity: number[];
-  compatibleCoilSerieses: CompatibleCoilSeriesesType[];
-};
-
-export type CompatibleCoilSeriesesType = {
-  idFromPlatforms: string;
-  name: string;
-};

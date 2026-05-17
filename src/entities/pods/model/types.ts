@@ -1,3 +1,5 @@
+import type { PodSeriesType } from '@/shared/types/pod-series';
+
 export interface IPodSeriesesStore {
   //данные
   podSerieses: PodSeriesType[];
@@ -14,10 +16,3 @@ export interface IPodSeriesesStore {
   unsubscribeFromPods: () => void;
   clearError: () => void;
 }
-
-export type PodSeriesType = {
-  id: string;
-  name: string;
-  capacity: number[];
-  ohms: number[];
-};

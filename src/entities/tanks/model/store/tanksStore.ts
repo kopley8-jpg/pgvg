@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import type { IPodSeriesesStore, TankSeriesType } from '../types';
+import type { ITankSeriesesStore, TankSeriesType } from '../types';
 import { DataSnapshot, off, onValue, ref } from 'firebase/database';
 import database from '@shared/api/firebase/client';
 
-export const useTanksSeriesesStore = create<IPodSeriesesStore>()(
+export const useTanksSeriesesStore = create<ITankSeriesesStore>()(
   immer((set, get) => ({
     tankSerieses: [],
     loadingTanks: false,

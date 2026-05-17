@@ -1,6 +1,12 @@
-import type { CoilSeriesType } from '@/entities/coils/model/types';
-import { off, onValue, ref } from 'firebase/database';
+import {
+  off,
+  onValue,
+  push,
+  ref,
+  type DatabaseReference,
+} from 'firebase/database';
 import database from './client';
+import type { CoilSeriesType } from '@/shared/types/coil-series';
 
 export const subscribeToCoils = (
   onUpdate: (coils: CoilSeriesType[]) => void
@@ -48,4 +54,21 @@ export const subscribeToCoilSeriesById = (
   });
 
   return () => off(coilRef, 'value', handler);
+};
+
+export const pushCoilSeries = async (
+  coilSeries: Omit<CoilSeriesType, 'id'>
+): Promise<string | null> => {
+  const coilsRef = ref(database, 'kochegar/platform/coils');
+
+  try {
+    const newRef = await push(coilsRef, coilSeries);
+    if (!newRef.key) {
+      throw new Error(`Failed to generate unique key for coil series`);
+    }
+    return newRef.key;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
