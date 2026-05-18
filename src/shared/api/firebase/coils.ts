@@ -9,25 +9,30 @@ import database from './client';
 import type { CoilSeriesType } from '@/shared/types/coil-series';
 
 export const subscribeToCoils = (
-  onUpdate: (coils: CoilSeriesType[]) => void
+  onUpdate: (coils: CoilSeriesType[]) => void,
+  onError?: (error: Error) => void
 ): (() => void) => {
   const coilsRef = ref(database, 'kochegar/platform/coils');
 
   const handler = onValue(coilsRef, (snapshot) => {
-    const data = snapshot.val();
-    if (!data) {
-      onUpdate([]);
-      return;
+    try {
+      const data = snapshot.val();
+      if (!data) {
+        onUpdate([]);
+        return;
+      }
+
+      const coilSerieses: CoilSeriesType[] = Object.entries(data).map(
+        ([key, value]: [string, any]) => ({
+          id: key,
+          ...(value as Omit<CoilSeriesType, 'id'>),
+        })
+      );
+
+      onUpdate(coilSerieses);
+    } catch (error) {
+      onError;
     }
-
-    const coilSerieses: CoilSeriesType[] = Object.entries(data).map(
-      ([key, value]: [string, any]) => ({
-        id: key,
-        ...(value as Omit<CoilSeriesType, 'id'>),
-      })
-    );
-
-    onUpdate(coilSerieses);
   });
 
   return () => off(coilsRef, 'value', handler);

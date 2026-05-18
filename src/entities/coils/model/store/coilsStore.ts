@@ -1,61 +1,45 @@
-// import { create } from 'zustand';
-// import { immer } from 'zustand/middleware/immer';
-// import type { ICoilSeriesesStore } from '../types';
-// import { DataSnapshot, off, onValue, ref } from 'firebase/database';
-// import database from '@shared/api/firebase/client';
+import { create } from 'zustand';
+import { immer } from 'zustand/middleware/immer';
+import type { ICoilSeriesesStore } from '../types';
+import { subscribeToCoils } from '@/shared/api/firebase/coils';
 
-// export const useCoilSeriesesStore = create<ICoilSeriesesStore>()(
-//   immer((set, get) => ({
-//     coilSerieses: [],
-//     loadingCoils: false,
-//     error: null,
+export const useCoilSeriesesStore = create<ICoilSeriesesStore>()(
+  immer((set, get) => ({
+    coilSerieses: [],
+    loadingCoils: false,
+    error: null,
 
-//     unsubscribe: null,
+    unsubscribe: null,
 
-//     subscribeToCoils: () => {
-//       if (get().unsubscribe) {
-//         return;
-//       }
+    subscribeToCoils: () => {
+      if (get().unsubscribe) {
+        return;
+      }
 
-//       set({ loadingCoils: true, error: null });
+      set({ loadingCoils: true });
 
-//       const coilSeriesesRef = ref(database, '/kochegar/platform/coils');
+      const unsubscribe = subscribeToCoils((coilSerieses) => {
+        set({
+          coilSerieses,
+          loadingCoils: false,
+        });
+      });
 
-//       const handler = (snaphot: DataSnapshot) => {
-//         const data = snaphot.val();
-//         console.log('data', data);
+      set({
+        unsubscribe: () => {
+          unsubscribe();
+          set({ coilSerieses: [], loadingCoils: false, unsubscribe: null });
+        },
+      });
+    },
 
-//         const coilSerieses: CoilSeriesType[] = data
-//           ? Object.entries(data).map(([key, value]) => ({
-//               ...(value as CoilSeriesType),
-//               id: key,
-//             }))
-//           : [];
+    unsubscribeFromCoils: () => {
+      const { unsubscribe } = get();
 
-//         set({
-//           coilSerieses,
-//           loadingCoils: false,
-//           error: null,
-//         });
-//       };
-
-//       onValue(coilSeriesesRef, handler);
-
-//       set({
-//         unsubscribe: () => {
-//           off(coilSeriesesRef, 'value', handler);
-//           set({ coilSerieses: [], loadingCoils: false, unsubscribe: null });
-//         },
-//       });
-//     },
-
-//     unsubscribeFromCoils: () => {
-//       const { unsubscribe } = get();
-
-//       if (unsubscribe) {
-//         unsubscribe();
-//       }
-//     },
-//     clearError: () => {},
-//   }))
-// );
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    },
+    clearError: () => {},
+  }))
+);

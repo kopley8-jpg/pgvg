@@ -1,7 +1,7 @@
 import type { ICoilSeriesCard } from './types';
-import type { CoilSeriesType } from '@/entities/coils/model/types';
 import { ref, remove, update } from 'firebase/database';
 import database from '@/shared/api/firebase/client';
+import type { CoilSeriesType } from '@/shared/types/coil-series';
 
 export const useCoilSeriesCard = (props: ICoilSeriesCard) => {
   const { coilSeries, onDelete } = props;
