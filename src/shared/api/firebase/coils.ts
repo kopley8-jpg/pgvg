@@ -3,6 +3,7 @@ import {
   onValue,
   push,
   ref,
+  update,
   type DatabaseReference,
 } from 'firebase/database';
 import database from './client';
@@ -10,7 +11,7 @@ import type { CoilSeriesType } from '@/shared/types/coil-series';
 
 export const subscribeToCoils = (
   onUpdate: (coils: CoilSeriesType[]) => void,
-  onError?: (error: Error) => void
+  onError?: (error: string) => void
 ): (() => void) => {
   const coilsRef = ref(database, 'kochegar/platform/coils');
 
@@ -31,7 +32,7 @@ export const subscribeToCoils = (
 
       onUpdate(coilSerieses);
     } catch (error) {
-      onError;
+      onError?.('не удалось загрузить испарики');
     }
   });
 

@@ -1,40 +1,22 @@
-import { useThemeStore } from '@/shared/hooks/useThemeStore';
-import { convertToNumber } from '@/shared/lib/convertToNumber';
 import { createRenderConfig } from '@/shared/lib/createRenderConfig';
-import type { CoilSeriesType } from '@/shared/types/coil-series';
 import { ArrayPrimitiveValue } from '@/shared/ui/ArrayPrimitiveValue/ArrayPrimitiveValue';
 import { ObjCard } from '@/shared/ui/ObjCard/ObjCard';
-import type { ObjCardStyles } from '@/shared/ui/ObjCard/types';
 import { TextValue } from '@/shared/ui/PrimitiveValue/TextValue/TextValue';
+import { MoreVert } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
+import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
+import { CoilSeriesMenu } from './CoilSeriesMenu/CoilSeriesMenu';
+import type { ICoilSeriesCard } from './model/types';
+import { useCoilSeriesCard } from './model/useCoilSeriesCard';
+import { useStyles } from './styles';
 
-interface ICoilSeriesCard {
-  coilSeries: CoilSeriesType;
-  onChange: <K extends keyof CoilSeriesType>(
-    entryName: K,
-    value: CoilSeriesType[K]
-  ) => void;
-  onError?: (error: Error) => void;
-}
 
 export const CoilSeriesCard = (props: ICoilSeriesCard) => {
-  const { coilSeries, onChange, onError } = props;
+  const { onChange, onMenuItemClick } = props;
+  const { coilSeries, loading, handleOhmsChange } = useCoilSeriesCard(props)
   const styles = useStyles();
 
-  const handleOhmsChange = (newValue: (string | number)[]) => {
-    const ohmsAsNumbers = newValue.map((v) => Number(convertToNumber(v)));
-
-    if (ohmsAsNumbers.some((val) => isNaN(val))) {
-      onError?.(new Error('Все значения должны быть числами'));
-      return;
-    }
-
-    if (ohmsAsNumbers.length === 0) {
-      onError?.(new Error('Хотя бы одно сопротивление обязательно'));
-      return;
-    }
-
-    onChange('ohms', ohmsAsNumbers);
-  };
+  if (!coilSeries || loading) return <span>загрузка...</span>
 
   return (
     <ObjCard
@@ -42,12 +24,24 @@ export const CoilSeriesCard = (props: ICoilSeriesCard) => {
       translatedNamesForKeys={translate}
       data={coilSeries}
       renderInHeader={() => (
-        <TextValue
-          value={coilSeries.name}
-          onSaveButtonPress={(value) => {
-            onChange('name', value.toString());
-          }}
-        />
+        <>
+          <TextValue
+            value={coilSeries.name}
+            onSaveButtonPress={(value) => {
+              onChange('name', value.toString());
+            }}
+          />
+          <PopupState variant='popover'>
+            {state => (
+              <>
+                <IconButton {...bindTrigger(state)}>
+                  <MoreVert />
+                </IconButton>
+                <CoilSeriesMenu menuProps={{ ...bindMenu(state) }} onItemClick={onMenuItemClick} />
+              </>
+            )}
+          </PopupState>
+        </>
       )}
       renderForKeys={[
         ...createRenderConfig(coilSeries).forKeys(['ohms'], (key, value) => (
@@ -59,27 +53,6 @@ export const CoilSeriesCard = (props: ICoilSeriesCard) => {
       ]}
     />
   );
-};
-
-const useStyles = (): ObjCardStyles => {
-  const { colors } = useThemeStore();
-  return {
-    container: {
-      height: '25vh',
-      width: '60vw',
-      backgroundColor: colors.background,
-    },
-    header: {
-      display: 'flex',
-      flexDirection: 'row',
-      paddingLeft: '4%',
-      justifyContent: 'space-between',
-      fontSize: '4vw',
-    },
-    content: {
-      fontSize: '4vw',
-    },
-  };
 };
 
 const translate = {

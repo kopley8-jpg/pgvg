@@ -40,6 +40,7 @@ export const useCoilSeriesesStore = create<ICoilSeriesesStore>()(
         unsubscribe();
       }
     },
+
     clearError: () => {},
   }))
 );

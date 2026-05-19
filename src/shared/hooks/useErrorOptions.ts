@@ -1,6 +1,6 @@
 import type { DeviceType } from '@/entities/devices/model/types';
 import { translate } from '../constants/translatesKeys';
-import { updateDeviceById } from '@/features/devices/updateDeviceEntryById/model/updateDeviceEntryById';
+import { updateDeviceById } from '@/features/deviceManagment/updateDeviceEntryById/model/updateDeviceEntryById';
 
 export const useErrorOptions = (
   deviceID: string
