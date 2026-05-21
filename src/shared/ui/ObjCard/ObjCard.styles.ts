@@ -1,65 +1,40 @@
-import { useThemeStore } from '@/shared/hooks/useThemeStore';
-import { createStyles } from '@/shared/lib/createStyles';
+// import { createStyles } from '@/shared/lib/createStyles';
 
-export const useStyles = () => {
-  const { colors } = useThemeStore();
+// export const useStyles = () => {
 
-  return createStyles({
-    container: {
-      maxHeight: '50%',
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'stretch',
-      boxSizing: 'content-box',
-      borderRadius: '20px',
-      border: `2px ${colors.primary} solid`,
-    },
-    photo: {
-      objectFit: 'contain',
-      borderTopLeftRadius: '20px',
-      borderBottomLeftRadius: '20px',
-      borderRight: `2px ${colors.primary} solid`,
-    },
-    infoContainer: {
-      boxSizing: 'content-box',
-      display: 'flex',
-      flexDirection: 'column',
-      width: '100%',
-    },
-    header: {
-      display: 'flex',
-      alignItems: 'center',
-      boxSizing: 'border-box',
-
-      color: colors.primary,
-      fontSize: '5vw',
-      borderBottom: `2px ${colors.primary} solid`,
-    },
-    content: {
-      boxSizing: 'border-box',
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'stretch',
-      paddingTop: '1vh',
-      paddingLeft: '1vh',
-      paddingRight: '1vh',
-      overflowY: 'auto',
-      gap: '3%',
-    },
-    propContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'stretch',
-      alignItems: 'center',
-      fontSize: '5vw',
-    },
-    propKeyName: {
-      width: '50%',
-      whiteSpace: 'normal', // Разрешаем перенос текста
-      wordBreak: 'break-word', // Перенос длинных слов
-      overflowWrap: 'break-word',
-      color: colors.primary,
-    },
-  });
-};
+//   return createStyles({
+//     container: {
+//       maxHeight: '50%',
+//       display: 'flex',
+//       flexDirection: 'row',
+//       boxSizing: 'content-box',
+//       borderRadius: '20px',
+//       border: `2px ${colors.primary} solid`,
+//     },
+//     photo: {
+//       objectFit: 'contain',
+//       borderTopLeftRadius: '20px',
+//       borderBottomLeftRadius: '20px',
+//       borderRight: `2px ${colors.primary} solid`,
+//     },
+//     infoContainer: {
+//       display: 'flex',
+//       flexDirection: 'column',
+//     },
+//     header: {
+//       display: 'flex',
+//       flexDirection: 'row',
+//       borderBottom: `2px ${colors.primary} solid`,
+//       padding: '1vw',
+//       gap: '1vw',
+//       boxSizing: 'border-box',
+//       textWrap: 'nowrap',
+//     },
+//     content: {
+//       backgroundColor: 'red',
+//       height: '100%',
+//     },
+//     propContainer: {},
+//     propKeyName: {},
+//   });
+// };

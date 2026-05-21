@@ -49,7 +49,7 @@ export const ObjEntry = <T extends Record<string, any>>({
 interface IObjEntryTwo {
   translatedNamesForKeys: Record<string, string>;
   entryName: string;
-  style?: ObjEntryStyles
+  style?: ObjEntryStylesType
   renderForKeys: (
     {
       key: string;
@@ -59,7 +59,7 @@ interface IObjEntryTwo {
   )[];
 }
 
-export type ObjEntryStyles = {
+export type ObjEntryStylesType = {
   container?: React.CSSProperties,
   entryName?: React.CSSProperties,
   propsContainer?: React.CSSProperties,

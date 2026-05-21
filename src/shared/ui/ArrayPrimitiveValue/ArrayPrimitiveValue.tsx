@@ -2,9 +2,11 @@ import { Chip, Typography } from '@mui/material';
 import { useState, useRef } from 'react';
 import { ArrayPrimitiveValueEditor } from './ArrayPrimitiveValueEditor/ArrayPrimitiveValueEditor';
 import { useStyles } from './styles';
+import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
 
 interface IArrayPrimitiveValue {
   value?: (string | number)[] | null;
+  style?: ArrPrimitiveValueStyles
   onChangesSaved: (newValue: (string | number)[]) => void;
   onClick?: () => void;
   errorOptions?: {
@@ -14,8 +16,16 @@ interface IArrayPrimitiveValue {
   };
 }
 
+export type ArrPrimitiveValueStyles = {
+  value?: React.CSSProperties,
+  popupContainer?: React.CSSProperties,
+  popupIcons?: React.CSSProperties,
+  popupItem?: React.CSSProperties,
+}
+
 export const ArrayPrimitiveValue = ({
   value,
+  style,
   onClick,
   onChangesSaved,
   errorOptions,
@@ -33,24 +43,18 @@ export const ArrayPrimitiveValue = ({
   return (
     <>
       {value ? (
-        <>
-          <ArrayPrimitiveValueEditor
-            open={isOpen}
-            onClose={() => setIsOpen(false)}
-            value={value}
-            onSaveButtonClick={handleChangesSaved}
-            anchorEl={anchorRef.current}
-          />
-          <div
-            ref={anchorRef} // Привязываем ref
-            onClick={() => {
-              setIsOpen(true);
-            }}
-            style={styles.container}
-          >
-            <span style={styles.text}>{value.join(', ')}</span>
-          </div>
-        </>
+        <PopupState variant='popover'>
+          {state => (
+            <>
+              <ArrayPrimitiveValueEditor
+                menuProps={{ ...bindMenu(state) }}
+                value={value}
+                onSaveButtonClick={handleChangesSaved}
+              />
+              <span {...bindTrigger(state)} style={{ ...styles.text, ...style?.value }}>{value.join(', ')}</span>
+            </>
+          )}
+        </PopupState>
       ) : (
         <>
           <span onClick={() => errorOptions?.onErrorTextClick?.()}>

@@ -2,23 +2,21 @@ export type DeviceType = {
   id: string;
 
   photoURL: string | null;
-  brand: string | null;
-  model: string | null;
+  brand: string;
+  model: string;
 
-  adjustmentAirflow: boolean | null;
-  modes: string[] | null;
-  features: string[] | null;
-  screen: ('индикация' | 'полноценный' | 'нет') | null;
-  battery: BatteryType | null;
-  minCoilResistance: number | null;
+  modes: string[];
+  features: string[];
+  screen: 'индикация' | 'полноценный' | 'нет';
+  battery: BatteryType;
+  minCoilResistance: number;
 
-  platforms: PlatformType | null;
+  platforms: PlatformType;
   kit: {
     pods: (PodType & { count: number })[] | null;
     tanks: { name: string; count: number }[] | null;
     coils: { name: string; resistance: number | string }[] | null;
     somethingElse: string | null;
-    lonyard: boolean | null;
   };
 };
 
@@ -28,10 +26,10 @@ export const PLATFORM_FORMATS = ['510', 'boro', 'dot', 'squonk', 'магнит']
 export type PlatformType =
   | {
       type: 'магнит';
+      adjustmentAirflow: boolean;
       compatiblePlats: CompactiblePlatType[];
     }
-  | { type: '510' | 'boro' | 'dot' | 'squonk' }
-  | { type: null };
+  | { type: '510' | 'boro' | 'dot' | 'squonk' };
 
 export type CompactiblePlatType = {
   type: 'pod' | 'tank';
@@ -55,7 +53,7 @@ export type MagneticPlatType = {
 };
 
 export type BatteryType =
-  | { type: 'встроенный'; capacity: number | null }
+  | { type: 'встроенный'; capacity: number }
   | {
       type: 'сменный';
       format: (typeof BATTERY_FORMATS)[number] | null;

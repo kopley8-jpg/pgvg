@@ -1,12 +1,12 @@
 import { IconButton, TextField } from '@mui/material';
 import { Cancel, Save } from '@mui/icons-material';
 import { useStyles } from './styles';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 interface IPrimitiveValueEditor {
   keyName?: string;
   value: string | number;
-
+  style?: React.CSSProperties,
   onSaveButtonPress?: (newValue: string | number) => void;
   onCancelButtonPress?: () => void;
 }
@@ -14,6 +14,7 @@ interface IPrimitiveValueEditor {
 export const TextEditor = ({
   keyName,
   value,
+  style,
   onCancelButtonPress,
   onSaveButtonPress,
 }: IPrimitiveValueEditor) => {
@@ -21,7 +22,7 @@ export const TextEditor = ({
   const [localValue, setLocalValue] = useState(value);
 
   return (
-    <div style={styles.container}>
+    <div style={{ ...styles.container, ...style }}>
       <TextField
         onChange={(p) => setLocalValue(p.target.value)}
         variant="outlined"

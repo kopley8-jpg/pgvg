@@ -4,7 +4,7 @@ import type { IArrayPrimitiveValueEditor } from './types';
 export const useArrayPrimitiveValueEditor = (
   props: IArrayPrimitiveValueEditor
 ) => {
-  const { value, onClose, onSaveButtonClick } = props;
+  const { value, menuProps, onSaveButtonClick } = props;
 
   const [localValues, setLocalValues] = useState<(string | number)[]>(value);
   const [pickedValueId, setPickedValueId] = useState<number | null>(null);
@@ -46,10 +46,13 @@ export const useArrayPrimitiveValueEditor = (
       saveButton: {
         onClick: () => {
           onSaveButtonClick(localValues);
+          menuProps.onClose?.({}, 'backdropClick');
         },
       },
       exitButton: {
-        onClick: () => onClose(),
+        onClick: () => {
+          menuProps.onClose?.({}, 'backdropClick');
+        },
       },
     };
   };

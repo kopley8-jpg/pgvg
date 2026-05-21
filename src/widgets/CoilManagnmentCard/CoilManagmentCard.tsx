@@ -1,4 +1,5 @@
 import { CoilSeriesCard } from "@/entities/coils/ui/EditableCoilSeriesCard/EditableCoilSeriesCard"
+import { deleteCoilSeries } from "@/features/coilManagment/delete-coil-series/deleteCoilSeries"
 import { updateCoilSeries } from "@/features/coilManagment/edit-сoil-series/model/edit-coil-series"
 import type { CoilSeriesType } from "@/shared/types/coil-series"
 
@@ -15,8 +16,17 @@ export const CoilManagmentCard = (props: ICoilManagmentCard) => {
   return (
     <CoilSeriesCard
       coilSeries={coilSeries}
-      onChange={(k, val) => updateCoilSeries(id, k, val).catch(e => alert(e))}
-      onMenuItemClick={item => { }} />
+      onChange={(k, val) => {
+        alert(id + k + val)
+        updateCoilSeries(id, k, val).catch(e => alert(e))
+      }}
+      onMenuItemClick={item => {
+        switch (item) {
+          case "delete": deleteCoilSeries(id).catch(e => alert(e));
+        }
+      }}
+      onError={err => alert(err)}
+    />
   )
 }
 

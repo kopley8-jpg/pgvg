@@ -3,7 +3,7 @@ export function createRenderConfig<T extends Record<string, any>>(data: T) {
     forKeys: <K extends keyof T>(
       keys: K[],
       renderItem: (key: K, value: T[K]) => React.ReactNode,
-      options?: { hideKeyName?: boolean }
+      options?: { hideKeyName?: boolean; style?: React.CSSProperties }
     ) => {
       return keys.map((key) => ({
         options: options,

@@ -1,13 +1,12 @@
-import { useThemeStore } from '@/shared/hooks/useThemeStore';
 import { useStyles } from './styles';
 import { useEffect } from 'react';
 import { useDevicesStore } from '@/entities/devices/model/store/devicesStore';
-import { DeviceCard } from '@/widgets/DeviceCard/DeviceCard';
+import { DeviceCard } from '@/entities/devices/ui/EditableDeviceCard/EditableDeviceCard';
+import { useThemeStore } from '@/shared/hooks/useThemeStore';
 
 export const DevicesPage = () => {
-  const styles = useStyles();
-  const { toggleTheme } = useThemeStore();
-
+  const { colors } = useThemeStore()
+  const styles = useStyles(colors);
   const { devices, loading, subscribeToDevices, unsubscribeFromDevices } =
     useDevicesStore();
 
@@ -24,7 +23,7 @@ export const DevicesPage = () => {
   return (
     <div style={styles.container}>
       {devices.map(device => (
-        <DeviceCard key={device.id} device={device} />
+        <DeviceCard device={device} colors={colors} onError={e => { alert(e) }} />
       ))}
     </div>
   );

@@ -1,12 +1,9 @@
-import { useThemeStore } from '@/shared/hooks/useThemeStore';
 import { createStyles } from '@/shared/lib/createStyles';
 
 export const useStyles = () => {
-  const { colors } = useThemeStore();
-
   return createStyles({
     container: {
-      backgroundColor: colors.second,
+      backgroundColor: 'grey',
       padding: '1.5%',
       borderRadius: '20px',
       cursor: 'pointer', // добавим, раз это кликабельно
@@ -14,12 +11,13 @@ export const useStyles = () => {
       alignItems: 'center',
     },
     text: {
-      fontSize: '4vw',
+      fontSize: '3vw',
       textAlign: 'center',
-      color: colors.background,
-      width: 'fit-content',
-      wordBreak: 'break-word',
-      maxWidth: '100%',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      color: 'black',
+      maxWidth: '90%',
     },
   });
 };

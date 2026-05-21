@@ -9,8 +9,7 @@ export const useStyles = () => {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-      padding: '1.2%',
-      gap: '3%',
+      justifyContent: 'flex-start',
     },
 
     TextField: {

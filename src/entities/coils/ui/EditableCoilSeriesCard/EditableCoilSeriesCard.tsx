@@ -44,7 +44,7 @@ export const CoilSeriesCard = (props: ICoilSeriesCard) => {
         </>
       )}
       renderForKeys={[
-        ...createRenderConfig(coilSeries).forKeys(['ohms'], (key, value) => (
+        ...createRenderConfig(coilSeries).forKeys(['ohms'], (_key, value) => (
           <ArrayPrimitiveValue
             value={value}
             onChangesSaved={handleOhmsChange}

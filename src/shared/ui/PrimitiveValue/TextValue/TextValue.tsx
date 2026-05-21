@@ -1,11 +1,12 @@
 import { useStyles } from './styles';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { TextEditor } from '../../TextEditor/TextEditor';
 import { convertToNumber } from '@/shared/lib/convertToNumber';
 
 interface IPrimitiveValueEditor {
   value?: string | number | null;
   fontSize?: any;
+  style?: React.CSSProperties
   onSaveButtonPress?: (newValue: string | number) => void;
   errorOptions?: {
     errorText: string;
@@ -18,6 +19,7 @@ export const TextValue = ({
   onSaveButtonPress,
   fontSize,
   errorOptions,
+  style
 }: IPrimitiveValueEditor) => {
   const styles = useStyles();
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -28,6 +30,7 @@ export const TextValue = ({
         <>
           {isEditing ? (
             <TextEditor
+              style={style}
               value={value}
               onCancelButtonPress={() => setIsEditing(false)}
               onSaveButtonPress={(p) => {

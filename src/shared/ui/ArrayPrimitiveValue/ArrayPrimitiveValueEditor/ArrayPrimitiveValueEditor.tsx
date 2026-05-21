@@ -1,8 +1,6 @@
 import { Add, Cancel, Delete, Save } from '@mui/icons-material';
 import { Divider, IconButton, Menu, MenuItem, Popover } from '@mui/material';
-import { useState } from 'react';
 import { useStyles } from './styles';
-import { TextValue } from '../../PrimitiveValue/TextValue/TextValue';
 import type { IArrayPrimitiveValueEditor } from './model/types';
 import { useArrayPrimitiveValueEditor } from './model/useArrayPrimitiveValueEditor';
 import { TextEditor } from '../../TextEditor/TextEditor';
@@ -14,7 +12,7 @@ export const ArrayPrimitiveValueEditor = (
 ) => {
   const styles = useStyles();
 
-  const { value } = props
+  const { value, style } = props
 
   const {
     localValues,
@@ -26,20 +24,20 @@ export const ArrayPrimitiveValueEditor = (
 
   return (
     <Popover
-      {...props}
+      {...props.menuProps}
       anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
       transformOrigin={{ vertical: 'top', horizontal: 'left' }}
       slotProps={{
         paper: {
-          style: styles.container,
+          style: { ...styles.container, ...style?.popupContainer },
         },
       }}
     >
       <div style={styles.header}>
-        <IconButton size='small' {...handler.exitButton}>
+        <IconButton size='small' {...handler.exitButton} sx={style?.popupIcons}>
           <Cancel fontSize='small' />
         </IconButton>
-        <IconButton size="small" {...handler.saveButton}>
+        <IconButton size="small" {...handler.saveButton} sx={style?.popupIcons}>
           <Save fontSize="small" />
         </IconButton>
 
@@ -53,17 +51,17 @@ export const ArrayPrimitiveValueEditor = (
                 value={val}
                 {...handler.editing.textField}
               />
-              <IconButton size='small' sx={styles.button} {...handler.editing.deleteButton}>
+              <IconButton size='small' {...handler.editing.deleteButton} sx={style?.popupIcons}>
                 <Delete fontSize='small' />
               </IconButton>
             </div>
           ) : (
-            <MenuItem onClick={() => handler.item.onClick(index)}>{val}</MenuItem>
+            <MenuItem onClick={() => handler.item.onClick(index)} sx={style?.popupItem}>{val}</MenuItem>
           )}
         </>
       ))}
 
-      <IconButton sx={{ borderRadius: 0 }} size='small' {...handler.addButton}>
+      <IconButton sx={{ borderRadius: 0, ...style?.popupIcons }} size='small' {...handler.addButton} >
         <Add fontSize='small' />
       </IconButton>
     </Popover>

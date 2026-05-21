@@ -1,40 +1,42 @@
 import { useState } from 'react';
 import type { IDropDownList } from './DropDown.types';
 import { useStyles } from './DropDown.styles';
+import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
+import { Box, MenuItem, Popover } from '@mui/material';
 
 export const DropDownList = <T extends string | undefined | null>({
   value,
   data,
+  style,
   onPick,
 }: IDropDownList<T>) => {
-  const [isOpen, setIsOpen] = useState(false);
-
   const styles = useStyles();
 
   return (
-    <div style={{ position: 'relative' }}>
-      {isOpen ? (
-        <div style={styles.container}>
-          {data.map((str) => (
-            <span
-              style={{ fontSize: '5vw', cursor: 'pointer' }}
-              onClick={() => {
-                onPick(str);
-                setIsOpen(false);
-              }}
-            >
-              {str}
-            </span>
-          ))}
-        </div>
-      ) : (
-        <span
-          onClick={() => setIsOpen(true)}
-          style={{ fontSize: '5vw', cursor: 'pointer' }}
-        >
-          {value ? value : '...'}
-        </span>
+    <PopupState variant="popover" >
+      {state => (
+        <>
+          <span {...bindTrigger(state)} style={{ ...style?.value }}>{value}</span>
+          <Popover
+            {...bindMenu(state)}
+            slotProps={{
+              paper: {
+                style: { ...style?.menuContainer }
+              }
+            }}>
+            {data.map(item => (
+              <MenuItem
+                sx={{ ...style?.menuItem }}
+                onClick={() => {
+                  onPick(item)
+                  state.close()
+                }}>{item}</MenuItem>
+            ))}
+          </Popover>
+        </>
       )}
-    </div>
+    </PopupState>
   );
 };
+
+

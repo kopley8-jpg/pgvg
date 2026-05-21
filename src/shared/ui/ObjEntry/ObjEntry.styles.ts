@@ -1,9 +1,6 @@
-import { useThemeStore } from '@/shared/hooks/useThemeStore';
 import { createStyles } from '@/shared/lib/createStyles';
 
 export const useStyles = () => {
-  const { colors } = useThemeStore();
-
   return createStyles({
     container: {
       display: 'flex',
@@ -21,7 +18,6 @@ export const useStyles = () => {
       paddingLeft: '8%',
       borderRadius: '10px',
       boxSizing: 'border-box',
-      borderLeft: `3px ${colors.primary} solid`,
     },
     propContainer: {
       display: 'flex',

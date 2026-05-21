@@ -1,19 +1,17 @@
-import { useThemeStore } from '@shared/hooks/useThemeStore';
+import type { colors as cols } from '@/shared/constants/colors';
 import { createStyles } from '@shared/lib/createStyles';
 
-export const useStyles = () => {
-  const { colors } = useThemeStore();
-
+export const useStyles = (colors: typeof cols.light) => {
   return createStyles({
     container: {
-      width: '100vw',
-      height: '100vh',
+      width: '100%',
+      height: '100%',
 
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      gap: '3.5%',
-      paddingTop: '7%',
+      gap: '3vh',
+      paddingTop: '3vh',
       overflowY: 'auto',
 
       backgroundColor: colors.background,
