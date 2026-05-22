@@ -20,6 +20,7 @@ export const ObjCardStyles = (colors: typeof cols.light): ObjCardStylesType => {
     prop: {
       color: colors.primary,
     },
+    propKeyName: {},
   };
 };
 
@@ -32,7 +33,8 @@ export const ObjEntryStyles = (
       fontSize: '3vw',
     },
     propsContainer: {
-      borderLeft: `3px ${colors.primary} solid`,
+      borderLeft: `2px ${colors.primary} solid`,
+      fontSize: '3vw',
     },
   };
 };

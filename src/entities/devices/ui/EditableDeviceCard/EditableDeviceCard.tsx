@@ -23,6 +23,7 @@ export const DeviceCard = (props: IDeviceCard) => {
 
   const styles = useStyles(colors);
 
+
   return (
     <ObjCard
       data={device}
@@ -42,12 +43,10 @@ export const DeviceCard = (props: IDeviceCard) => {
             <PlatformEntry
               platform={value}
               objEntryStyles={ObjEntryStyles(colors)}
+              {...uiHandler.platform}
             />
           ),
-          {
-            hideKeyName: true,
-            style: { border: '0px black solid' },
-          }
+          { hideKeyName: true, }
         ),
 
         ...deviceConfig.forKeys(
@@ -56,17 +55,10 @@ export const DeviceCard = (props: IDeviceCard) => {
             <BatteryEntry
               style={ObjEntryStyles(colors)}
               battery={value}
-              onError={(e) => {
-                alert(e);
-              }}
+              {...uiHandler.battery}
             />
           ),
-          {
-            hideKeyName: true,
-            style: {
-              border: '0px rgba(0,0,0,0), solid',
-            },
-          }
+          { hideKeyName: true }
         ),
         ...deviceConfig.forKeys(['minCoilResistance'], (_key, value) => (
           <TextValue
@@ -83,11 +75,11 @@ export const DeviceCard = (props: IDeviceCard) => {
             }}
             value={value}
             data={['индикация', 'нет', 'полноценный']}
-            onPick={() => {}}
+            {...uiHandler.screen}
           />
         )),
-        ...deviceConfig.forKeys(['features', 'modes'], (_key, value) => (
-          <ArrayPrimitiveValue value={value} onChangesSaved={() => {}} />
+        ...deviceConfig.forKeys(['features', 'modes'], (key, value) => (
+          <ArrayPrimitiveValue value={value} {...uiHandler.featuresNModes(key)} />
         )),
       ]}
     />

@@ -1,12 +1,23 @@
 import { subscribeToDeviceById } from '@/shared/api/firebase/devices';
-import type { DeviceType } from '@/shared/types/device';
+import type {
+  BatteryType,
+  CompactiblePlatType,
+  DeviceType,
+  PlatformType,
+} from '@/shared/types/device';
 import { useEffect, useState } from 'react';
 import type { IDeviceCard } from './types';
 import { Key } from '@mui/icons-material';
 import { convertToNumber } from '@/shared/lib/convertToNumber';
 
 export const useDeviceCard = (props: IDeviceCard) => {
-  const { device: imDevice, onChange, onError } = props;
+  const {
+    device: imDevice,
+    onChange,
+    onCompatiblePlatAdd,
+    onPlatItemClick,
+    onError,
+  } = props;
 
   const [device, setDevice] = useState<DeviceType | null>(null);
   const [loading, setLoading] = useState(typeof imDevice === 'string');
@@ -58,6 +69,43 @@ export const useDeviceCard = (props: IDeviceCard) => {
     brand: handleTextFieldChange('brand'),
     model: handleTextFieldChange('model'),
     minCoilResisnatce: handleTextFieldChange('minCoilResistance'),
+    platform: {
+      onChange: (newPlatform: PlatformType) => {
+        onChange?.('platforms', newPlatform);
+      },
+      onCompatiblePlatAdd: (
+        e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+      ) => {
+        onCompatiblePlatAdd(e);
+      },
+      onPlatItemClick: (plat: CompactiblePlatType) => {
+        onPlatItemClick(plat);
+      },
+    },
+    battery: {
+      onChange: (battery: BatteryType) => {
+        onChange?.('battery', battery);
+      },
+      onError: (error: string) => {
+        onError?.(error);
+      },
+    },
+    screen: {
+      onPick: (picked: 'индикация' | 'полноценный' | 'нет' | undefined) => {
+        if (!picked) return;
+        onChange?.('screen', picked);
+      },
+    },
+    featuresNModes: (key: 'features' | 'modes') => {
+      return {
+        onChangesSaved: (newVal: (string | number)[]) => {
+          onChange?.(
+            key,
+            newVal.map((val) => val.toString())
+          );
+        },
+      };
+    },
   };
 
   return {

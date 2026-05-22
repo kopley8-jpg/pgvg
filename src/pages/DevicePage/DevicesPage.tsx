@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useDevicesStore } from '@/entities/devices/model/store/devicesStore';
 import { DeviceCard } from '@/entities/devices/ui/EditableDeviceCard/EditableDeviceCard';
 import { useThemeStore } from '@/shared/hooks/useThemeStore';
+import { DeviceManagmentCard } from '@/widgets/DeviceManagmentCard/DeviceManagmentCard';
 
 export const DevicesPage = () => {
   const { colors } = useThemeStore()
@@ -23,7 +24,7 @@ export const DevicesPage = () => {
   return (
     <div style={styles.container}>
       {devices.map(device => (
-        <DeviceCard device={device} colors={colors} onError={e => { alert(e) }} />
+        <DeviceManagmentCard device={device} />
       ))}
     </div>
   );

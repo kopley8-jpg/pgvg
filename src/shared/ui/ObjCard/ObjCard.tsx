@@ -29,16 +29,24 @@ export const ObjCard = <T extends Record<string, any>>({
         </div>
         <div style={{ ...styles.props, ...propsStyles?.props }}>
           {renderForKeys.map(render => (
-            <div style={{ ...styles.prop, ...propsStyles?.prop, ...render.options?.style }}>
+            <>
               {!render.options?.hideKeyName ? (
-                <div style={styles.propKeyNameContainer}>
-                  <span>{translatedNamesForKeys ? translatedNamesForKeys[render.key] : render.key.toString()}</span>
+                <div style={{ ...styles.prop, ...propsStyles?.prop, ...render.options?.style }}>
+                  <div style={styles.propKeyNameContainer}>
+                    <span>{translatedNamesForKeys ? translatedNamesForKeys[render.key] : render.key.toString()}</span>
+                  </div>
+                  <div style={{ ...styles.propContentContainer }}>
+                    {render.renderItem(render.key, data[render.key])}
+                  </div>
                 </div>
-              ) : (<></>)}
-              <div style={styles.propContentContainer}>
-                {render.renderItem(render.key, data[render.key])}
-              </div>
-            </div>
+              ) : (
+                <div style={{ ...styles.prop, ...propsStyles?.prop, border: "0px black solid" }}>
+                  <div style={{ ...styles.propContentContainer, width: "100%" }}>
+                    {render.renderItem(render.key, data[render.key])}
+                  </div>
+                </div>
+              )}
+            </>
           ))}
         </div>
       </div>
@@ -56,16 +64,16 @@ const useStyles = () => {
       boxSizing: "border-box",
       display: "flex",
       flexDirection: "row",
-      width: '60%'
+      height: "35vh"
     },
     img: {
       objectFit: "contain",
-      maxWidth: "20vw"
+      height: "100%"
     },
     info: {
       display: "flex",
       flexDirection: "column",
-      width: "100%"
+      width: "40vw"
     },
     header: {
       borderBottom: "2px grey solid",
@@ -77,6 +85,7 @@ const useStyles = () => {
       gap: "0.5vw",
     },
     props: {
+      width: "100%",
       height: "100%",
       display: "flex",
       flexDirection: "column",
@@ -84,12 +93,13 @@ const useStyles = () => {
       paddingBottom: "0.5vh",
       gap: "0.5vh",
       paddingLeft: "1vw",
-      paddingRight: "1vw"
+      paddingRight: "1vw",
+      overflowY: "auto"
     },
     prop: {
+      width: "100%",
       display: "flex",
       flexDirection: "row",
-      alignItems: "stretch",
       border: "2px grey solid",
       borderRadius: "20px",
     },
@@ -108,45 +118,8 @@ const useStyles = () => {
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      justifyContent: "center"
+      justifyContent: "center",
+      cursor: "pointer"
     }
   })
 }
-
-const renderPropsByKeys = <T extends Record<string, any>, K extends keyof T>(
-  data: T,
-  keys: K[],
-  renderItem: (key: K, value: T[K]) => React.ReactNode
-) => {
-  return keys.map((key) => <>{renderItem(key, data[key])}</>);
-};
-
-
-// <div style={{ ...styles.container, ...style?.container }}>
-//   {photoURL ? (
-//     <img src={photoURL ? photoURL : ''} style={styles.photo} />
-//   ) : (<></>)}
-//   <div style={{ ...styles.infoContainer, ...style?.infoContainer }}>
-//     <div style={{ ...styles.header, ...style?.header }}>{renderInHeader()}</div>
-//     <div style={{ ...styles.content, ...style?.content }}>
-//       {renderForKeys.map((renderForKey) => (
-//         <div style={{ ...styles.propContainer, ...style?.propContainer }}>
-//           {renderForKey.options && renderForKey.options.hideKeyName ? (
-//             <></>
-//           ) : (
-//             <span style={{ ...styles.propKeyName, ...style?.propKeyName }}>
-//               {translatedNamesForKeys
-//                 ? translatedNamesForKeys[renderForKey.key]
-//                 : renderForKey.key.toString()}
-//               :
-//             </span>
-//           )}
-//           {renderForKey.renderItem(
-//             renderForKey.key,
-//             data[renderForKey.key]
-//           )}
-//         </div>
-//       ))}
-//     </div>
-//   </div>
-// </div>
