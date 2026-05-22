@@ -3,6 +3,7 @@ import { createStyles } from '@/shared/lib/createStyles';
 export const useStyles = () => {
   return createStyles({
     container: {
+      width: '100%',
       display: 'flex',
       flexDirection: 'column',
       fontSize: '3vw',
