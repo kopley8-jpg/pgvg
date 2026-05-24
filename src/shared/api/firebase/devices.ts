@@ -1,4 +1,4 @@
-import { off, onValue, push, ref } from 'firebase/database';
+import { get, off, onValue, push, ref } from 'firebase/database';
 import database from './client';
 import type { DeviceType } from '@/shared/types/device';
 
@@ -23,9 +23,18 @@ export const subscribeToDevices = (
         ([key, value]: [string, any]) => ({
           id: key,
           ...(value as Omit<DeviceType, 'id'>),
+          platforms:
+            value.platforms.type === 'магнит'
+              ? {
+                  ...value.platforms,
+                  compatiblePlats: Object.values(
+                    value.platforms.compatiblePlats ?? {}
+                  ),
+                }
+              : value.platforms,
         })
       );
-
+      console.log(devices);
       onUpdate(devices);
     } catch (error) {
       onError?.('не удалось загрузить девайсы');
@@ -56,6 +65,17 @@ export const subscribeToDeviceById = (
   });
 
   return () => off(deviceRef, 'value', handler);
+};
+
+export const getDevices = async (): Promise<DeviceType[]> => {
+  const devicesRef = ref(database, devicePath);
+  const snapshot = await get(devicesRef);
+  const data = snapshot.val();
+  if (!data) return [];
+  return Object.entries(data).map(([key, value]: [string, any]) => ({
+    id: key,
+    ...(value as Omit<DeviceType, 'id'>),
+  }));
 };
 
 export const pushDevice = async (

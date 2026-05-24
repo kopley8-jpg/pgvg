@@ -15,4 +15,5 @@ export interface ITankSeriesCard {
   onCoilAdd: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   onError?: (error: string) => void;
   onDelete: () => void;
+  headerRender?: React.ReactNode;
 }

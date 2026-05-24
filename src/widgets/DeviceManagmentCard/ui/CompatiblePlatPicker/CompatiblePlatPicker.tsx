@@ -1,6 +1,5 @@
 import {
   Box,
-  Divider,
   IconButton,
   MenuItem,
   Modal,
@@ -17,10 +16,7 @@ import { createStyles } from '@/shared/lib/createStyles';
 import { Add, Search } from '@mui/icons-material';
 import type { PodSeriesType } from '@/shared/types/pod-series';
 import type { TankSeriesType } from '@/shared/types/tank-series';
-import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
 import { PodManagmentCard } from '@/widgets/PodManagmentCard/PodManagmentCard';
-import { pushPodSeries } from '@/features/pod-managment/push-pod-series/push-pod-series';
-import { pushTankSeries } from '@/features/tank-managment/push-tank-series/push-tank-series';
 import { TankManagmentCard } from '@/widgets/TankManagmentCard/TankManagmentCard';
 
 export const CompatiblePlatPicker = (props: ICompatiblePlatPicker) => {
@@ -61,6 +57,7 @@ export const CompatiblePlatPicker = (props: ICompatiblePlatPicker) => {
                 open: platToShow ? platToShow.id === plat.id : false,
                 ...uiHandler.seriesCardDialog.menuProps,
               }}
+              onAdd={() => uiHandler.seriesCardDialog.onAdd(plat)}
             />
           </>
         ))}
@@ -72,11 +69,13 @@ export const CompatiblePlatPicker = (props: ICompatiblePlatPicker) => {
 const SeriesCardDialog = ({
   series,
   menuProps,
+  onAdd
 }: {
   series:
-    | ({ type: 'pod' } & PodSeriesType)
-    | ({ type: 'tank' } & TankSeriesType);
+  | ({ type: 'pod' } & PodSeriesType)
+  | ({ type: 'tank' } & TankSeriesType);
   menuProps: MenuProps;
+  onAdd: () => void
 }) => {
   return (
     <Modal
@@ -93,13 +92,26 @@ const SeriesCardDialog = ({
         <PodManagmentCard
           podSeries={series}
           renderInHeader={
-            <IconButton size="small">
+            <IconButton size="small" onClick={() => {
+              menuProps.onClose?.({}, "backdropClick")
+              onAdd()
+            }}>
               <Add fontSize="small" />
             </IconButton>
           }
         />
       ) : (
-        <TankManagmentCard tankSeries={series} />
+        <TankManagmentCard
+          headerRender={(
+            <IconButton size="small" onClick={() => {
+              menuProps.onClose?.({}, "backdropClick")
+              onAdd()
+            }}>
+              <Add fontSize="small" />
+            </IconButton>
+          )}
+          tankSeries={series}
+        />
       )}
     </Modal>
   );

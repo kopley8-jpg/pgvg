@@ -1,5 +1,5 @@
 import { PodSeriesCard } from '@/entities/pods/ui/PodSeriesCard/EditablePodSeriesCard';
-import { deletePodSeries } from '@/features/pod-managment/delete-pod-series/deleteCoilSeries';
+import { deletePodSeries } from '@/features/pod-managment/delete-pod-series/deletePodSeries';
 import { updatePodSeries } from '@/features/pod-managment/update-pod-series/update-pod-series';
 import { useThemeStore } from '@/shared/hooks/useThemeStore';
 import type { PodSeriesType } from '@/shared/types/pod-series';

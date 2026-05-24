@@ -33,7 +33,7 @@ export type PlatformType =
   | {
       type: 'магнит';
       adjustmentAirflow: boolean;
-      compatiblePlats: CompactiblePlatType[] | null;
+      compatiblePlats: CompactiblePlatType[];
     }
   | { type: '510' | 'boro' | 'dot' | 'squonk' };
 

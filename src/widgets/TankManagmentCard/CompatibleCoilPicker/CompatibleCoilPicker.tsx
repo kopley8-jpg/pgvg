@@ -1,31 +1,22 @@
 import {
   Box,
-  Divider,
   IconButton,
   MenuItem,
   Modal,
   Popover,
-  Tab,
-  Tabs,
   TextField,
   type MenuProps,
-  type ModalProps,
 } from '@mui/material';
 import type { ICompatiblePlatPicker } from './model/types';
-import { useCompatiblePlatPicker } from './model/useCompatibleCoilPicker';
+import { useCompatibleCoilPicker } from './model/useCompatibleCoilPicker';
 import { createStyles } from '@/shared/lib/createStyles';
 import { Add, Search } from '@mui/icons-material';
-import type { PodSeriesType } from '@/shared/types/pod-series';
-import type { TankSeriesType } from '@/shared/types/tank-series';
-import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
-import { PodManagmentCard } from '@/widgets/PodManagmentCard/PodManagmentCard';
-import { pushPodSeries } from '@/features/pod-managment/push-pod-series/push-pod-series';
-import { pushTankSeries } from '@/features/tank-managment/push-tank-series/push-tank-series';
-import { TankManagmentCard } from '@/widgets/TankManagmentCard/TankManagmentCard';
+import type { CoilSeriesType } from '@/shared/types/coil-series';
+import { CoilManagmentCard } from '@/widgets/CoilManagnmentCard/CoilManagmentCard';
 
-export const CompatiblePlatPicker = (props: ICompatiblePlatPicker) => {
-  const { plats, currentTab, platToShow, uiHandler } =
-    useCompatiblePlatPicker(props);
+export const CompatibleCoilPicker = (props: ICompatiblePlatPicker) => {
+  const { coils, coilToShow, uiHandler } =
+    useCompatibleCoilPicker(props);
   const styles = useStyles();
   return (
     <Popover
@@ -46,21 +37,18 @@ export const CompatiblePlatPicker = (props: ICompatiblePlatPicker) => {
           },
         }}
       />
-      <Tabs value={currentTab} {...uiHandler.tabs}>
-        <Tab label={'Поды'} id="pods" />
-        <Tab label={'Танки'} id="tanks" />
-      </Tabs>
       <Box sx={styles.box}>
-        <MenuItem {...uiHandler.createSeriesButton}>+ Создать серию</MenuItem>
-        {plats.map((plat) => (
+        <MenuItem {...uiHandler.createCoilButton}>+ Создать серию</MenuItem>
+        {coils.map((coil) => (
           <>
-            <MenuItem {...uiHandler.platItem(plat)}>{plat.name}</MenuItem>
+            <MenuItem {...uiHandler.coilItem(coil)}>{coil.name}</MenuItem>
             <SeriesCardDialog
-              series={plat}
+              series={coil}
               menuProps={{
-                open: platToShow ? platToShow.id === plat.id : false,
+                open: coilToShow ? coilToShow.id === coil.id : false,
                 ...uiHandler.seriesCardDialog.menuProps,
               }}
+              onAdd={() => uiHandler.seriesCardDialog.onAdd(coil)}
             />
           </>
         ))}
@@ -72,11 +60,11 @@ export const CompatiblePlatPicker = (props: ICompatiblePlatPicker) => {
 const SeriesCardDialog = ({
   series,
   menuProps,
+  onAdd
 }: {
-  series:
-    | ({ type: 'pod' } & PodSeriesType)
-    | ({ type: 'tank' } & TankSeriesType);
+  series: CoilSeriesType
   menuProps: MenuProps;
+  onAdd: () => void
 }) => {
   return (
     <Modal
@@ -89,18 +77,13 @@ const SeriesCardDialog = ({
         justifyContent: 'center',
       }}
     >
-      {series.type === 'pod' ? (
-        <PodManagmentCard
-          podSeries={series}
-          renderInHeader={
-            <IconButton size="small">
-              <Add fontSize="small" />
-            </IconButton>
-          }
-        />
-      ) : (
-        <TankManagmentCard tankSeries={series} />
-      )}
+      <CoilManagmentCard
+        coilSeries={series.id}
+        renderInHeader={(
+          <IconButton size='small' onClick={onAdd}>
+            <Add fontSize='small' />
+          </IconButton>
+        )} />
     </Modal>
   );
 };

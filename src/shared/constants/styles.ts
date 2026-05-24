@@ -9,6 +9,7 @@ export const ObjCardStyles = (colors: typeof cols.light): ObjCardStylesType => {
       border: `2px ${colors.second} solid`,
       fontSize: '3vw',
       color: colors.primary,
+      backgroundColor: colors.background,
     },
     photo: {
       borderRadius: '20px 0px 0px 20px',

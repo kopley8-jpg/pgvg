@@ -8,6 +8,7 @@ import { pushPodSeries } from '@/features/pod-managment/push-pod-series/push-pod
 import { pushTankSeries } from '@/features/tank-managment/push-tank-series/push-tank-series';
 
 export const useCompatiblePlatPicker = (props: ICompatiblePlatPicker) => {
+  const { onClose, onPick } = props;
   const [loading, setLoading] = useState(false);
   const [plats, setPlats] = useState<
     ({ type: 'pod' } & PodSeriesType)[] | ({ type: 'tank' } & TankSeriesType)[]
@@ -82,6 +83,22 @@ export const useCompatiblePlatPicker = (props: ICompatiblePlatPicker) => {
         onClose: () => {
           setPlatToShow(null);
         },
+      },
+      onAdd: (
+        plat:
+          | ({
+              type: 'pod';
+            } & PodSeriesType)
+          | ({
+              type: 'tank';
+            } & TankSeriesType)
+      ) => {
+        onPick({
+          type: plat.type,
+          name: plat.name,
+          idFromPlatforms: plat.id,
+        });
+        onClose();
       },
     },
   };

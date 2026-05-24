@@ -1,96 +1,67 @@
 import { useEffect, useState } from 'react';
 import type { ICompatiblePlatPicker } from './types';
-import type { PodSeriesType } from '@/shared/types/pod-series';
-import type { TankSeriesType } from '@/shared/types/tank-series';
-import { subscribeToPods } from '@/shared/api/firebase/pods';
-import { subscribeToTanks } from '@/shared/api/firebase/tanks';
-import { pushPodSeries } from '@/features/pod-managment/push-pod-series/push-pod-series';
-import { pushTankSeries } from '@/features/tank-managment/push-tank-series/push-tank-series';
+import type { CoilSeriesType } from '@/shared/types/coil-series';
+import { pushCoilSeries, subscribeToCoils } from '@/shared/api/firebase/coils';
+import type { CompactibleCoilSeriesesType } from '@/shared/types/tank-series';
 
-export const useCompatiblePlatPicker = (props: ICompatiblePlatPicker) => {
+export const useCompatibleCoilPicker = (props: ICompatiblePlatPicker) => {
+  const { onClose, onPick } = props;
   const [loading, setLoading] = useState(false);
-  const [plats, setPlats] = useState<
-    ({ type: 'pod' } & PodSeriesType)[] | ({ type: 'tank' } & TankSeriesType)[]
-  >([]);
-  const [currentTab, setCurrentTab] = useState(0);
-  const [platToShow, setPlatToShow] = useState<
-    | ({
-        type: 'pod';
-      } & PodSeriesType)
-    | ({
-        type: 'tank';
-      } & TankSeriesType)
-    | null
-  >(null);
-  const [newPlatId, setNewPlatId] = useState<string | null>(null);
+  const [coils, setCoils] = useState<CoilSeriesType[]>([]);
+  const [coilToShow, setCoilToShow] = useState<CoilSeriesType | null>(null);
+  const [newCoilId, setNewCoilId] = useState<string | null>(null);
 
   useEffect(() => {
     setLoading(true);
 
     let unsubscribe = () => {};
 
-    if (currentTab === 0) {
-      unsubscribe = subscribeToPods((pods) => {
-        setPlats(pods.map((pod) => ({ ...pod, type: 'pod' })));
-      });
-    } else {
-      unsubscribe = subscribeToTanks((tanks) => {
-        setPlats(tanks.map((tank) => ({ ...tank, type: 'tank' })));
-      });
-    }
+    unsubscribe = subscribeToCoils((coils) => {
+      setCoils(coils);
+    });
 
-    if (newPlatId) {
-      const newPlat = plats.find((plat) => plat.id === newPlatId);
-      setPlatToShow(newPlat ? newPlat : null);
+    if (newCoilId) {
+      const newCoil = coils.find((coil) => coil.id === newCoilId);
+      setCoilToShow(newCoil ? newCoil : null);
     }
 
     return () => {
       unsubscribe();
     };
-  }, [currentTab, newPlatId]);
+  }, [newCoilId]);
 
   const uiHandler = {
-    tabs: {
-      onChange: (event: React.SyntheticEvent<Element, Event>, value: any) => {
-        setCurrentTab(value);
-      },
-    },
-    createSeriesButton: {
+    createCoilButton: {
       onClick: async () => {
-        if (currentTab === 0) {
-          let newId = await pushPodSeries();
-          setNewPlatId(newId);
-        } else {
-          let newId = await pushTankSeries();
-          setNewPlatId(newId);
-        }
+        let newId = await pushCoilSeries();
+        setNewCoilId(newId);
       },
     },
-    platItem: (
-      plat:
-        | ({ type: 'tank' } & TankSeriesType)
-        | ({ type: 'pod' } & PodSeriesType)
-    ) => {
+    coilItem: (coil: CoilSeriesType) => {
       return {
         onClick: () => {
-          setPlatToShow(plat);
+          setCoilToShow(coil);
         },
       };
     },
     seriesCardDialog: {
       menuProps: {
         onClose: () => {
-          setPlatToShow(null);
+          setCoilToShow(null);
         },
+      },
+      onAdd: (coil: CoilSeriesType) => {
+        onPick({ name: coil.name, idFromPlatforms: coil.id });
+        setCoilToShow(null);
+        onClose();
       },
     },
   };
 
   return {
-    plats,
-    currentTab,
+    coils,
     uiHandler,
-    platToShow,
-    newPlatId,
+    coilToShow,
+    newCoilId,
   };
 };

@@ -11,14 +11,20 @@ import { useCoilSeriesCard } from './model/useCoilSeriesCard';
 import { ObjCardStyles } from '@/shared/constants/styles';
 
 export const CoilSeriesCard = (props: ICoilSeriesCard) => {
-  const { onChange, onMenuItemClick, colors } = props;
+  const { onChange, onMenuItemClick, colors, renderInHeader } = props;
   const { coilSeries, loading, handleOhmsChange } = useCoilSeriesCard(props);
 
   if (!coilSeries || loading) return <span>загрузка...</span>;
 
   return (
     <ObjCard
-      styles={ObjCardStyles(colors)}
+      styles={{
+        ...ObjCardStyles(colors),
+        container: {
+          ...ObjCardStyles(colors).container,
+          height: "20vh"
+        }
+      }}
       translatedNamesForKeys={translate}
       data={coilSeries}
       renderInHeader={() => (
@@ -42,6 +48,7 @@ export const CoilSeriesCard = (props: ICoilSeriesCard) => {
               </>
             )}
           </PopupState>
+          {renderInHeader}
         </>
       )}
       renderForKeys={[

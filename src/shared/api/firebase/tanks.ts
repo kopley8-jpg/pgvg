@@ -17,10 +17,17 @@ export const subscribeToTanks = (
     const tankSerieses: TankSeriesType[] = Object.entries(data).map(
       ([key, value]: [string, any]) => ({
         id: key,
-        ...(value as Omit<TankSeriesType, 'id'>),
+        name: value.name,
+        capacity:
+          typeof value.capacity === 'object'
+            ? Object.values(value.capacity ?? {})
+            : [value.capacity],
+        compatibleCoilSerieses: Object.values(
+          value.compatibleCoilSerieses ?? {}
+        ),
       })
     );
-
+    console.log(tankSerieses);
     onUpdate(tankSerieses);
   });
 
@@ -52,4 +59,8 @@ export const subscribeToTankSeriesById = (
   });
 
   return () => off(tankRef, 'value', handler);
+};
+
+const rtdbToArray = <T extends object>(data: T) => {
+  return Object(data).entries.map(([_key, value]: [string, any]) => value);
 };

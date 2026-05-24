@@ -26,7 +26,8 @@ export const subscribeToCoils = (
       const coilSerieses: CoilSeriesType[] = Object.entries(data).map(
         ([key, value]: [string, any]) => ({
           id: key,
-          ...(value as Omit<CoilSeriesType, 'id'>),
+          name: value.name ?? 'Неизвестный испарик',
+          ohms: Object.values(value.ohms ?? {}),
         })
       );
 
@@ -63,18 +64,18 @@ export const subscribeToCoilSeriesById = (
 };
 
 export const pushCoilSeries = async (
-  coilSeries: Omit<CoilSeriesType, 'id'>
-): Promise<string | null> => {
+  coilSeries?: Omit<CoilSeriesType, 'id'>
+) => {
   const coilsRef = ref(database, 'kochegar/platform/coils');
 
-  try {
-    const newRef = await push(coilsRef, coilSeries);
-    if (!newRef.key) {
-      throw new Error(`Failed to generate unique key for coil series`);
-    }
-    return newRef.key;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  const newRef = await push(
+    coilsRef,
+    coilSeries ? coilSeries : NEW_COIL_SERIES
+  );
+  return newRef.key;
+};
+
+export const NEW_COIL_SERIES: Omit<CoilSeriesType, 'id'> = {
+  name: 'Новая серия испариков',
+  ohms: [1],
 };

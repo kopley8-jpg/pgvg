@@ -1,6 +1,9 @@
+import { updateDevice } from '@/features/device-managment/update-device/update-device';
 import database from '@/shared/api/firebase/client';
+import { getDevices } from '@/shared/api/firebase/devices';
+import type { CompactiblePlatType, PlatformType } from '@/shared/types/device';
 import type { PodSeriesType } from '@/shared/types/pod-series';
-import { ref, update } from 'firebase/database';
+import { push, ref, update } from 'firebase/database';
 
 export const updatePodSeries = async <
   K extends keyof Omit<PodSeriesType, 'id'>,
@@ -10,6 +13,48 @@ export const updatePodSeries = async <
   value: Omit<PodSeriesType, 'id'>[K]
 ) => {
   const podRef = ref(database, `kochegar/platform/pods/${id}`);
+
+  if (key === 'name') {
+    const devices = await getDevices();
+    await Promise.all(
+      devices
+        .filter(
+          (device) =>
+            device.platforms.type === 'магнит' &&
+            device.platforms.compatiblePlats?.some(
+              (plat) => plat.idFromPlatforms === id
+            )
+        )
+        .map((device) => {
+          const platforms = device.platforms as Extract<
+            PlatformType,
+            { type: 'магнит' }
+          >;
+          return updateDevice(device.id, 'platforms', {
+            ...platforms,
+            compatiblePlats: platforms.compatiblePlats?.map((plat) =>
+              plat.idFromPlatforms === id
+                ? { ...plat, name: value.toString() }
+                : plat
+            ),
+          });
+        })
+    );
+  }
+
   await update(podRef, { [key]: value });
-  alert(id + key + value);
+};
+
+export const pushCompactiblePlat = async (
+  deviceId: string,
+  plat: CompactiblePlatType
+) => {
+  const platRef = ref(
+    database,
+    `kochegar/devices/${deviceId}/platforms/compatiblePlats`
+  );
+
+  alert(`kochegar/devices/${deviceId}/platforms/compatiblePlats`);
+
+  await push(platRef, plat);
 };

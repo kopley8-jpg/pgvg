@@ -29,6 +29,7 @@ export const TankSeriesCard = (props: ITankSeriesCard) => {
         <>
           <TextValue value={tankSeries.name} {...uiHandler.name} />
           <CardMenu {...uiHandler.menu} />
+          {props.headerRender}
         </>
       )}
       renderForKeys={[
