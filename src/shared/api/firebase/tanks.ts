@@ -1,32 +1,31 @@
-import type { CoilSeriesType } from '@/entities/coils/model/types';
 import { off, onValue, ref } from 'firebase/database';
 import database from './client';
-import type { TankSeriesType } from '@/entities/tanks/model/types';
+import type { TankSeriesType } from '@/shared/types/tank-series';
 
-// export const subscribeToTanks = (
-//   onUpdate: (coils: CoilSeriesType[]) => void
-// ): (() => void) => {
-//   const coilsRef = ref(database, 'kochegar/platform/coils');
+export const subscribeToTanks = (
+  onUpdate: (tanks: TankSeriesType[]) => void
+): (() => void) => {
+  const tanksRef = ref(database, 'kochegar/platform/tanks');
 
-//   const handler = onValue(coilsRef, (snapshot) => {
-//     const data = snapshot.val();
-//     if (!data) {
-//       onUpdate([]);
-//       return;
-//     }
+  const handler = onValue(tanksRef, (snapshot) => {
+    const data = snapshot.val();
+    if (!data) {
+      onUpdate([]);
+      return;
+    }
 
-//     const coilSerieses: CoilSeriesType[] = Object.entries(data).map(
-//       ([key, value]: [string, any]) => ({
-//         id: key,
-//         ...(value as Omit<CoilSeriesType, 'id'>),
-//       })
-//     );
+    const tankSerieses: TankSeriesType[] = Object.entries(data).map(
+      ([key, value]: [string, any]) => ({
+        id: key,
+        ...(value as Omit<TankSeriesType, 'id'>),
+      })
+    );
 
-//     onUpdate(coilSerieses);
-//   });
+    onUpdate(tankSerieses);
+  });
 
-//   return () => off(coilsRef, 'value', handler);
-// };
+  return () => off(tanksRef, 'value', handler);
+};
 
 export const subscribeToTankSeriesById = (
   id: string,

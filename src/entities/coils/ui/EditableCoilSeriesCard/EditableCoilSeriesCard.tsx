@@ -8,19 +8,17 @@ import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
 import { CoilSeriesMenu } from './CoilSeriesMenu/CoilSeriesMenu';
 import type { ICoilSeriesCard } from './model/types';
 import { useCoilSeriesCard } from './model/useCoilSeriesCard';
-import { useStyles } from './styles';
-
+import { ObjCardStyles } from '@/shared/constants/styles';
 
 export const CoilSeriesCard = (props: ICoilSeriesCard) => {
-  const { onChange, onMenuItemClick } = props;
-  const { coilSeries, loading, handleOhmsChange } = useCoilSeriesCard(props)
-  const styles = useStyles();
+  const { onChange, onMenuItemClick, colors } = props;
+  const { coilSeries, loading, handleOhmsChange } = useCoilSeriesCard(props);
 
-  if (!coilSeries || loading) return <span>загрузка...</span>
+  if (!coilSeries || loading) return <span>загрузка...</span>;
 
   return (
     <ObjCard
-      style={{ ...styles }}
+      styles={ObjCardStyles(colors)}
       translatedNamesForKeys={translate}
       data={coilSeries}
       renderInHeader={() => (
@@ -31,13 +29,16 @@ export const CoilSeriesCard = (props: ICoilSeriesCard) => {
               onChange('name', value.toString());
             }}
           />
-          <PopupState variant='popover'>
-            {state => (
+          <PopupState variant="popover">
+            {(state) => (
               <>
                 <IconButton {...bindTrigger(state)}>
                   <MoreVert />
                 </IconButton>
-                <CoilSeriesMenu menuProps={{ ...bindMenu(state) }} onItemClick={onMenuItemClick} />
+                <CoilSeriesMenu
+                  menuProps={{ ...bindMenu(state) }}
+                  onItemClick={onMenuItemClick}
+                />
               </>
             )}
           </PopupState>

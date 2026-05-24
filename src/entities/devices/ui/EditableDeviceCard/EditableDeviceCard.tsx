@@ -23,7 +23,6 @@ export const DeviceCard = (props: IDeviceCard) => {
 
   const styles = useStyles(colors);
 
-
   return (
     <ObjCard
       data={device}
@@ -46,7 +45,7 @@ export const DeviceCard = (props: IDeviceCard) => {
               {...uiHandler.platform}
             />
           ),
-          { hideKeyName: true, }
+          { hideKeyName: true }
         ),
 
         ...deviceConfig.forKeys(
@@ -79,7 +78,10 @@ export const DeviceCard = (props: IDeviceCard) => {
           />
         )),
         ...deviceConfig.forKeys(['features', 'modes'], (key, value) => (
-          <ArrayPrimitiveValue value={value} {...uiHandler.featuresNModes(key)} />
+          <ArrayPrimitiveValue
+            value={value}
+            {...uiHandler.featuresNModes(key)}
+          />
         )),
       ]}
     />

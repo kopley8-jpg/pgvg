@@ -12,7 +12,7 @@ import {
   type ModalProps,
 } from '@mui/material';
 import type { ICompatiblePlatPicker } from './model/types';
-import { useCompatiblePlatPicker } from './model/useCompatiblePlatPicker';
+import { useCompatiblePlatPicker } from './model/useCompatibleCoilPicker';
 import { createStyles } from '@/shared/lib/createStyles';
 import { Add, Search } from '@mui/icons-material';
 import type { PodSeriesType } from '@/shared/types/pod-series';

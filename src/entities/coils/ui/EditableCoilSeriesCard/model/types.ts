@@ -1,3 +1,4 @@
+import type { colors } from '@/shared/constants/colors';
 import type { CoilSeriesType } from '@/shared/types/coil-series';
 
 export interface ICoilSeriesCard {
@@ -8,4 +9,5 @@ export interface ICoilSeriesCard {
   ) => void;
   onMenuItemClick: (item: 'delete') => void;
   onError?: (error: Error) => void;
+  colors: typeof colors.light;
 }

@@ -16,6 +16,7 @@ export const ObjCardStyles = (colors: typeof cols.light): ObjCardStylesType => {
     },
     header: {
       borderBottom: `2px ${colors.second} solid`,
+      paddingLeft: 10,
     },
     prop: {
       color: colors.primary,

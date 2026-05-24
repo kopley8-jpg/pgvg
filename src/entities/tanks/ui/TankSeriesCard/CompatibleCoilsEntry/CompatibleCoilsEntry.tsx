@@ -1,5 +1,5 @@
 import { createRenderConfig } from '@/shared/lib/createRenderConfig';
-import type { CompactiblePlatType } from '@/shared/types/device';
+import type { CompactibleCoilSeriesesType } from '@/shared/types/tank-series';
 import {
   ObjEntryTwo,
   type ObjEntryStylesType,
@@ -8,20 +8,20 @@ import { Add, Delete } from '@mui/icons-material';
 import { IconButton, MenuItem } from '@mui/material';
 
 interface ICompatiblePlatsEntry {
-  compatiblePlats: CompactiblePlatType[] | null;
+  compactibleCoils: CompactibleCoilSeriesesType[] | null;
   objEntryStyles: ObjEntryStylesType;
-  onDelete: (compatiblePlats: CompactiblePlatType[]) => void;
-  onPlatItemClick: (plat: CompactiblePlatType) => void;
-  onPlatAdd: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onDelete: (compatiblePlats: CompactibleCoilSeriesesType[]) => void;
+  onCoilItemClick: (plat: CompactibleCoilSeriesesType) => void;
+  onCoilAdd: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
-export const CompatiblePlatsEntry = (props: ICompatiblePlatsEntry) => {
+export const CompactibleCoilsEntry = (props: ICompatiblePlatsEntry) => {
   const {
-    compatiblePlats,
+    compactibleCoils,
     objEntryStyles,
     onDelete,
-    onPlatItemClick,
-    onPlatAdd,
+    onCoilItemClick,
+    onCoilAdd,
   } = props;
   return (
     <ObjEntryTwo
@@ -29,16 +29,16 @@ export const CompatiblePlatsEntry = (props: ICompatiblePlatsEntry) => {
       style={objEntryStyles}
       translatedNamesForKeys={{}}
       renderForKeys={[
-        ...(compatiblePlats ? compatiblePlats : [])
-          .map((plat) =>
-            createRenderConfig({ plat }).forKeys(
-              ['plat'],
+        ...(compactibleCoils ? compactibleCoils : [])
+          .map((coil) =>
+            createRenderConfig({ coil }).forKeys(
+              ['coil'],
               (_key, value) => (
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                   <MenuItem
                     sx={{ fontSize: '2vw', py: 1, px: 1, minHeight: 'auto' }}
                     onClick={() => {
-                      onPlatItemClick(plat);
+                      onCoilItemClick(coil);
                     }}
                   >
                     {value.name}
@@ -47,8 +47,8 @@ export const CompatiblePlatsEntry = (props: ICompatiblePlatsEntry) => {
                     size="small"
                     onClick={() => {
                       onDelete(
-                        (compatiblePlats ? compatiblePlats : []).filter(
-                          (res) => res.idFromPlatforms != plat.idFromPlatforms
+                        (compactibleCoils ? compactibleCoils : []).filter(
+                          (res) => res.idFromPlatforms != coil.idFromPlatforms
                         )
                       );
                     }}
@@ -67,7 +67,7 @@ export const CompatiblePlatsEntry = (props: ICompatiblePlatsEntry) => {
             <IconButton
               size="small"
               onClick={(e) => {
-                onPlatAdd(e);
+                onCoilAdd(e);
               }}
             >
               <Add fontSize="small" />

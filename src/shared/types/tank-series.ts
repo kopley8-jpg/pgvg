@@ -2,10 +2,10 @@ export type TankSeriesType = {
   id: string;
   name: string;
   capacity: number[];
-  compatibleCoilSerieses: CompatibleCoilSeriesesType[];
+  compatibleCoilSerieses: CompactibleCoilSeriesesType[];
 };
 
-export type CompatibleCoilSeriesesType = {
+export type CompactibleCoilSeriesesType = {
   idFromPlatforms: string;
   name: string;
 };
