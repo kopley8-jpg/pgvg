@@ -34,7 +34,6 @@ export const subscribeToDevices = (
               : value.platforms,
         })
       );
-      console.log(devices);
       onUpdate(devices);
     } catch (error) {
       onError?.('не удалось загрузить девайсы');
@@ -72,10 +71,22 @@ export const getDevices = async (): Promise<DeviceType[]> => {
   const snapshot = await get(devicesRef);
   const data = snapshot.val();
   if (!data) return [];
-  return Object.entries(data).map(([key, value]: [string, any]) => ({
-    id: key,
-    ...(value as Omit<DeviceType, 'id'>),
-  }));
+  const devices: DeviceType[] = Object.entries(data).map(
+    ([key, value]: [string, any]) => ({
+      id: key,
+      ...(value as Omit<DeviceType, 'id'>),
+      platforms:
+        value.platforms.type === 'магнит'
+          ? {
+              ...value.platforms,
+              compatiblePlats: Object.values(
+                value.platforms.compatiblePlats ?? {}
+              ),
+            }
+          : value.platforms,
+    })
+  );
+  return devices;
 };
 
 export const pushDevice = async (

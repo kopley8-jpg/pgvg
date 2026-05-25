@@ -1,8 +1,14 @@
 import { TankSeriesCard } from '@/entities/tanks/ui/TankSeriesCard/EditableTankSeriesCard';
 import { deleteTankSeries } from '@/features/tank-managment/delete-tank-series/delete-tank-series';
-import { pushCompactibleCoilSeries, updateTankSeries } from '@/features/tank-managment/update-tank-series/update-tank-series';
+import {
+  pushCompactibleCoilSeries,
+  updateTankSeries,
+} from '@/features/tank-managment/update-tank-series/update-tank-series';
 import { useThemeStore } from '@/shared/hooks/useThemeStore';
-import type { CompactibleCoilSeriesesType, TankSeriesType } from '@/shared/types/tank-series';
+import type {
+  CompactibleCoilSeriesesType,
+  TankSeriesType,
+} from '@/shared/types/tank-series';
 import { useState } from 'react';
 import { CompatibleCoilPicker } from './CompatibleCoilPicker/CompatibleCoilPicker';
 import { Modal } from '@mui/material';
@@ -10,10 +16,10 @@ import { CoilManagmentCard } from '../CoilManagnmentCard/CoilManagmentCard';
 
 export const TankManagmentCard = ({
   tankSeries,
-  headerRender
+  headerRender,
 }: {
   tankSeries: TankSeriesType | string;
-  headerRender?: React.ReactNode
+  headerRender?: React.ReactNode;
 }) => {
   const { colors } = useThemeStore();
 
@@ -26,7 +32,8 @@ export const TankManagmentCard = ({
     open: false,
     anchorEl: null,
   });
-  const [clickedCoil, setClickedCoil] = useState<CompactibleCoilSeriesesType | null>(null)
+  const [clickedCoil, setClickedCoil] =
+    useState<CompactibleCoilSeriesesType | null>(null);
 
   return (
     <>
@@ -38,22 +45,27 @@ export const TankManagmentCard = ({
           deleteTankSeries(id);
         }}
         onCoilAdd={(e) => {
-          setCompatibleCoilPickerProps(prev => ({
+          setCompatibleCoilPickerProps((prev) => ({
             ...prev,
             open: true,
-            anchorEl: e.currentTarget
-          }))
+            anchorEl: e.currentTarget,
+          }));
         }}
-        onCoilItemClick={(coil) => { setClickedCoil(coil) }}
-        onError={() => { }}
+        onCoilItemClick={(coil) => {
+          setClickedCoil(coil);
+        }}
+        onError={() => {}}
         headerRender={headerRender}
       />
       <CompatibleCoilPicker
         {...compatibleCoilPickerProps}
-        onPick={coil => {
-          pushCompactibleCoilSeries(id, coil)
+        onPick={(coil) => {
+          pushCompactibleCoilSeries(id, coil);
         }}
-        onClose={() => setCompatibleCoilPickerProps(prev => ({ ...prev, open: false }))} />
+        onClose={() =>
+          setCompatibleCoilPickerProps((prev) => ({ ...prev, open: false }))
+        }
+      />
       <CoilPreview coil={clickedCoil} onClose={() => setClickedCoil(null)} />
     </>
   );
@@ -82,4 +94,3 @@ const CoilPreview = ({
     </Modal>
   );
 };
-

@@ -36,7 +36,7 @@ export const useDeviceCard = (props: IDeviceCard) => {
     });
 
     return unsubscribe;
-  });
+  }, []);
 
   const handleChange = <K extends keyof Omit<DeviceType, 'id'>>(
     key: K,
@@ -72,6 +72,7 @@ export const useDeviceCard = (props: IDeviceCard) => {
     platform: {
       onChange: (newPlatform: PlatformType) => {
         onChange?.('platforms', newPlatform);
+        console.log(newPlatform);
       },
       onCompatiblePlatAdd: (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>

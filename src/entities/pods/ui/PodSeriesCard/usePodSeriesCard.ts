@@ -22,7 +22,7 @@ export const usePodSeriesCard = (props: IPodSeriesCard) => {
     });
 
     return unsubscribe;
-  });
+  }, []);
 
   const handleArrayPrimitChange = (key: 'capacity' | 'ohms') => {
     return {

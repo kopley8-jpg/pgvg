@@ -23,7 +23,7 @@ export const deletePodSeries = async (id: string) => {
           PlatformType,
           { type: 'магнит' }
         >;
-        return updateDevice(id, 'platforms', {
+        return updateDevice(device.id, 'platforms', {
           ...platforms,
           compatiblePlats: platforms.compatiblePlats?.filter(
             (plat) => plat.idFromPlatforms !== id

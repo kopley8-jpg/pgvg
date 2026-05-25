@@ -16,29 +16,29 @@ export const updatePodSeries = async <
 
   if (key === 'name') {
     const devices = await getDevices();
-    await Promise.all(
-      devices
-        .filter(
-          (device) =>
-            device.platforms.type === 'магнит' &&
-            device.platforms.compatiblePlats?.some(
-              (plat) => plat.idFromPlatforms === id
-            )
+    alert(`key = name, loaded ${devices.length} devices`);
+    const filtered = devices.filter(
+      (device) =>
+        device.platforms.type === 'магнит' &&
+        device.platforms.compatiblePlats.some(
+          (plat) => plat.idFromPlatforms === id
         )
-        .map((device) => {
-          const platforms = device.platforms as Extract<
-            PlatformType,
-            { type: 'магнит' }
-          >;
-          return updateDevice(device.id, 'platforms', {
-            ...platforms,
-            compatiblePlats: platforms.compatiblePlats?.map((plat) =>
-              plat.idFromPlatforms === id
-                ? { ...plat, name: value.toString() }
-                : plat
-            ),
-          });
-        })
+    );
+    Promise.all(
+      filtered.map((device) => {
+        const platforms = device.platforms as Extract<
+          PlatformType,
+          { type: 'магнит' }
+        >;
+        return updateDevice(device.id, 'platforms', {
+          ...platforms,
+          compatiblePlats: platforms.compatiblePlats.map((plat) =>
+            plat.idFromPlatforms === id && plat.type === 'pod'
+              ? { ...plat, name: value.toString() }
+              : plat
+          ),
+        });
+      })
     );
   }
 

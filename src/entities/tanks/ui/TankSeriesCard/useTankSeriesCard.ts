@@ -31,7 +31,7 @@ export const useTankSeriesCard = (props: ITankSeriesCard) => {
     });
 
     return unsubscribe;
-  });
+  }, []);
 
   const uiHandler = {
     name: {
@@ -40,7 +40,7 @@ export const useTankSeriesCard = (props: ITankSeriesCard) => {
       },
     },
     menu: {
-      onClick: onDelete,
+      onClick: () => onDelete(),
     },
     capacity: {
       onChangesSaved: (newValue: (string | number)[]) => {
