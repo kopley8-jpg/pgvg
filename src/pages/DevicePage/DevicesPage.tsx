@@ -1,7 +1,5 @@
 import { useStyles } from './styles';
 import { useEffect, useState } from 'react';
-import { useDevicesStore } from '@/entities/devices/model/store/devicesStore';
-import { DeviceCard } from '@/entities/devices/ui/EditableDeviceCard/EditableDeviceCard';
 import { useThemeStore } from '@/shared/hooks/useThemeStore';
 import { DeviceManagmentCard } from '@/widgets/DeviceManagmentCard/DeviceManagmentCard';
 import type { DeviceType } from '@/shared/types/device';

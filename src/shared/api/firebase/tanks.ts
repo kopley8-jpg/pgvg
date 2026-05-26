@@ -37,7 +37,8 @@ export const subscribeToTanks = (
 export const getTanks = async () => {
   const tanksRef = ref(database, 'kochegar/platform/tanks');
 
-  const data = get(tanksRef);
+  const snapshot = await get(tanksRef);
+  const data = snapshot.val();
   if (!data) return [];
 
   const tanks: TankSeriesType[] = Object.entries(data).map(

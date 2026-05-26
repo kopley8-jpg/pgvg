@@ -11,15 +11,13 @@ export const deleteCoilSeries = async (id: string) => {
     tank.compatibleCoilSerieses.some((coil) => coil.idFromPlatforms === id)
   );
 
-  alert(`найдено ${filtered.length} танков`);
-
   await Promise.all(
     filtered.map((tank) => {
-      updateTankSeries(
+      return updateTankSeries(
         tank.id,
         'compatibleCoilSerieses',
         tank.compatibleCoilSerieses.filter(
-          (coil) => coil.idFromPlatforms === id
+          (coil) => coil.idFromPlatforms !== id
         )
       );
     })

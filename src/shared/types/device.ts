@@ -14,8 +14,10 @@ export type DeviceType = {
   platforms: PlatformType;
   kit: {
     pods: (PodType & { count: number })[] | null;
-    tanks: { name: string; count: number }[] | null;
-    coils: { name: string; resistance: number | string }[] | null;
+    tanks: { idFromPlatforms: string; name: string; count: number }[] | null;
+    coils:
+      | { idFromPlatforms: string; name: string; resistance: number | string }[]
+      | null;
     somethingElse: string | null;
   };
 };
@@ -44,6 +46,7 @@ export type CompactiblePlatType = {
 };
 
 type PodType = {
+  idFromPlatforms: string;
   name: string;
   capacity: number;
   resistance: number;
