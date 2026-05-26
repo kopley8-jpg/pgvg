@@ -1,4 +1,7 @@
+import { updateDevice } from '@/features/device-managment/update-device/update-device';
 import database from '@/shared/api/firebase/client';
+import { getDevices } from '@/shared/api/firebase/devices';
+import type { PlatformType } from '@/shared/types/device';
 import type {
   CompactibleCoilSeriesesType,
   TankSeriesType,
@@ -15,6 +18,35 @@ export const updateTankSeries = async <
     | ((tank: TankSeriesType) => Omit<TankSeriesType, 'id'>[K])
 ) => {
   const tankRef = ref(database, `kochegar/platform/tanks/${id}`);
+
+  if (key === 'name') {
+    const devices = await getDevices();
+    alert(`key = name, loaded ${devices.length} devices`);
+    const filtered = devices.filter(
+      (device) =>
+        device.platforms.type === 'магнит' &&
+        device.platforms.compatiblePlats.some(
+          (plat) => plat.idFromPlatforms === id
+        )
+    );
+    Promise.all(
+      filtered.map((device) => {
+        const platforms = device.platforms as Extract<
+          PlatformType,
+          { type: 'магнит' }
+        >;
+        return updateDevice(device.id, 'platforms', {
+          ...platforms,
+          compatiblePlats: platforms.compatiblePlats.map((plat) =>
+            plat.idFromPlatforms === id && plat.type === 'tank'
+              ? { ...plat, name: value.toString() }
+              : plat
+          ),
+        });
+      })
+    );
+  }
+
   await update(tankRef, { [key]: value });
 };
 

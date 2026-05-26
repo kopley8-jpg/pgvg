@@ -36,7 +36,7 @@ export const useDeviceCard = (props: IDeviceCard) => {
     });
 
     return unsubscribe;
-  }, []);
+  }, [imDevice]);
 
   const handleChange = <K extends keyof Omit<DeviceType, 'id'>>(
     key: K,

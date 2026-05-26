@@ -4,7 +4,6 @@ import type { CompactiblePlatType, DeviceType } from '@/shared/types/device';
 import { CompatiblePlatPicker } from './ui/CompatiblePlatPicker/CompatiblePlatPicker';
 import { useState } from 'react';
 import { Modal } from '@mui/material';
-import { PodSeriesCard } from '@/entities/pods/ui/PodSeriesCard/EditablePodSeriesCard';
 import { PodManagmentCard } from '../PodManagmentCard/PodManagmentCard';
 import { TankManagmentCard } from '../TankManagmentCard/TankManagmentCard';
 import { pushCompactiblePlat } from '@/features/pod-managment/update-pod-series/update-pod-series';
@@ -29,13 +28,15 @@ export const DeviceManagmentCard = ({
     null
   );
 
-  const id = typeof device === "object" ? device.id : device
+  const id = typeof device === 'object' ? device.id : device;
 
   return (
     <>
       <DeviceCard
         device={device}
-        onChange={(key, val) => { updateDevice(id, key, val) }}
+        onChange={(key, val) => {
+          updateDevice(id, key, val);
+        }}
         onCompatiblePlatAdd={(e) => {
           setCompatiblePlatPickerProps((prev) => ({
             ...prev,
@@ -56,8 +57,8 @@ export const DeviceManagmentCard = ({
         onClose={() =>
           setCompatiblePlatPickerProps((prev) => ({ ...prev, open: false }))
         }
-        onPick={plat => {
-          pushCompactiblePlat(id, plat)
+        onPick={(plat) => {
+          pushCompactiblePlat(id, plat);
         }}
       />
       <PlatPreview plat={clickedPlat} onClose={() => setClickedPlat(null)} />

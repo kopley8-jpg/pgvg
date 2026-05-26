@@ -22,7 +22,7 @@ export const useCoilSeriesCard = (props: ICoilSeriesCard) => {
     });
 
     return unsubscribe;
-  }, []);
+  }, [inCoilSeries]);
 
   const handleOhmsChange = (newValue: (string | number)[]) => {
     const ohmsAsNumbers = newValue.map((v) => Number(convertToNumber(v)));

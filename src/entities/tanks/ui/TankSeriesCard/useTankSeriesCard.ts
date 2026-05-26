@@ -31,7 +31,7 @@ export const useTankSeriesCard = (props: ITankSeriesCard) => {
     });
 
     return unsubscribe;
-  }, []);
+  }, [inTankSeries]);
 
   const uiHandler = {
     name: {

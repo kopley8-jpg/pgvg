@@ -1,4 +1,4 @@
-import { off, onValue, ref } from 'firebase/database';
+import { get, off, onValue, ref } from 'firebase/database';
 import database from './client';
 import type { TankSeriesType } from '@/shared/types/tank-series';
 
@@ -32,6 +32,27 @@ export const subscribeToTanks = (
   });
 
   return () => off(tanksRef, 'value', handler);
+};
+
+export const getTanks = async () => {
+  const tanksRef = ref(database, 'kochegar/platform/tanks');
+
+  const data = get(tanksRef);
+  if (!data) return [];
+
+  const tanks: TankSeriesType[] = Object.entries(data).map(
+    ([key, value]: [string, any]) => ({
+      id: key,
+      name: value.name,
+      capacity:
+        typeof value.capacity === 'object'
+          ? Object.values(value.capacity ?? [])
+          : [value.capacity],
+      compatibleCoilSerieses: Object.values(value.compatibleCoilSerieses ?? []),
+    })
+  );
+
+  return tanks;
 };
 
 export const subscribeToTankSeriesById = (
