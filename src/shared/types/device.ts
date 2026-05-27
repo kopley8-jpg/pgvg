@@ -12,14 +12,44 @@ export type DeviceType = {
   minCoilResistance: number;
 
   platforms: PlatformType;
-  kit: {
-    pods: (PodType & { count: number })[] | null;
-    tanks: { idFromPlatforms: string; name: string; count: number }[] | null;
-    coils:
-      | { idFromPlatforms: string; name: string; resistance: number | string }[]
-      | null;
-    somethingElse: string | null;
-  };
+  kit: DeviceKitType[];
+};
+
+export type DeviceKitType =
+  | PodInKitType
+  | TankInKitType
+  | CoilInKitType
+  | SomethingElseInKitType;
+
+export type PodInKitType = {
+  type: 'pod';
+  idFromPlatforms: string;
+  name: string;
+  capacity: string;
+  resistance: number;
+  count: number;
+};
+
+export type TankInKitType = {
+  type: 'tank';
+  name: string;
+  capacity: number;
+  idFromPlatforms: string;
+  count: number;
+};
+
+export type CoilInKitType = {
+  type: 'coil';
+  name: string;
+  resistance: number;
+  idFromPlatforms: string;
+  count: number;
+};
+
+export type SomethingElseInKitType = {
+  type: 'somethingElse';
+  name: string;
+  count: number;
 };
 
 export const BATTERY_FORMATS = ['18350', '18650', '20700', '21700'] as const;
@@ -43,13 +73,6 @@ export type CompactiblePlatType = {
   type: 'pod' | 'tank';
   name: string;
   idFromPlatforms: string;
-};
-
-type PodType = {
-  idFromPlatforms: string;
-  name: string;
-  capacity: number;
-  resistance: number;
 };
 
 export type MagneticPlatType = {
