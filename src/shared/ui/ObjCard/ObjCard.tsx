@@ -1,6 +1,9 @@
 import React from 'react';
 import type { IObjCard } from './types';
 import { createStyles } from '@/shared/lib/createStyles';
+import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
+import { IconButton, MenuItem, Popover } from '@mui/material';
+import { MoreVert } from '@mui/icons-material';
 
 export const ObjCard = <T extends Record<string, any>>({
   photoURL,
@@ -9,6 +12,7 @@ export const ObjCard = <T extends Record<string, any>>({
   renderInHeader,
   styles: propsStyles,
   renderForKeys,
+  menu
 }: IObjCard<T>) => {
   const styles = useStyles();
 
@@ -23,6 +27,30 @@ export const ObjCard = <T extends Record<string, any>>({
       <div style={{ ...styles.info, ...propsStyles?.infoContainer }}>
         <div style={{ ...styles.header, ...propsStyles?.header }}>
           {renderInHeader()}
+          {menu ? (
+            <PopupState variant='popover'>
+              {state => (
+                <>
+                  <IconButton {...bindTrigger(state)} {...menu.trigger} size={"small"}>
+                    <MoreVert fontSize='small' />
+                  </IconButton>
+                  <Popover
+                    {...bindPopover(state)}
+                    transformOrigin={{ horizontal: "center", vertical: "top" }}
+                    anchorOrigin={{ horizontal: "center", vertical: "top" }}>
+                    {menu.menuItems.map(menuItem => (
+                      <MenuItem
+                        {...menuItem}
+                        onClick={(e) => {
+                          state.close()
+                          menuItem.onClick?.(e)
+                        }}>{menuItem.renderBeforeLabel}{menuItem.label}</MenuItem>
+                    ))}
+                  </Popover>
+                </>
+              )}
+            </PopupState>
+          ) : (<></>)}
         </div>
         <div style={{ ...styles.props, ...propsStyles?.props }}>
           {renderForKeys.map((render, index) => (

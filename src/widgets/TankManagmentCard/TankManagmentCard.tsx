@@ -10,9 +10,9 @@ import type {
   TankSeriesType,
 } from '@/shared/types/tank-series';
 import { useState } from 'react';
-import { CompatibleCoilPicker } from './CompatibleCoilPicker/CompatibleCoilPicker';
 import { Modal } from '@mui/material';
 import { CoilManagmentCard } from '../CoilManagnmentCard/CoilManagmentCard';
+import { PlatformPicker } from '../DeviceManagmentCard/ui/PlatformPicker/PlatformPicker';
 
 export const TankManagmentCard = ({
   tankSeries,
@@ -54,18 +54,22 @@ export const TankManagmentCard = ({
         onCoilItemClick={(coil) => {
           setClickedCoil(coil);
         }}
-        onError={() => {}}
+        onError={() => { }}
         headerRender={headerRender}
       />
-      <CompatibleCoilPicker
+      <PlatformPicker
+        showedPlatforms={["coils"]}
         {...compatibleCoilPickerProps}
-        onPick={(coil) => {
-          pushCompactibleCoilSeries(id, coil);
+        onPick={(series) => {
+          if (series.type !== "coil") return
+          pushCompactibleCoilSeries(id, {
+            ...series,
+            idFromPlatforms: series.id
+          })
         }}
-        onClose={() =>
+        onClose={() => {
           setCompatibleCoilPickerProps((prev) => ({ ...prev, open: false }))
-        }
-      />
+        }} />
       <CoilPreview coil={clickedCoil} onClose={() => setClickedCoil(null)} />
     </>
   );

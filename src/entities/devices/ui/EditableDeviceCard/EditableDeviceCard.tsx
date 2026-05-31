@@ -12,6 +12,7 @@ import { DropDownList } from '@/shared/ui/DropDownList/DropDownList';
 import { BatteryEntry } from './ui/BatteryEntry/BatteryEntry';
 import { PlatformEntry } from './ui/PlatformEntry/PlatformEntry';
 import { KitEntry } from './ui/KitEntry/KitEntry';
+import { Delete, Photo, PictureAsPdf, PictureInPicture } from '@mui/icons-material';
 
 export const DeviceCard = (props: IDeviceCard) => {
   const { device, loading, uiHandler } = useDeviceCard(props);
@@ -36,6 +37,19 @@ export const DeviceCard = (props: IDeviceCard) => {
           <TextValue value={device.model} {...uiHandler.model} />
         </>
       )}
+      menu={{
+        trigger: {},
+        menuItems: [
+          ...(device.photoURL
+            ?
+            [
+              { label: "Заменить фото", sx: { gap: 1 }, renderBeforeLabel: (<Photo />) },
+              { label: "Удалить фото", sx: { gap: 1 }, renderBeforeLabel: <Photo /> }
+            ]
+            : [{ label: "Добавить фото", sx: { gap: 1 }, renderBeforeLabel: <Photo /> }]),
+          { label: "Удалить девайс", sx: { color: "red", gap: 1 }, renderBeforeLabel: <Delete /> },
+        ]
+      }}
       renderForKeys={[
         ...deviceConfig.forKeys(
           ['platforms'],

@@ -1,3 +1,5 @@
+import type { IconButtonProps, MenuItemProps } from '@mui/material';
+
 export interface IObjCard<T extends Record<string, any>> {
   photoURL?: string | null;
   data: T;
@@ -9,7 +11,16 @@ export interface IObjCard<T extends Record<string, any>> {
     key: keyof T;
     renderItem: (key: keyof T, value: T[keyof T]) => React.ReactNode;
   }[];
+  menu?: {
+    trigger?: IconButtonProps;
+    menuItems: MenuItemAtObjCard[];
+  };
 }
+
+type MenuItemAtObjCard = {
+  label: string;
+  renderBeforeLabel?: React.ReactNode;
+} & MenuItemProps;
 
 export type ObjCardStyles = {
   container?: React.CSSProperties;

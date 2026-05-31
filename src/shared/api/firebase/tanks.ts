@@ -1,6 +1,7 @@
 import { get, off, onValue, ref } from 'firebase/database';
 import database from './client';
 import type { TankSeriesType } from '@/shared/types/tank-series';
+import { TextValue } from '@/shared/ui/PrimitiveValue/TextValue/TextValue';
 
 export const subscribeToTanks = (
   onUpdate: (tanks: TankSeriesType[]) => void
@@ -15,18 +16,9 @@ export const subscribeToTanks = (
     }
 
     const tankSerieses: TankSeriesType[] = Object.entries(data).map(
-      ([key, value]: [string, any]) => ({
-        id: key,
-        name: value.name,
-        capacity:
-          typeof value.capacity === 'object'
-            ? Object.values(value.capacity ?? {})
-            : [value.capacity],
-        compatibleCoilSerieses: Object.values(
-          value.compatibleCoilSerieses ?? {}
-        ),
-      })
+      ([key, value]: [string, any]) => snapshotToTank(key, TextValue)
     );
+
     console.log(tankSerieses);
     onUpdate(tankSerieses);
   });
@@ -42,15 +34,7 @@ export const getTanks = async () => {
   if (!data) return [];
 
   const tanks: TankSeriesType[] = Object.entries(data).map(
-    ([key, value]: [string, any]) => ({
-      id: key,
-      name: value.name,
-      capacity:
-        typeof value.capacity === 'object'
-          ? Object.values(value.capacity ?? [])
-          : [value.capacity],
-      compatibleCoilSerieses: Object.values(value.compatibleCoilSerieses ?? []),
-    })
+    ([key, value]: [string, any]) => snapshotToTank(key, TextValue)
   );
 
   return tanks;
@@ -68,13 +52,7 @@ export const subscribeToTankSeriesById = (
       return;
     }
 
-    const { id: _, ...cleanData } = data;
-
-    const tankSeries: TankSeriesType = {
-      ...cleanData,
-      id: id,
-      capacity: Array.isArray(data.capacity) ? data.capacity : [data.capacity],
-    };
+    const tankSeries: TankSeriesType = snapshotToTank(id, data);
 
     onUpdate(tankSeries);
   });
@@ -82,6 +60,14 @@ export const subscribeToTankSeriesById = (
   return () => off(tankRef, 'value', handler);
 };
 
-const rtdbToArray = <T extends object>(data: T) => {
-  return Object(data).entries.map(([_key, value]: [string, any]) => value);
+const snapshotToTank = (key: string, data: any): TankSeriesType => {
+  return {
+    id: key,
+    name: data.name ?? 'неизвестный танк',
+    capacity:
+      typeof data.capacity === 'object'
+        ? Object.values(data.capacity ?? {})
+        : [data.capacity],
+    compatibleCoilSerieses: Object.values(data.compatibleCoilSerieses ?? {}),
+  };
 };
