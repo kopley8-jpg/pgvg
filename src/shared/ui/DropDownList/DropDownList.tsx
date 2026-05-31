@@ -4,7 +4,7 @@ import { useStyles } from './DropDown.styles';
 import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
 import { Box, MenuItem, Popover } from '@mui/material';
 
-export const DropDownList = <T extends string | undefined | null>({
+export const DropDownList = <T extends string | number | undefined | null>({
   value,
   data,
   style,

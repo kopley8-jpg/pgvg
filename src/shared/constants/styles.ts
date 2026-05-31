@@ -40,3 +40,10 @@ export const ObjEntryStyles = (
     },
   };
 };
+
+export const modalStyles: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+};

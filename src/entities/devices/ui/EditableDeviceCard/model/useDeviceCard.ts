@@ -2,8 +2,10 @@ import { subscribeToDeviceById } from '@/shared/api/firebase/devices';
 import type {
   BatteryType,
   CompactiblePlatType,
+  DeviceKitType,
   DeviceType,
   PlatformType,
+  SomethingElseInKitType,
 } from '@/shared/types/device';
 import { useEffect, useState } from 'react';
 import type { IDeviceCard } from './types';
@@ -16,6 +18,8 @@ export const useDeviceCard = (props: IDeviceCard) => {
     onChange,
     onCompatiblePlatAdd,
     onPlatItemClick,
+    onAddKitItemMenuClick,
+    onKitItemClick,
     onError,
   } = props;
 
@@ -77,10 +81,10 @@ export const useDeviceCard = (props: IDeviceCard) => {
       onCompatiblePlatAdd: (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
       ) => {
-        onCompatiblePlatAdd(e);
+        onCompatiblePlatAdd?.(e);
       },
       onPlatItemClick: (plat: CompactiblePlatType) => {
-        onPlatItemClick(plat);
+        onPlatItemClick?.(plat);
       },
     },
     battery: {
@@ -106,6 +110,24 @@ export const useDeviceCard = (props: IDeviceCard) => {
           );
         },
       };
+    },
+    kitEntry: {
+      onAddKitItemMenuClick: (
+        e: React.MouseEvent<HTMLLIElement, MouseEvent>
+      ) => {
+        onAddKitItemMenuClick?.(e);
+      },
+      onKitItemClick: (
+        item: Exclude<DeviceKitType, SomethingElseInKitType>
+      ) => {
+        onKitItemClick?.(item);
+      },
+      onChange: (newValue: DeviceKitType[]) => {
+        onChange?.('kit', newValue);
+      },
+      onError: (error: string) => {
+        onError?.(error);
+      },
     },
   };
 

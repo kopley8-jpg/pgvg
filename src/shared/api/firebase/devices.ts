@@ -20,20 +20,9 @@ export const subscribeToDevices = (
       }
 
       const devices: DeviceType[] = Object.entries(data).map(
-        ([key, value]: [string, any]) => ({
-          id: key,
-          ...(value as Omit<DeviceType, 'id'>),
-          platforms:
-            value.platforms.type === 'магнит'
-              ? {
-                  ...value.platforms,
-                  compatiblePlats: Object.values(
-                    value.platforms.compatiblePlats ?? {}
-                  ),
-                }
-              : value.platforms,
-        })
+        ([key, value]: [string, any]) => snapshotToDevice(key, value)
       );
+      console.log(devices);
       onUpdate(devices);
     } catch (error) {
       onError?.('не удалось загрузить девайсы');
@@ -41,6 +30,25 @@ export const subscribeToDevices = (
   });
 
   return () => off(devicesRef, 'value', handler);
+};
+
+export const getDevices = async (): Promise<DeviceType[]> => {
+  const devicesRef = ref(database, devicePath);
+  const snapshot = await get(devicesRef);
+  const data = snapshot.val();
+  if (!data) return [];
+  const devices: DeviceType[] = Object.entries(data).map(
+    ([key, value]: [string, any]) => snapshotToDevice(key, value)
+  );
+  return devices;
+};
+
+export const pushDevice = async (
+  device: Omit<DeviceType, 'id'>
+): Promise<string | null> => {
+  const devicesRef = ref(database, 'kochegar/devices');
+
+  return await push(devicesRef, device).key;
 };
 
 export const subscribeToDeviceById = (
@@ -66,33 +74,21 @@ export const subscribeToDeviceById = (
   return () => off(deviceRef, 'value', handler);
 };
 
-export const getDevices = async (): Promise<DeviceType[]> => {
-  const devicesRef = ref(database, devicePath);
-  const snapshot = await get(devicesRef);
-  const data = snapshot.val();
-  if (!data) return [];
-  const devices: DeviceType[] = Object.entries(data).map(
-    ([key, value]: [string, any]) => ({
-      id: key,
-      ...(value as Omit<DeviceType, 'id'>),
-      platforms:
-        value.platforms.type === 'магнит'
-          ? {
-              ...value.platforms,
-              compatiblePlats: Object.values(
-                value.platforms.compatiblePlats ?? {}
-              ),
-            }
-          : value.platforms,
-    })
-  );
-  return devices;
-};
-
-export const pushDevice = async (
-  device: Omit<DeviceType, 'id'>
-): Promise<string | null> => {
-  const devicesRef = ref(database, 'kochegar/devices');
-
-  return await push(devicesRef, device).key;
+export const snapshotToDevice = (key: string, value: any): DeviceType => {
+  return {
+    id: key,
+    ...(value as Omit<DeviceType, 'id'>),
+    platforms:
+      value.platforms.type === 'магнит'
+        ? {
+            ...value.platforms,
+            compatiblePlats: Object.values(
+              value.platforms.compatiblePlats ?? {}
+            ),
+          }
+        : value.platforms,
+    kit: Object.values(value.kit ?? {}),
+    modes: Object.values(value.modes ?? {}),
+    features: Object.values(value.features ?? {}),
+  };
 };

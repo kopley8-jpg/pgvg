@@ -26,36 +26,25 @@ export const TextValue = ({
 
   return (
     <>
-      {value ? (
-        <>
-          {isEditing ? (
-            <TextEditor
-              style={style}
-              value={value}
-              onCancelButtonPress={() => setIsEditing(false)}
-              onSaveButtonPress={(p) => {
-                onSaveButtonPress?.(convertToNumber(p));
-                setIsEditing(false);
-              }}
-            />
-          ) : (
-            <span
-              style={{
-                ...styles.text,
-                fontSize: fontSize ? fontSize : undefined,
-              }}
-              onClick={() => setIsEditing(true)}
-            >
-              {value}
-            </span>
-          )}
-        </>
+      {isEditing ? (
+        <TextEditor
+          style={style}
+          value={value ? value.toString() : "значение?"}
+          onCancelButtonPress={() => setIsEditing(false)}
+          onSaveButtonPress={(p) => {
+            onSaveButtonPress?.(convertToNumber(p));
+            setIsEditing(false);
+          }}
+        />
       ) : (
         <span
-          style={{ ...styles.text, fontSize: fontSize ? fontSize : undefined }}
-          onClick={() => errorOptions?.onErrorTextClick?.()}
+          style={{
+            ...styles.text,
+            fontSize: fontSize ? fontSize : undefined,
+          }}
+          onClick={() => setIsEditing(true)}
         >
-          {errorOptions ? errorOptions.errorText : 'undefined'}
+          {value ? value.toString() : "значение?"}
         </span>
       )}
     </>

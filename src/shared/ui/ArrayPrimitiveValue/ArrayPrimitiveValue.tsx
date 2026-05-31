@@ -30,38 +30,26 @@ export const ArrayPrimitiveValue = ({
   onChangesSaved,
   errorOptions,
 }: IArrayPrimitiveValue) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const anchorRef = useRef<HTMLDivElement>(null);
 
   const styles = useStyles();
 
   const handleChangesSaved = (newValue: (string | number)[]) => {
     onChangesSaved(newValue);
-    setIsOpen(false);
   };
 
   return (
-    <>
-      {value ? (
-        <PopupState variant='popover'>
-          {state => (
-            <>
-              <ArrayPrimitiveValueEditor
-                menuProps={{ ...bindMenu(state) }}
-                value={value}
-                onSaveButtonClick={handleChangesSaved}
-              />
-              <span {...bindTrigger(state)} style={{ ...styles.text, ...style?.value }}>{value.join(', ')}</span>
-            </>
-          )}
-        </PopupState>
-      ) : (
+    <PopupState variant='popover'>
+      {state => (
         <>
-          <span onClick={() => errorOptions?.onErrorTextClick?.()}>
-            {errorOptions ? errorOptions.errorText : 'undefined'}
-          </span>
+          <ArrayPrimitiveValueEditor
+            menuProps={{ ...bindMenu(state) }}
+            value={value ? value : []}
+            onSaveButtonClick={handleChangesSaved}
+          />
+          <span {...bindTrigger(state)} style={{ ...styles.text, ...style?.value }}>{value?.length ? value.join(', ') : "значение?"}</span>
         </>
       )}
-    </>
+    </PopupState>
+
   );
 };

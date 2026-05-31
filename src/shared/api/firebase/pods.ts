@@ -4,14 +4,13 @@ import { off, onValue, ref } from 'firebase/database';
 
 export const subscribeToPodSeriesById = (
   id: string,
-  onUpdate: (coils: PodSeriesType | null) => void
+  onUpdate: (coils: PodSeriesType) => void
 ) => {
   const podsRef = ref(database, `kochegar/platform/pods/${id}`);
 
   const handler = onValue(podsRef, (snapshot) => {
     const data = snapshot.val();
     if (!data) {
-      onUpdate(null);
       return;
     }
 

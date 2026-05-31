@@ -58,14 +58,13 @@ export const getTanks = async () => {
 
 export const subscribeToTankSeriesById = (
   id: string,
-  onUpdate: (tank: TankSeriesType | null) => void
+  onUpdate: (tank: TankSeriesType) => void
 ) => {
   const tankRef = ref(database, `kochegar/platform/tanks/${id}`);
 
   const handler = onValue(tankRef, (snapshot) => {
     const data = snapshot.val();
     if (!data) {
-      onUpdate(null);
       return;
     }
 

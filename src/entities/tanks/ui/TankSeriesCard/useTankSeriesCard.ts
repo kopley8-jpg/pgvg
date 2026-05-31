@@ -21,6 +21,7 @@ export const useTankSeriesCard = (props: ITankSeriesCard) => {
 
   useEffect(() => {
     if (typeof inTankSeries === 'object') {
+      alert('обновляем');
       setTankSeries(inTankSeries);
       return;
     }
@@ -31,7 +32,7 @@ export const useTankSeriesCard = (props: ITankSeriesCard) => {
     });
 
     return unsubscribe;
-  }, [inTankSeries]);
+  }, [JSON.stringify(inTankSeries)]);
 
   const uiHandler = {
     name: {

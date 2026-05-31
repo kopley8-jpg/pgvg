@@ -42,14 +42,13 @@ export const subscribeToCoils = (
 
 export const subscribeToCoilSeriesById = (
   id: string,
-  onUpdate: (coils: CoilSeriesType | null) => void
+  onUpdate: (coils: CoilSeriesType) => void
 ) => {
   const coilRef = ref(database, `kochegar/platform/coils/${id}`);
 
   const handler = onValue(coilRef, (snapshot) => {
     const data = snapshot.val();
     if (!data) {
-      onUpdate(null);
       return;
     }
 

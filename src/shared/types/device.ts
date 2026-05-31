@@ -25,7 +25,7 @@ export type PodInKitType = {
   type: 'pod';
   idFromPlatforms: string;
   name: string;
-  capacity: string;
+  capacity: number;
   resistance: number;
   count: number;
 };
@@ -47,7 +47,7 @@ export type CoilInKitType = {
 };
 
 export type SomethingElseInKitType = {
-  type: 'somethingElse';
+  type: 'something-else';
   name: string;
   count: number;
 };

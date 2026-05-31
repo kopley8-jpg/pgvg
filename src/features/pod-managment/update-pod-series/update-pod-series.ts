@@ -44,17 +44,3 @@ export const updatePodSeries = async <
 
   await update(podRef, { [key]: value });
 };
-
-export const pushCompactiblePlat = async (
-  deviceId: string,
-  plat: CompactiblePlatType
-) => {
-  const platRef = ref(
-    database,
-    `kochegar/devices/${deviceId}/platforms/compatiblePlats`
-  );
-
-  alert(`kochegar/devices/${deviceId}/platforms/compatiblePlats`);
-
-  await push(platRef, plat);
-};

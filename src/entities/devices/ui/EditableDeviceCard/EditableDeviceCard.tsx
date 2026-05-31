@@ -11,6 +11,7 @@ import { ObjCardStyles, ObjEntryStyles } from '@/shared/constants/styles';
 import { DropDownList } from '@/shared/ui/DropDownList/DropDownList';
 import { BatteryEntry } from './ui/BatteryEntry/BatteryEntry';
 import { PlatformEntry } from './ui/PlatformEntry/PlatformEntry';
+import { KitEntry } from './ui/KitEntry/KitEntry';
 
 export const DeviceCard = (props: IDeviceCard) => {
   const { device, loading, uiHandler } = useDeviceCard(props);
@@ -47,7 +48,6 @@ export const DeviceCard = (props: IDeviceCard) => {
           ),
           { hideKeyName: true }
         ),
-
         ...deviceConfig.forKeys(
           ['battery'],
           (_key, value) => (
@@ -59,6 +59,12 @@ export const DeviceCard = (props: IDeviceCard) => {
           ),
           { hideKeyName: true }
         ),
+        ...deviceConfig.forKeys(["kit"], (_key, value) => (
+          <KitEntry
+            kit={value}
+            {...uiHandler.kitEntry}
+            colors={colors} />
+        ), { hideKeyName: true }),
         ...deviceConfig.forKeys(['minCoilResistance'], (_key, value) => (
           <TextValue
             style={{ maxWidth: '120px' }}
@@ -83,6 +89,7 @@ export const DeviceCard = (props: IDeviceCard) => {
             {...uiHandler.featuresNModes(key)}
           />
         )),
+
       ]}
     />
   );
