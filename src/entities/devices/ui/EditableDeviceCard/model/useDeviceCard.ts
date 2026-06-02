@@ -123,7 +123,7 @@ export const useDeviceCard = (props: IDeviceCard) => {
         onAddKitItemMenuClick?.(e);
       },
       onKitItemClick: (
-        item: Exclude<DeviceKitType, SomethingElseInKitType>
+        item: Exclude<DeviceKitType, SomethingElseInKitType> & { id: number }
       ) => {
         onKitItemClick?.(item);
       },

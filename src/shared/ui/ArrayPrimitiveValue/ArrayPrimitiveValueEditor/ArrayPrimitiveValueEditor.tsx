@@ -20,8 +20,8 @@ export const ArrayPrimitiveValueEditor = (
   return (
     <Popover
       {...props.menuProps}
-      anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-      transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'center' }}
       slotProps={{
         paper: {
           style: { ...styles.container, ...style?.popupContainer },

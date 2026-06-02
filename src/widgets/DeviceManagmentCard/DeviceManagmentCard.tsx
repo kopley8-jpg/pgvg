@@ -1,6 +1,13 @@
 import { DeviceCard } from '@/entities/devices/ui/EditableDeviceCard/EditableDeviceCard';
 import { useThemeStore } from '@/shared/hooks/useThemeStore';
-import type { CoilInKitType, CompactiblePlatType, DeviceKitType, PodInKitType, SomethingElseInKitType, TankInKitType } from '@/shared/types/device';
+import type {
+  CoilInKitType,
+  CompactiblePlatType,
+  DeviceKitType,
+  PodInKitType,
+  SomethingElseInKitType,
+  TankInKitType,
+} from '@/shared/types/device';
 import { Modal } from '@mui/material';
 import { PodManagmentCard } from '../PodManagmentCard/PodManagmentCard';
 import { TankManagmentCard } from '../TankManagmentCard/TankManagmentCard';
@@ -24,24 +31,32 @@ import { TextValue } from '@/shared/ui/PrimitiveValue/TextValue/TextValue';
 export const DeviceManagmentCard = ({ device }: IDeviceManagmentCard) => {
   const { colors } = useThemeStore();
 
-  const { platformPickerProps, clickedPlat, clickedKitItem, uiHandler } = useDeviceManagmentCard({ device })
-
+  const { platformPickerProps, clickedPlat, clickedKitItem, uiHandler } =
+    useDeviceManagmentCard({ device });
 
   return (
     <>
-      <DeviceCard
-        device={device}
-        colors={colors}
-        {...uiHandler.deviceCard}
-      />
+      <DeviceCard device={device} colors={colors} {...uiHandler.deviceCard} />
       <PlatPreview plat={clickedPlat} {...uiHandler.platPreview} />
       <PlatformPicker
         {...platformPickerProps}
         {...uiHandler.platformPicker}
-        showedPlatforms={platformPickerProps.target === "kit" ? ['pods', 'tanks', 'coils'] : ["pods", "tanks"]}
+        showedPlatforms={
+          platformPickerProps.target === 'kit'
+            ? ['pods', 'tanks', 'coils']
+            : ['pods', 'tanks']
+        }
       />
-      <Modal sx={modalStyles} open={Boolean(clickedKitItem)} {...uiHandler.editKitItemCardModal}>
-        <EditKitItemCard item={clickedKitItem!} colors={colors} {...uiHandler.editKitItemCard} />
+      <Modal
+        sx={modalStyles}
+        open={Boolean(clickedKitItem)}
+        {...uiHandler.editKitItemCardModal}
+      >
+        <EditKitItemCard
+          item={clickedKitItem!}
+          colors={colors}
+          {...uiHandler.editKitItemCard}
+        />
       </Modal>
     </>
   );
@@ -56,11 +71,7 @@ const PlatPreview = ({
 }) => {
   if (!plat) return <></>;
   return (
-    <Modal
-      open={Boolean(plat)}
-      onClose={() => onClose()}
-      sx={modalStyles}
-    >
+    <Modal open={Boolean(plat)} onClose={() => onClose()} sx={modalStyles}>
       {plat.type === 'pod' ? (
         <PodManagmentCard podSeries={plat.idFromPlatforms} />
       ) : (
@@ -70,153 +81,263 @@ const PlatPreview = ({
   );
 };
 
-const EditKitItemCard = ({ item, colors, onChange, onError }: { item: PodInKitType | TankInKitType | CoilInKitType, colors: typeof cols.light, onChange: (newItem: Exclude<DeviceKitType, SomethingElseInKitType>) => void, onError: (error: string) => void }) => {
-
-  const [series, setSeries] = useState<PodSeriesType & { type: "pod" } | TankSeriesType & { type: "tank" } | CoilSeriesType & { type: "coil" } | null>(null)
+const EditKitItemCard = ({
+  item,
+  colors,
+  onChange,
+  onError,
+}: {
+  item: Exclude<DeviceKitType, SomethingElseInKitType> & { id: number };
+  colors: typeof cols.light;
+  onChange: (
+    newItem: Exclude<DeviceKitType, SomethingElseInKitType> & { id: number }
+  ) => void;
+  onError: (error: string) => void;
+}) => {
+  const [series, setSeries] = useState<
+    | (PodSeriesType & { type: 'pod' })
+    | (TankSeriesType & { type: 'tank' })
+    | (CoilSeriesType & { type: 'coil' })
+    | null
+  >(null);
 
   useEffect(() => {
-    const unsubscribe = subscribeToSeriesByName(item.type, item.idFromPlatforms, (series) => {
-      setSeries({ ...series, type: item.type } as any)
-    })
-    return unsubscribe
-  }, [])
+    const unsubscribe = subscribeToSeriesByName(
+      item.type,
+      item.idFromPlatforms,
+      (series) => {
+        setSeries({ ...series, type: item.type } as any);
+      }
+    );
+    return unsubscribe;
+  }, []);
 
-  if (!series) return <span>Загрузка...</span>
+  if (!series) return <span>Загрузка...</span>;
 
   switch (item.type) {
-    case "pod":
-      if (series.type !== "pod") return <></>
-      return <PodItemInKitEditorCard onChange={onChange} onError={onError} kitItem={item} series={series} colors={colors} />
-    case "tank":
-      if (series.type !== "tank") return <></>
-      return <TankItemInKitEditorCard onChange={onChange} onError={onError} kitItem={item} series={series} colors={colors} />
-    case "coil":
-      if (series.type !== "coil") return <></>
-      return <CoilItemInKitEditorCard onChange={onChange} onError={onError} kitItem={item} series={series} colors={colors} />
+    case 'pod':
+      if (series.type !== 'pod') return <></>;
+      return (
+        <PodItemInKitEditorCard
+          onChange={onChange}
+          onError={onError}
+          kitItem={item}
+          series={series}
+          colors={colors}
+        />
+      );
+    case 'tank':
+      if (series.type !== 'tank') return <></>;
+      return (
+        <TankItemInKitEditorCard
+          onChange={onChange}
+          onError={onError}
+          kitItem={item}
+          series={series}
+          colors={colors}
+        />
+      );
+    case 'coil':
+      if (series.type !== 'coil') return <></>;
+      return (
+        <CoilItemInKitEditorCard
+          onChange={onChange}
+          onError={onError}
+          kitItem={item}
+          series={series}
+          colors={colors}
+        />
+      );
   }
-}
+};
 
 interface IItemInKit {
   colors: typeof cols.light;
-  onChange: (newItem: Exclude<DeviceKitType, SomethingElseInKitType>) => void;
-  onError: (error: string) => void
+  onChange: (
+    newItem: Exclude<DeviceKitType, SomethingElseInKitType> & { id: number }
+  ) => void;
+  onError: (error: string) => void;
 }
 
-const PodItemInKitEditorCard = ({ kitItem, series, colors, onChange, onError }: IItemInKit & { kitItem: PodInKitType, series: PodSeriesType }) => {
-
-  const podItemConfig = createRenderConfig(kitItem)
+const PodItemInKitEditorCard = ({
+  kitItem,
+  series,
+  colors,
+  onChange,
+  onError,
+}: IItemInKit & {
+  kitItem: PodInKitType & { id: number };
+  series: PodSeriesType;
+}) => {
+  const podItemConfig = createRenderConfig(kitItem);
 
   return (
     <ObjCard
-      styles={ObjCardStyles(colors)}
+      styles={{
+        ...ObjCardStyles(colors),
+        container: {
+          ...ObjCardStyles(colors).container,
+          height: '20vh',
+        },
+      }}
       data={kitItem}
-      renderInHeader={() => (
-        <span>{kitItem.name}</span>
-      )}
+      renderInHeader={() => <span>{kitItem.name}</span>}
       renderForKeys={[
-        ...podItemConfig.forKeys(["resistance"], (_key, value) => (
-          <DropDownList value={value} data={series.ohms} onPick={p => {
-            if (p === value) return
-            onChange({ ...kitItem, resistance: p })
-          }} />
+        ...podItemConfig.forKeys(['resistance'], (_key, value) => (
+          <DropDownList
+            value={value}
+            data={series.ohms}
+            onPick={(p) => {
+              if (p === value) return;
+              onChange({ ...kitItem, resistance: p });
+            }}
+          />
         )),
         ...[
           series.capacity.length > 1
-            ? podItemConfig.forKeys(["capacity"], (_key, value) => (
-              <DropDownList value={value} data={series.capacity} onPick={p => {
-                if (p === value) return
-                onChange({ ...kitItem, capacity: p })
-              }} />
-            ))
-            : []
+            ? podItemConfig.forKeys(['capacity'], (_key, value) => (
+                <DropDownList
+                  value={value}
+                  data={series.capacity}
+                  onPick={(p) => {
+                    if (p === value) return;
+                    onChange({ ...kitItem, capacity: p });
+                  }}
+                />
+              ))
+            : [],
         ].flat(),
-        ...podItemConfig.forKeys(["count"], (_key, value) => (
-          <TextValue value={value} onSaveButtonPress={e => {
-            const toNumber = Number(e)
-            if (isNaN(toNumber)) {
-              onError("значение должно быть числом")
-            } else {
-              onChange({ ...kitItem, count: toNumber })
-            }
-          }} />
-        ))
+        ...podItemConfig.forKeys(['count'], (_key, value) => (
+          <TextValue
+            value={value}
+            onSaveButtonPress={(e) => {
+              const toNumber = Number(e);
+              if (isNaN(toNumber)) {
+                onError('значение должно быть числом');
+              } else {
+                onChange({ ...kitItem, count: toNumber });
+              }
+            }}
+          />
+        )),
       ]}
     />
-  )
-}
+  );
+};
 
-const TankItemInKitEditorCard = ({ kitItem, series, colors, onChange, onError }: IItemInKit & { kitItem: TankInKitType, series: TankSeriesType }) => {
-
-  const tankItemConfig = createRenderConfig(kitItem)
+const TankItemInKitEditorCard = ({
+  kitItem,
+  series,
+  colors,
+  onChange,
+  onError,
+}: IItemInKit & {
+  kitItem: TankInKitType & { id: number };
+  series: TankSeriesType;
+}) => {
+  const tankItemConfig = createRenderConfig(kitItem);
 
   return (
     <ObjCard
-      styles={ObjCardStyles(colors)}
+      styles={{
+        ...ObjCardStyles(colors),
+        container: {
+          ...ObjCardStyles(colors).container,
+          height: '20vh',
+        },
+      }}
       data={kitItem}
-      renderInHeader={() => (
-        <span>{kitItem.name}</span>
-      )}
+      renderInHeader={() => <span>{kitItem.name}</span>}
       renderForKeys={[
         ...[
           series.capacity.length > 1
-            ? tankItemConfig.forKeys(["capacity"], (_key, value) => (
-              <DropDownList value={value} data={series.capacity} onPick={p => {
-                if (p === value) return
-                onChange({ ...kitItem, capacity: p })
-              }} />
-            ))
-            : []
+            ? tankItemConfig.forKeys(['capacity'], (_key, value) => (
+                <DropDownList
+                  value={value}
+                  data={series.capacity}
+                  onPick={(p) => {
+                    if (p === value) return;
+                    onChange({ ...kitItem, capacity: p });
+                  }}
+                />
+              ))
+            : [],
         ].flat(),
-        ...tankItemConfig.forKeys(["count"], (_key, value) => (
-          <TextValue value={value} onSaveButtonPress={e => {
-            const toNumber = Number(e)
-            if (isNaN(toNumber)) {
-              onError("значение должно быть числом")
-            } else {
-              onChange({ ...kitItem, count: toNumber })
-            }
-          }} />
-        ))
+        ...tankItemConfig.forKeys(['count'], (_key, value) => (
+          <TextValue
+            value={value}
+            onSaveButtonPress={(e) => {
+              const toNumber = Number(e);
+              if (isNaN(toNumber)) {
+                onError('значение должно быть числом');
+              } else {
+                onChange({ ...kitItem, count: toNumber });
+              }
+            }}
+          />
+        )),
       ]}
     />
-  )
-}
+  );
+};
 
-const CoilItemInKitEditorCard = ({ kitItem, series, colors, onChange, onError }: IItemInKit & { kitItem: CoilInKitType, series: CoilSeriesType }) => {
-
-  const coilItemConfig = createRenderConfig(kitItem)
+const CoilItemInKitEditorCard = ({
+  kitItem,
+  series,
+  colors,
+  onChange,
+  onError,
+}: IItemInKit & {
+  kitItem: CoilInKitType & { id: number };
+  series: CoilSeriesType;
+}) => {
+  const coilItemConfig = createRenderConfig(kitItem);
 
   return (
     <ObjCard
-      styles={ObjCardStyles(colors)}
+      styles={{
+        ...ObjCardStyles(colors),
+        container: {
+          ...ObjCardStyles(colors).container,
+          height: '20vh',
+        },
+      }}
       data={kitItem}
-      renderInHeader={() => (
-        <span>{kitItem.name}</span>
-      )}
+      renderInHeader={() => <span>{kitItem.name}</span>}
       renderForKeys={[
-        ...coilItemConfig.forKeys(["resistance"], (_key, value) => (
-          <DropDownList value={value} data={series.ohms} onPick={p => {
-            if (p === value) return
-            onChange({ ...kitItem, resistance: p })
-          }} />
+        ...coilItemConfig.forKeys(['resistance'], (_key, value) => (
+          <DropDownList
+            value={value}
+            data={series.ohms}
+            onPick={(p) => {
+              if (p === value) return;
+              onChange({ ...kitItem, resistance: p });
+            }}
+          />
         )),
-        ...coilItemConfig.forKeys(["count"], (_key, value) => (
-          <TextValue value={value} onSaveButtonPress={e => {
-            const toNumber = Number(e)
-            if (isNaN(toNumber)) {
-              onError("значение должно быть числом")
-            } else {
-              onChange({ ...kitItem, count: toNumber })
-            }
-          }} />
-        ))
+        ...coilItemConfig.forKeys(['count'], (_key, value) => (
+          <TextValue
+            value={value}
+            onSaveButtonPress={(e) => {
+              const toNumber = Number(e);
+              if (isNaN(toNumber)) {
+                onError('значение должно быть числом');
+              } else {
+                onChange({ ...kitItem, count: toNumber });
+              }
+            }}
+          />
+        )),
       ]}
     />
-  )
-}
+  );
+};
 
-
-function subscribeToSeriesByName(name: 'coil' | 'pod' | 'tank', id: string, onChange: (item: CoilSeriesType | PodSeriesType | TankSeriesType) => void) {
+function subscribeToSeriesByName(
+  name: 'coil' | 'pod' | 'tank',
+  id: string,
+  onChange: (item: CoilSeriesType | PodSeriesType | TankSeriesType) => void
+) {
   switch (name) {
     case 'coil':
       return subscribeToCoilSeriesById(id, onChange);

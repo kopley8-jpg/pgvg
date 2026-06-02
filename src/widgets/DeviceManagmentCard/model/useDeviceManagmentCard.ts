@@ -21,10 +21,9 @@ export const useDeviceManagmentCard = ({ device }: IDeviceManagmentCard) => {
     null
   );
 
-  const [clickedKitItem, setClickedKitItem] = useState<Exclude<
-    DeviceKitType,
-    SomethingElseInKitType
-  > | null>(null);
+  const [clickedKitItem, setClickedKitItem] = useState<
+    (Exclude<DeviceKitType, SomethingElseInKitType> & { id: number }) | null
+  >(null);
 
   const [platformPickerProps, setPlatformPickerProps] = useState<{
     target: 'platform' | 'kit' | null;
@@ -115,11 +114,12 @@ export const useDeviceManagmentCard = ({ device }: IDeviceManagmentCard) => {
     editKitItemCard: {
       onChange(newItem) {
         updateDevice(id, 'kit', (device) =>
-          device.kit.map((item) =>
+          device.kit.map((item, index) =>
             item.type === 'something-else'
               ? item
               : item.idFromPlatforms === newItem.idFromPlatforms &&
-                  item.type === newItem.type
+                  item.type === newItem.type &&
+                  newItem.id === index
                 ? newItem
                 : item
           )
@@ -147,7 +147,9 @@ type IUiHandler = {
   platformPicker: Partial<IPlatformPicker>;
   editKitItemCardModal: { onClose: () => void };
   editKitItemCard: {
-    onChange: (newItem: Exclude<DeviceKitType, SomethingElseInKitType>) => void;
+    onChange: (
+      newItem: Exclude<DeviceKitType, SomethingElseInKitType> & { id: number }
+    ) => void;
     onError: (error: string) => void;
   };
 };

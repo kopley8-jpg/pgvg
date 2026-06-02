@@ -9,7 +9,7 @@ export const useStyles = () => {
       flexDirection: 'column',
       alignItems: 'stretch',
       minWidth: '20vw',
-      maxWidth: '30vw',
+      maxWidth: '40vw',
     },
     header: {
       display: 'flex',

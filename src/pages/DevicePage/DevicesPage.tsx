@@ -28,11 +28,9 @@ export const DevicesPage = () => {
 
   return (
     <div style={styles.container}>
-      {devices
-        .sort((a, b) => (a.brand > b.brand ? 1 : -1))
-        .map((device) => (
-          <DeviceManagmentCard key={device.id} device={device} />
-        ))}
+      {devices.map((device) => (
+        <DeviceManagmentCard key={device.id} device={device} />
+      ))}
       <IconButton onClick={() => pushDevice()}>
         <Add />
       </IconButton>

@@ -32,7 +32,7 @@ export const useTankSeriesCard = (props: ITankSeriesCard) => {
     });
 
     return unsubscribe;
-  }, [JSON.stringify(inTankSeries)]);
+  }, [inTankSeries]);
 
   const uiHandler = {
     name: {

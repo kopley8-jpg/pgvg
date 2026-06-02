@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 interface IPrimitiveValueEditor {
   keyName?: string;
   value: string | number;
-  style?: React.CSSProperties,
+  style?: React.CSSProperties;
   onSaveButtonPress?: (newValue: string | number) => void;
   onCancelButtonPress?: () => void;
 }
@@ -24,7 +24,9 @@ export const TextEditor = ({
   return (
     <div style={{ ...styles.container, ...style }}>
       <TextField
-        onChange={(p) => setLocalValue(p.target.value)}
+        onChange={(p) => {
+          setLocalValue(p.target.value);
+        }}
         variant="outlined"
         {...(keyName ? { label: keyName } : {})}
         slotProps={{
@@ -33,7 +35,10 @@ export const TextEditor = ({
               <IconButton
                 size="small"
                 style={styles.button}
-                onClick={() => onSaveButtonPress?.(localValue)}
+                onClick={() => {
+                  if (localValue === '') return;
+                  onSaveButtonPress?.(localValue);
+                }}
               >
                 <Save fontSize="small" />
               </IconButton>

@@ -45,7 +45,9 @@ export const ArrayPrimitiveValue = ({
             {...bindTrigger(state)}
             style={{ ...styles.text, ...style?.value }}
           >
-            {value?.length ? value.join(', ') : 'значение?'}
+            {Boolean(value) && value && value.length > 0
+              ? value.join(', ')
+              : 'значение?'}
           </span>
         </>
       )}

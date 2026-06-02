@@ -8,7 +8,6 @@ export const deleteTankSeries = async (id: string) => {
   const tankSeriesRef = ref(database, `kochegar/platform/tanks/${id}`);
 
   const devices = await getDevices();
-  alert(devices.length);
 
   await Promise.all(
     devices

@@ -29,7 +29,7 @@ interface IKitEntry {
     e: React.MouseEvent<HTMLLIElement, MouseEvent>
   ) => void;
   onKitItemClick: (
-    item: Exclude<DeviceKitType, SomethingElseInKitType>
+    item: Exclude<DeviceKitType, SomethingElseInKitType> & { id: number }
   ) => void;
   colors: typeof cols.light;
   onChange: (newValue: DeviceKitType[]) => void;
@@ -67,7 +67,7 @@ export const KitEntry = (props: IKitEntry) => {
                       if (item.type === 'something-else') {
                         setClickedSomethingElseKitItem(item);
                       } else {
-                        onKitItemClick(item);
+                        onKitItemClick({ ...item, id: index });
                       }
                     }}
                     onDelete={() => {
@@ -239,10 +239,22 @@ const KitMenuItem = ({
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
       <MenuItem
-        sx={{ fontSize: '2vw', py: 1, px: 1, minHeight: 'auto' }}
+        sx={{
+          fontSize: '2vw',
+          py: 1,
+          px: 1,
+          minHeight: 'auto',
+          textOverflow: 'clip',
+          whiteSpace: 'normal',
+          textWrap: 'auto',
+        }}
         onClick={() => onClick?.()}
       >
-        {item.name}
+        {item.count +
+          'x ' +
+          item.name +
+          ' ' +
+          (item.type === 'pod' || item.type === 'coil' ? item.resistance : '')}
       </MenuItem>
       <IconButton size="small" onClick={onDelete}>
         <Delete fontSize="small" />

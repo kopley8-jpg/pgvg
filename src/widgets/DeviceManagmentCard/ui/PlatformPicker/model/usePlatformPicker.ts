@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { IPlatformPicker, SeriesItem } from './types';
 import { subscribeToPods } from '@/shared/api/firebase/pods';
 import { subscribeToTanks } from '@/shared/api/firebase/tanks';
@@ -15,21 +15,33 @@ export const usePlatformPicker = (props: IPlatformPicker) => {
   const [seriesToShow, setSeriesToShow] = useState<SeriesItem | null>(null);
   const [newSeriesId, setNewSeriesId] = useState<string | null>(null);
 
+  const seriesToShowRef = useRef(seriesToShow);
+  seriesToShowRef.current = seriesToShow;
+
   useEffect(() => {
     const unsubscribe = subscribeToSeriesByName(
       showedPlatforms[currentTabId],
       (newSerieses) => {
         setSerieses(newSerieses);
+        if (newSeriesId) {
+          const newSeries = newSerieses.find(
+            (series) => series.id === newSeriesId
+          );
+          if (newSeries) {
+            setSeriesToShow(newSeries);
+            setNewSeriesId(null);
+          }
+        }
+        if (seriesToShowRef.current) {
+          const newSeries = newSerieses.find(
+            (res) => res.id === seriesToShowRef.current!.id
+          );
+          if (newSeries) {
+            setSeriesToShow(newSeries);
+          }
+        }
       }
     );
-
-    if (newSeriesId) {
-      const newSeries = serieses.find((series) => series.id === newSeriesId);
-      if (newSeries) {
-        setSeriesToShow(newSeries);
-        setNewSeriesId(null);
-      }
-    }
 
     return unsubscribe;
   }, [currentTabId, newSeriesId]);

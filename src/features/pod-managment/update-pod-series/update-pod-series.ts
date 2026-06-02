@@ -16,7 +16,6 @@ export const updatePodSeries = async <
 
   if (key === 'name') {
     const devices = await getDevices();
-    alert(`key = name, loaded ${devices.length} devices`);
     const filtered = devices.filter(
       (device) =>
         device.platforms.type === 'магнит' &&
