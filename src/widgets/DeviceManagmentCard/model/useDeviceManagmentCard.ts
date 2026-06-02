@@ -5,16 +5,14 @@ import type {
   DeviceKitType,
   SomethingElseInKitType,
 } from '@/shared/types/device';
-import {
-  pushCompactiblePlat,
-  updateDevice,
-} from '@/features/device-managment/update-device/update-device';
+import { updateDevice } from '@/features/device-managment/update-device/update-device';
 import type { IDeviceCard } from '@/entities/devices/ui/EditableDeviceCard/model/types';
-import type { ICompatiblePlatPicker } from '../ui/CompatiblePlatPicker/model/types';
 import type {
   IPlatformPicker,
   SeriesItem,
 } from '../ui/PlatformPicker/model/types';
+import { removeDevice } from '@/features/device-managment/remove-device/remove-device';
+import { uploadImageToImgBB } from '@/shared/api/imgbb/uploadImage';
 
 export const useDeviceManagmentCard = ({ device }: IDeviceManagmentCard) => {
   const id = typeof device === 'object' ? device.id : device;
@@ -62,13 +60,15 @@ export const useDeviceManagmentCard = ({ device }: IDeviceManagmentCard) => {
       onError(error) {
         alert(error);
       },
-    },
-    compatiblePlatPicker: {
-      onClose() {
-        setPlatformPickerProps((prev) => ({ ...prev, open: false }));
+      onDeviceDelete() {
+        removeDevice(id);
       },
-      onPick(plat) {
-        pushCompactiblePlat(id, plat);
+      onPhotoAccept: async (file) => {
+        await uploadImageToImgBB(file)
+          .then((url) => {
+            updateDevice(id, 'photoURL', url);
+          })
+          .catch(() => alert('не удалось загрузить фото'));
       },
     },
     platPreview: {
@@ -143,7 +143,6 @@ export const useDeviceManagmentCard = ({ device }: IDeviceManagmentCard) => {
 
 type IUiHandler = {
   deviceCard: Partial<IDeviceCard>;
-  compatiblePlatPicker: Partial<ICompatiblePlatPicker>;
   platPreview: { onClose: () => void };
   platformPicker: Partial<IPlatformPicker>;
   editKitItemCardModal: { onClose: () => void };

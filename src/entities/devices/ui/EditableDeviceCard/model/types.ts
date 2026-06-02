@@ -24,4 +24,6 @@ export interface IDeviceCard {
     e: React.MouseEvent<HTMLLIElement, MouseEvent>
   ) => void;
   onError?: (error: string) => void;
+  onDeviceDelete?: () => void;
+  onPhotoAccept?: (file: File) => void;
 }

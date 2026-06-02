@@ -1,9 +1,9 @@
 import { updateDevice } from '@/features/device-managment/update-device/update-device';
 import database from '@/shared/api/firebase/client';
 import { getDevices } from '@/shared/api/firebase/devices';
-import type { CompactiblePlatType, PlatformType } from '@/shared/types/device';
+import type { PlatformType } from '@/shared/types/device';
 import type { PodSeriesType } from '@/shared/types/pod-series';
-import { push, ref, update } from 'firebase/database';
+import { ref, update } from 'firebase/database';
 
 export const updatePodSeries = async <
   K extends keyof Omit<PodSeriesType, 'id'>,

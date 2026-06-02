@@ -1,11 +1,4 @@
-import {
-  off,
-  onValue,
-  push,
-  ref,
-  update,
-  type DatabaseReference,
-} from 'firebase/database';
+import { off, onValue, push, ref } from 'firebase/database';
 import database from './client';
 import type { CoilSeriesType } from '@/shared/types/coil-series';
 

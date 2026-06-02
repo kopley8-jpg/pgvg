@@ -6,7 +6,7 @@ import { convertToNumber } from '@/shared/lib/convertToNumber';
 interface IPrimitiveValueEditor {
   value?: string | number | null;
   fontSize?: any;
-  style?: React.CSSProperties
+  style?: React.CSSProperties;
   onSaveButtonPress?: (newValue: string | number) => void;
   errorOptions?: {
     errorText: string;
@@ -18,8 +18,7 @@ export const TextValue = ({
   value,
   onSaveButtonPress,
   fontSize,
-  errorOptions,
-  style
+  style,
 }: IPrimitiveValueEditor) => {
   const styles = useStyles();
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -29,7 +28,7 @@ export const TextValue = ({
       {isEditing ? (
         <TextEditor
           style={style}
-          value={value ? value.toString() : "значение?"}
+          value={value ? value.toString() : 'значение?'}
           onCancelButtonPress={() => setIsEditing(false)}
           onSaveButtonPress={(p) => {
             onSaveButtonPress?.(convertToNumber(p));
@@ -44,7 +43,7 @@ export const TextValue = ({
           }}
           onClick={() => setIsEditing(true)}
         >
-          {value ? value.toString() : "значение?"}
+          {value ? value.toString() : 'значение?'}
         </span>
       )}
     </>

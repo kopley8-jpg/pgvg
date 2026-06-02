@@ -1,7 +1,6 @@
 import { get, off, onValue, ref } from 'firebase/database';
 import database from './client';
 import type { TankSeriesType } from '@/shared/types/tank-series';
-import { TextValue } from '@/shared/ui/PrimitiveValue/TextValue/TextValue';
 
 export const subscribeToTanks = (
   onUpdate: (tanks: TankSeriesType[]) => void
@@ -16,7 +15,7 @@ export const subscribeToTanks = (
     }
 
     const tankSerieses: TankSeriesType[] = Object.entries(data).map(
-      ([key, value]: [string, any]) => snapshotToTank(key, TextValue)
+      ([key, value]: [string, any]) => snapshotToTank(key, value)
     );
 
     console.log(tankSerieses);
@@ -34,7 +33,7 @@ export const getTanks = async () => {
   if (!data) return [];
 
   const tanks: TankSeriesType[] = Object.entries(data).map(
-    ([key, value]: [string, any]) => snapshotToTank(key, TextValue)
+    ([key, value]: [string, any]) => snapshotToTank(key, value)
   );
 
   return tanks;

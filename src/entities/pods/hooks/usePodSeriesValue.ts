@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { ref, onValue, off } from 'firebase/database';
 import database from '@shared/api/firebase/client';
-import type { PodSeriesType } from '../model/types';
+import type { PodSeriesType } from '@/shared/types/pod-series';
 
 export const usePodSeriesValue = (id: string | null) => {
   const [series, setSeries] = useState<PodSeriesType | null>(null);

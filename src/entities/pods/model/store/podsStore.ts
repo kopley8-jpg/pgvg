@@ -1,8 +1,9 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import type { IPodSeriesesStore, PodSeriesType } from '../types';
 import { DataSnapshot, off, onValue, ref } from 'firebase/database';
 import database from '@shared/api/firebase/client';
+import type { IPodSeriesesStore } from '../types';
+import type { PodSeriesType } from '@/shared/types/pod-series';
 
 export const usePodSeriesesStore = create<IPodSeriesesStore>()(
   immer((set, get) => ({

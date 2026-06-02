@@ -52,14 +52,8 @@ export type SomethingElseInKitType = {
   count: number;
 };
 
-export const BATTERY_FORMATS = ['18350', '18650', '20700', '21700'] as const;
-export const PLATFORM_FORMATS = [
-  '510',
-  'boro',
-  'dot',
-  'squonk',
-  'магнит',
-] as const;
+export const BATTERY_FORMATS = ['18350', '18650', '20700', '21700'];
+export const PLATFORM_FORMATS = ['510', 'boro', 'dot', 'squonk', 'магнит'];
 
 export type PlatformType =
   | {

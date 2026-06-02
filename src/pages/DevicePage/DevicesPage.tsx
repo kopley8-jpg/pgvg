@@ -4,6 +4,9 @@ import { useThemeStore } from '@/shared/hooks/useThemeStore';
 import { DeviceManagmentCard } from '@/widgets/DeviceManagmentCard/DeviceManagmentCard';
 import type { DeviceType } from '@/shared/types/device';
 import { subscribeToDevices } from '@/shared/api/firebase/devices';
+import { IconButton } from '@mui/material';
+import { Add } from '@mui/icons-material';
+import { pushDevice } from '@/features/device-managment/create-device/push-device';
 
 export const DevicesPage = () => {
   const { colors } = useThemeStore();
@@ -25,9 +28,14 @@ export const DevicesPage = () => {
 
   return (
     <div style={styles.container}>
-      {devices.map((device) => (
-        <DeviceManagmentCard key={device.id} device={device} />
-      ))}
+      {devices
+        .sort((a, b) => (a.brand > b.brand ? 1 : -1))
+        .map((device) => (
+          <DeviceManagmentCard key={device.id} device={device} />
+        ))}
+      <IconButton onClick={() => pushDevice()}>
+        <Add />
+      </IconButton>
     </div>
   );
 };

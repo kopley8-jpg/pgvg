@@ -6,7 +6,7 @@ import type {
   CompactibleCoilSeriesesType,
   TankSeriesType,
 } from '@/shared/types/tank-series';
-import { get, push, ref, update } from 'firebase/database';
+import { push, ref, update } from 'firebase/database';
 
 export const updateTankSeries = async <
   K extends keyof Omit<TankSeriesType, 'id'>,

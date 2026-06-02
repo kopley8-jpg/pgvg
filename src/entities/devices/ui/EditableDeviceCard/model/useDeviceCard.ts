@@ -9,7 +9,6 @@ import type {
 } from '@/shared/types/device';
 import { useEffect, useState } from 'react';
 import type { IDeviceCard } from './types';
-import { Key } from '@mui/icons-material';
 import { convertToNumber } from '@/shared/lib/convertToNumber';
 
 export const useDeviceCard = (props: IDeviceCard) => {
@@ -21,10 +20,16 @@ export const useDeviceCard = (props: IDeviceCard) => {
     onAddKitItemMenuClick,
     onKitItemClick,
     onError,
+    onDeviceDelete,
+    onPhotoAccept,
   } = props;
 
   const [device, setDevice] = useState<DeviceType | null>(null);
   const [loading, setLoading] = useState(typeof imDevice === 'string');
+  const [photoLoader, setPhotoLoader] = useState<{
+    open: boolean;
+    anchorEl: HTMLElement | null;
+  }>({ open: false, anchorEl: null });
 
   const id = typeof imDevice === 'string' ? imDevice : imDevice.id;
 
@@ -129,6 +134,34 @@ export const useDeviceCard = (props: IDeviceCard) => {
         onError?.(error);
       },
     },
+    menuItem: (item: 'delete-device' | 'load-photo' | 'delete-photo') => {
+      return {
+        onClick: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+          switch (item) {
+            case 'delete-device':
+              onDeviceDelete?.();
+              break;
+            case 'load-photo':
+              setPhotoLoader({ open: true, anchorEl: e.currentTarget });
+              break;
+            case 'delete-photo':
+              onChange?.('photoURL', null);
+              break;
+          }
+        },
+      };
+    },
+    photoLoader: {
+      onUrl: (url: string) => {
+        onChange?.('photoURL', url);
+      },
+      onFile: (file: File) => {
+        onPhotoAccept?.(file);
+      },
+      onClose: () => {
+        setPhotoLoader({ open: false, anchorEl: null });
+      },
+    },
   };
 
   return {
@@ -136,5 +169,6 @@ export const useDeviceCard = (props: IDeviceCard) => {
     loading,
     handleChange,
     uiHandler,
+    photoLoader,
   };
 };

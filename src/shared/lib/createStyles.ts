@@ -1,5 +1,3 @@
-import { useThemeStore } from '../hooks/useThemeStore';
-
 interface nestedCSSProp {
   [key: string]: React.CSSProperties | nestedCSSProp;
 }

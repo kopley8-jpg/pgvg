@@ -1,6 +1,5 @@
 import { createRenderConfig } from '@/shared/lib/createRenderConfig';
 import {
-  PLATFORM_FORMATS,
   type CompactiblePlatType,
   type PlatformType,
 } from '@/shared/types/device';
@@ -40,7 +39,7 @@ export const PlatformEntry = (props: IPlatformEntry) => {
         ...createRenderConfig(platform).forKeys(['type'], (_key, value) => (
           <DropDownList
             value={value}
-            data={PLATFORM_FORMATS}
+            data={['510', 'boro', 'dot', 'squonk', 'магнит']}
             onPick={(picked) => {
               if (!picked || picked === platform.type) return;
               if (picked === 'магнит') {

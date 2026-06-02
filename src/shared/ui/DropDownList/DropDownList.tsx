@@ -1,8 +1,6 @@
-import { useState } from 'react';
 import type { IDropDownList } from './DropDown.types';
-import { useStyles } from './DropDown.styles';
 import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
-import { Box, MenuItem, Popover } from '@mui/material';
+import { MenuItem, Popover } from '@mui/material';
 
 export const DropDownList = <T extends string | number | undefined | null>({
   value,
@@ -10,27 +8,31 @@ export const DropDownList = <T extends string | number | undefined | null>({
   style,
   onPick,
 }: IDropDownList<T>) => {
-  const styles = useStyles();
-
   return (
-    <PopupState variant="popover" >
-      {state => (
+    <PopupState variant="popover">
+      {(state) => (
         <>
-          <span {...bindTrigger(state)} style={{ ...style?.value }}>{value}</span>
+          <span {...bindTrigger(state)} style={{ ...style?.value }}>
+            {value}
+          </span>
           <Popover
             {...bindMenu(state)}
             slotProps={{
               paper: {
-                style: { ...style?.menuContainer }
-              }
-            }}>
-            {data.map(item => (
+                style: { ...style?.menuContainer },
+              },
+            }}
+          >
+            {data.map((item) => (
               <MenuItem
                 sx={{ ...style?.menuItem }}
                 onClick={() => {
-                  onPick(item)
-                  state.close()
-                }}>{item}</MenuItem>
+                  onPick(item);
+                  state.close();
+                }}
+              >
+                {item}
+              </MenuItem>
             ))}
           </Popover>
         </>
@@ -38,5 +40,3 @@ export const DropDownList = <T extends string | number | undefined | null>({
     </PopupState>
   );
 };
-
-
