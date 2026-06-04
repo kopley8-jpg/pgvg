@@ -5,6 +5,7 @@ import path from 'path';
 // https://vite.dev/config/
 export default defineConfig({
   server: {
+    allowedHosts: ['verbally-daredevil-vocation.ngrok-free.dev'],
     host: '0.0.0.0',
     port: 3000, // форсим нужный порт
     strictPort: true, // если 3000 занят - выкинет ошибку, а не переключится на другой
