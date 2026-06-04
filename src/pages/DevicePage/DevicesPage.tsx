@@ -31,9 +31,7 @@ export const DevicesPage = () => {
       {devices.map((device) => (
         <DeviceManagmentCard key={device.id} device={device} />
       ))}
-      <IconButton onClick={() => pushDevice()}>
-        <Add />
-      </IconButton>
+
     </div>
   );
 };
