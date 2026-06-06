@@ -11,12 +11,12 @@ import {
 import { Switch } from '@mui/material';
 import { CompatiblePlatsEntry } from './ui/CompatiblePlatsEntry/CompatiblePlatsEntry';
 
-interface IPlatformEntry {
+export interface IPlatformEntry {
   platform: PlatformType;
   objEntryStyles: ObjEntryStylesType;
-  onChange: (platform: PlatformType) => void;
-  onPlatItemClick: (plat: CompactiblePlatType) => void;
-  onCompatiblePlatAdd: (
+  onChange?: (platform: PlatformType) => void;
+  onPlatItemClick?: (plat: CompactiblePlatType) => void;
+  onCompatiblePlatAdd?: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => void;
 }
@@ -43,54 +43,54 @@ export const PlatformEntry = (props: IPlatformEntry) => {
             onPick={(picked) => {
               if (!picked || picked === platform.type) return;
               if (picked === 'магнит') {
-                onChange({
+                onChange?.({
                   type: picked,
                   adjustmentAirflow: false,
                   compatiblePlats: [],
                 });
               } else {
-                onChange({ type: picked });
+                onChange?.({ type: picked });
               }
             }}
           />
         )),
         ...(platform.type === 'магнит'
           ? [
-              ...createRenderConfig(platform).forKeys(
-                ['adjustmentAirflow'],
-                (_key, value) => (
-                  <Switch
-                    checked={value}
-                    size="small"
-                    onClick={() =>
-                      onChange({
-                        ...platform,
-                        adjustmentAirflow: !platform.adjustmentAirflow,
-                      })
-                    }
-                  />
-                )
+            ...createRenderConfig(platform).forKeys(
+              ['adjustmentAirflow'],
+              (_key, value) => (
+                <Switch
+                  checked={value}
+                  size="small"
+                  onClick={() =>
+                    onChange?.({
+                      ...platform,
+                      adjustmentAirflow: !platform.adjustmentAirflow,
+                    })
+                  }
+                />
+              )
+            ),
+            ...createRenderConfig(platform).forKeys(
+              ['compatiblePlats'],
+              (_key, value) => (
+                <CompatiblePlatsEntry
+                  compatiblePlats={value}
+                  objEntryStyles={objEntryStyles}
+                  onPlatItemClick={(plat) => {
+                    onPlatItemClick?.(plat);
+                  }}
+                  onDelete={(newPlats) => {
+                    onChange?.({ ...platform, compatiblePlats: newPlats });
+                  }}
+                  onPlatAdd={(e) => {
+                    onCompatiblePlatAdd?.(e);
+                  }}
+                />
               ),
-              ...createRenderConfig(platform).forKeys(
-                ['compatiblePlats'],
-                (_key, value) => (
-                  <CompatiblePlatsEntry
-                    compatiblePlats={value}
-                    objEntryStyles={objEntryStyles}
-                    onPlatItemClick={(plat) => {
-                      onPlatItemClick(plat);
-                    }}
-                    onDelete={(newPlats) => {
-                      onChange({ ...platform, compatiblePlats: newPlats });
-                    }}
-                    onPlatAdd={(e) => {
-                      onCompatiblePlatAdd(e);
-                    }}
-                  />
-                ),
-                { hideKeyName: true }
-              ),
-            ]
+              { hideKeyName: true }
+            ),
+          ]
           : [null]),
       ]}
     />

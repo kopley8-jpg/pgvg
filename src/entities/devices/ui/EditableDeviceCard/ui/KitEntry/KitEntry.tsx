@@ -23,17 +23,18 @@ import {
 import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
 import { useState } from 'react';
 
-interface IKitEntry {
+export interface IKitEntry {
   kit: DeviceKitType[];
-  onAddKitItemMenuClick: (
+  colors: typeof cols.light;
+  onAddKitItemMenuClick?: (
     e: React.MouseEvent<HTMLLIElement, MouseEvent>
   ) => void;
-  onKitItemClick: (
-    item: Exclude<DeviceKitType, SomethingElseInKitType> & { id: number }
+  onKitItemClick?: (
+    item: Exclude<DeviceKitType, SomethingElseInKitType>,
+    id: number
   ) => void;
-  colors: typeof cols.light;
-  onChange: (newValue: DeviceKitType[]) => void;
-  onError: (error: string) => void;
+  onChange?: (newValue: DeviceKitType[]) => void;
+  onError?: (error: string) => void;
 }
 
 export const KitEntry = (props: IKitEntry) => {
@@ -67,11 +68,11 @@ export const KitEntry = (props: IKitEntry) => {
                       if (item.type === 'something-else') {
                         setClickedSomethingElseKitItem(item);
                       } else {
-                        onKitItemClick({ ...item, id: index });
+                        onKitItemClick?.(item, index);
                       }
                     }}
                     onDelete={() => {
-                      onChange(
+                      onChange?.(
                         kit.filter((_kitItem, kitIndex) => kitIndex != index)
                       );
                     }}
@@ -84,15 +85,15 @@ export const KitEntry = (props: IKitEntry) => {
                     <EditSomethingElseInKitCard
                       item={clickedSomethingElseKitItem!}
                       onChange={(newItem) => {
-                        onChange(
+                        onChange?.(
                           kit.map((kitItem, kitIndex) =>
-                            index === kitIndex ? newItem : kitItem
+                            index === kitIndex ? { ...newItem } : kitItem
                           )
                         );
                         setClickedSomethingElseKitItem(newItem);
                       }}
                       onDelete={() => {
-                        onChange(
+                        onChange?.(
                           kit.filter((_kitItem, kitIndex) => kitIndex != index)
                         );
                         setClickedSomethingElseKitItem(null);
@@ -124,10 +125,10 @@ export const KitEntry = (props: IKitEntry) => {
                           name: 'Новое что-то еще',
                           count: 1,
                         };
-                        onChange([...kit, newKitItem]);
+                        onChange?.([...kit, newKitItem]);
                         setClickedSomethingElseKitItem(newKitItem);
                       } else {
-                        onAddKitItemMenuClick(e);
+                        onAddKitItemMenuClick?.(e);
                       }
                     }}
                     menuProps={{ ...bindPopover(state) }}
@@ -175,7 +176,7 @@ const EditSomethingElseInKitCard = ({
   colors: typeof cols.light;
   onChange: (newValue: SomethingElseInKitType) => void;
   onDelete: () => void;
-  onError: (error: string) => void;
+  onError?: (error: string) => void;
 }) => {
   const kitConfig = createRenderConfig(item);
   return (
@@ -215,7 +216,7 @@ const EditSomethingElseInKitCard = ({
             onSaveButtonPress={(newVal) => {
               const toNumber = Number(newVal);
               if (isNaN(toNumber)) {
-                onError('значение должно быть числом');
+                onError?.('значение должно быть числом');
               } else {
                 onChange({ ...item, count: toNumber });
               }

@@ -1,11 +1,11 @@
-import { convertToNumber } from "@/shared/lib/convertToNumber"
+import { convertToNumber } from "@/shared/lib/tryConvertToNumber"
 import { createRenderConfig } from "@/shared/lib/createRenderConfig"
 import { BATTERY_FORMATS, type BatteryType } from "@/shared/types/device"
 import { DropDownList } from "@/shared/ui/DropDownList/DropDownList"
 import { ObjEntryTwo, type ObjEntryStylesType } from "@/shared/ui/ObjEntry/ObjEntry"
 import { TextValue } from "@/shared/ui/PrimitiveValue/TextValue/TextValue"
 
-interface IBatteryEntry {
+export interface IBatteryEntry {
   battery: BatteryType,
   style: ObjEntryStylesType,
   onChange?: (battery: BatteryType) => void,

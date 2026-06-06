@@ -1,4 +1,4 @@
-import { convertToNumber } from '@/shared/lib/convertToNumber';
+import { convertToNumber } from '@/shared/lib/tryConvertToNumber';
 import type { ICoilSeriesCard } from './types';
 import { useEffect, useState } from 'react';
 import type { CoilSeriesType } from '@/shared/types/coil-series';

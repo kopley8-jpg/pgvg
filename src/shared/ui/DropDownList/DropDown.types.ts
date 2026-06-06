@@ -1,8 +1,8 @@
 import type React from 'react';
 
-export interface IDropDownList<T extends string | number | undefined | null> {
-  value: T;
-  data: T[];
+export interface IDropDownList<T extends string | number> {
+  value: T | null;
+  data: T[] | readonly T[];
   style?: DropDownStyle;
   onPick: (picked: T) => void;
 }
