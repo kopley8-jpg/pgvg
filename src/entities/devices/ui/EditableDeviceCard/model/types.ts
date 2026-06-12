@@ -23,7 +23,8 @@ export interface IDeviceCard {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => void;
   onKitItemClick?: (
-    item: Exclude<DeviceKitType, SomethingElseInKitType>
+    item: Exclude<DeviceKitType, SomethingElseInKitType>,
+    id: number
   ) => void;
   onAddKitItemMenuClick?: (
     e: React.MouseEvent<HTMLLIElement, MouseEvent>

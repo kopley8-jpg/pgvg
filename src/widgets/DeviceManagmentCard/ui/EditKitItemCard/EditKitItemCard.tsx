@@ -1,20 +1,23 @@
-import { subscribeToCoilSeriesById } from "@/shared/api/firebase/coils";
-import { subscribeToPodSeriesById } from "@/shared/api/firebase/pods";
-import { subscribeToTankSeriesById } from "@/shared/api/firebase/tanks";
-import type { colors as cols } from "@/shared/constants/colors";
-import { ObjCardStyles } from "@/shared/constants/styles";
-import { createRenderConfig } from "@/shared/lib/createRenderConfig";
-import type { CoilSeriesType } from "@/shared/types/coil-series";
-import type { DeviceKitType, SomethingElseInKitType, PodInKitType, TankInKitType, CoilInKitType } from "@/shared/types/device";
-import type { PodSeriesType } from "@/shared/types/pod-series";
-import type { TankSeriesType } from "@/shared/types/tank-series";
-import { DropDownList } from "@/shared/ui/DropDownList/DropDownList";
-import { ObjCard } from "@/shared/ui/ObjCard/ObjCard";
-import { TextValue } from "@/shared/ui/PrimitiveValue/TextValue/TextValue";
-import { useState, useEffect } from "react";
-
-type LocalDeviceKitType = Exclude<DeviceKitType, SomethingElseInKitType>
-
+import { subscribeToCoilSeriesById } from '@/shared/api/firebase/coils';
+import { subscribeToPodSeriesById } from '@/shared/api/firebase/pods';
+import { subscribeToTankSeriesById } from '@/shared/api/firebase/tanks';
+import type { colors as cols } from '@/shared/constants/colors';
+import { ObjCardStyles } from '@/shared/constants/styles';
+import { createRenderConfig } from '@/shared/lib/createRenderConfig';
+import type { CoilSeriesType } from '@/shared/types/coil-series';
+import type {
+  DeviceKitType,
+  SomethingElseInKitType,
+  PodInKitType,
+  TankInKitType,
+  CoilInKitType,
+} from '@/shared/types/device';
+import type { PodSeriesType } from '@/shared/types/pod-series';
+import type { TankSeriesType } from '@/shared/types/tank-series';
+import { DropDownList } from '@/shared/ui/DropDownList/DropDownList';
+import { ObjCard } from '@/shared/ui/ObjCard/ObjCard';
+import { TextValue } from '@/shared/ui/PrimitiveValue/TextValue/TextValue';
+import { useState, useEffect } from 'react';
 
 export const EditKitItemCard = ({
   item,
@@ -131,15 +134,15 @@ const PodItemInKitEditorCard = ({
         ...[
           series.capacity.length > 1
             ? podItemConfig.forKeys(['capacity'], (_key, value) => (
-              <DropDownList
-                value={value}
-                data={series.capacity}
-                onPick={(p) => {
-                  if (p === value) return;
-                  onChange({ ...kitItem, capacity: p });
-                }}
-              />
-            ))
+                <DropDownList
+                  value={value}
+                  data={series.capacity}
+                  onPick={(p) => {
+                    if (p === value) return;
+                    onChange({ ...kitItem, capacity: p });
+                  }}
+                />
+              ))
             : [],
         ].flat(),
         ...podItemConfig.forKeys(['count'], (_key, value) => (
@@ -187,15 +190,15 @@ const TankItemInKitEditorCard = ({
         ...[
           series.capacity.length > 1
             ? tankItemConfig.forKeys(['capacity'], (_key, value) => (
-              <DropDownList
-                value={value}
-                data={series.capacity}
-                onPick={(p) => {
-                  if (p === value) return;
-                  onChange({ ...kitItem, capacity: p });
-                }}
-              />
-            ))
+                <DropDownList
+                  value={value}
+                  data={series.capacity}
+                  onPick={(p) => {
+                    if (p === value) return;
+                    onChange({ ...kitItem, capacity: p });
+                  }}
+                />
+              ))
             : [],
         ].flat(),
         ...tankItemConfig.forKeys(['count'], (_key, value) => (

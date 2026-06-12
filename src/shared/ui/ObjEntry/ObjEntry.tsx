@@ -1,22 +1,22 @@
 import { useState } from 'react';
 import { useStyles } from './ObjEntry.styles';
 import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
-import { MenuItem } from '@mui/material';
+import { Box, MenuItem, type SxProps, type Theme } from '@mui/material';
 
 interface IObjEntryTwo {
   translatedNamesForKeys: Record<string, string>;
   entryName: string;
-  style?: ObjEntryStylesType
-  renderForKeys: (
-    {
-      key: string;
-      renderItem: () => React.ReactNode;
-      options?: { hideKeyName?: boolean }
-    } | null
-  )[];
+  style?: ObjEntryStylesType;
+  renderForKeys: ({
+    key: string;
+    renderItem: () => React.ReactNode;
+    options?: { hideKeyName?: boolean };
+  } | null)[];
 }
 
-export type ObjEntryStylesType = Partial<Record<(keyof ReturnType<typeof useStyles>), React.CSSProperties>>
+export type ObjEntryStylesType = Partial<
+  Record<keyof ReturnType<typeof useStyles>, SxProps<Theme>>
+>;
 
 export const ObjEntryTwo = ({
   entryName,
@@ -26,48 +26,84 @@ export const ObjEntryTwo = ({
 }: IObjEntryTwo) => {
   const styles = useStyles();
 
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   return (
-    <div style={{ ...styles.container, ...style?.container }}>
-      <MenuItem style={{ ...styles.entryName, ...style?.entryName }} onClick={() => setOpen(!open)}>
+    <Box sx={{ ...styles.container, ...style?.container }}>
+      <MenuItem
+        sx={{ ...styles.entryName, ...style?.entryName }}
+        onClick={() => setOpen(!open)}
+      >
         {entryName}
-        {open ? (
-          <ArrowDropUp />
-        ) : (
-          <ArrowDropDown />
-        )}
+        {open ? <ArrowDropUp /> : <ArrowDropDown />}
       </MenuItem>
       {open ? (
-        <div style={{ ...styles.propsContainer, ...style?.propsContainer }}>
+        <Box sx={{ ...styles.propsContainer, ...style?.propsContainer }}>
           {renderForKeys.map((render) => (
             <>
               {render ? (
                 <>
                   {render.options?.hideKeyName ? (
-                    <div style={{ ...styles.propContainer, ...style?.propContainer, border: "0px black solid" }}>
-                      <div style={{ ...styles.propContentContainer, ...style?.propContentContainer }}>
+                    <Box
+                      sx={{
+                        ...styles.propContainer,
+                        ...style?.propContainer,
+                        border: '0px black solid',
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          ...styles.propContentContainer,
+                          ...style?.propContentContainer,
+                          width: '100%',
+                        }}
+                      >
                         {render.renderItem()}
-                      </div>
-                    </div>
+                      </Box>
+                    </Box>
                   ) : (
-                    <div style={{ ...styles.propContainer, ...style?.propContainer }}>
-                      <div style={{ ...styles.propKeyNameContainer, ...style?.propKeyNameContainer }}>
+                    <Box
+                      sx={{
+                        ...styles.propContainer,
+                        ...style?.propContainer,
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          ...styles.propKeyNameContainer,
+                          ...style?.propKeyNameContainer,
+                        }}
+                      >
                         <span>
-                          <span>{translatedNamesForKeys ? translatedNamesForKeys[render.key] : render.key.toString()}:</span>
+                          <span>
+                            {translatedNamesForKeys
+                              ? translatedNamesForKeys[render.key]
+                              : render.key.toString()}
+                            :
+                          </span>
                         </span>
-                      </div>
-                      <div style={{ ...styles.propContentContainer, ...style?.propContentContainer }}>
+                      </Box>
+                      <Box
+                        sx={{
+                          ...styles.propContentContainer,
+                          ...style?.propContentContainer,
+                          alignItems: 'center',
+                        }}
+                      >
                         {render.renderItem()}
-                      </div>
-                    </div>
+                      </Box>
+                    </Box>
                   )}
                 </>
-              ) : (<></>)}
+              ) : (
+                <></>
+              )}
             </>
           ))}
-        </div>
-      ) : (<></>)}
-    </div>
+        </Box>
+      ) : (
+        <></>
+      )}
+    </Box>
   );
 };

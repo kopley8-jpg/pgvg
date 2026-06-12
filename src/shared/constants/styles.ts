@@ -7,9 +7,18 @@ export const ObjCardStyles = (colors: typeof cols.light): ObjCardStylesType => {
     container: {
       borderRadius: '20px',
       border: `2px ${colors.second} solid`,
-      fontSize: '3vw',
+      fontSize: '1rem',
+      '@media (max-width: 386px)': {
+        fontSize: '3vw',
+      },
       color: colors.primary,
       backgroundColor: colors.background,
+      '@media (orientation: landscape)': {
+        width: { sm: '50%', md: '40%', lg: '30%' },
+      },
+      '@media (orientation: portrait)': {
+        width: '90%',
+      },
     },
     photo: {
       borderRadius: '20px 0px 0px 20px',
@@ -17,7 +26,6 @@ export const ObjCardStyles = (colors: typeof cols.light): ObjCardStylesType => {
     },
     header: {
       borderBottom: `2px ${colors.second} solid`,
-      paddingLeft: 10,
     },
     prop: {
       color: colors.primary,
@@ -32,11 +40,17 @@ export const ObjEntryStyles = (
   return {
     entryName: {
       color: colors.primary,
-      fontSize: '3vw',
+      fontSize: '1rem',
+      '@media (max-width: 386px)': {
+        fontSize: '3vw',
+      },
     },
     propsContainer: {
+      fontSize: '1rem',
+      '@media (max-width: 386px)': {
+        fontSize: '3vw',
+      },
       borderLeft: `2px ${colors.primary} solid`,
-      fontSize: '3vw',
     },
   };
 };

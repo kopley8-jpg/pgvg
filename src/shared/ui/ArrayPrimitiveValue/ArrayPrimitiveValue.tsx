@@ -1,5 +1,4 @@
 import { ArrayPrimitiveValueEditor } from './ArrayPrimitiveValueEditor/ArrayPrimitiveValueEditor';
-import { useStyles } from './styles';
 import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
 
 interface IArrayPrimitiveValue {
@@ -26,8 +25,6 @@ export const ArrayPrimitiveValue = ({
   style,
   onChangesSaved,
 }: IArrayPrimitiveValue) => {
-  const styles = useStyles();
-
   const handleChangesSaved = (newValue: (string | number)[]) => {
     onChangesSaved(newValue);
   };
@@ -41,10 +38,7 @@ export const ArrayPrimitiveValue = ({
             value={value ? value : []}
             onSaveButtonClick={handleChangesSaved}
           />
-          <span
-            {...bindTrigger(state)}
-            style={{ ...styles.text, ...style?.value }}
-          >
+          <span {...bindTrigger(state)} style={{ ...style?.value }}>
             {Boolean(value) && value && value.length > 0
               ? value.join(', ')
               : 'значение?'}

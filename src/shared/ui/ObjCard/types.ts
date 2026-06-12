@@ -1,4 +1,4 @@
-import type { IconButtonProps, MenuItemProps } from '@mui/material';
+import type { IconButtonProps, MenuItemProps, SxProps, Theme } from '@mui/material';
 
 export interface IObjCard<T extends Record<string, any>> {
   photoURL?: string | null;
@@ -23,11 +23,12 @@ type MenuItemAtObjCard = {
 } & MenuItemProps;
 
 export type ObjCardStyles = {
-  container?: React.CSSProperties;
+  container?: SxProps<Theme>;
   photo?: React.CSSProperties;
-  infoContainer?: React.CSSProperties;
-  header?: React.CSSProperties;
-  props?: React.CSSProperties;
-  prop?: React.CSSProperties;
-  propKeyName?: React.CSSProperties;
+  infoContainer?: SxProps<Theme>;
+  header?: SxProps<Theme>;
+  props?: SxProps<Theme>;
+  prop?: SxProps<Theme>;
+  propKeyName?: SxProps<Theme>;
+  propContentContainer?:SxProps<Theme>
 };

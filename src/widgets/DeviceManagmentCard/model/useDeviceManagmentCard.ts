@@ -53,8 +53,8 @@ export const useDeviceManagmentCard = ({ device }: IDeviceManagmentCard) => {
           anchorEl: e.currentTarget,
         });
       },
-      onKitItemClick(item) {
-        setClickedKitItem(item);
+      onKitItemClick(item, id) {
+        setClickedKitItem({ ...item, id });
       },
       onError(error) {
         alert(error);

@@ -82,7 +82,7 @@ export const useDeviceCard = (props: IDeviceCard) => {
           value.map((val) => val.toString())
         ),
     }),
-    dropDown: (key) => ({
+    dropDown: (_key) => ({
       onPick(picked) {
         onChange?.('screen', picked);
       },

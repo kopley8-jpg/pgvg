@@ -114,7 +114,11 @@ export const KitEntry = (props: IKitEntry) => {
             <PopupState variant="popover">
               {(state) => (
                 <>
-                  <IconButton size="small" {...bindTrigger(state)}>
+                  <IconButton
+                    size="small"
+                    {...bindTrigger(state)}
+                    sx={{ width: '100%', borderRadius: '10px' }}
+                  >
                     <Add fontSize="small" />
                   </IconButton>
                   <AddItemToKitMenu
@@ -241,7 +245,6 @@ const KitMenuItem = ({
     <div style={{ display: 'flex', flexDirection: 'row' }}>
       <MenuItem
         sx={{
-          fontSize: '2vw',
           py: 1,
           px: 1,
           minHeight: 'auto',

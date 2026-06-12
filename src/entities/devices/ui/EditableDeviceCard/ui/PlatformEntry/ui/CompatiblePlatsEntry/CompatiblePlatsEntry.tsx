@@ -26,7 +26,17 @@ export const CompatiblePlatsEntry = (props: ICompatiblePlatsEntry) => {
   return (
     <ObjEntryTwo
       entryName="Поддерживает"
-      style={objEntryStyles}
+      style={{
+        ...objEntryStyles,
+        propsContainer: {
+          ...objEntryStyles.propsContainer,
+          overflow: 'hidden',
+        },
+        propContainer: {
+          ...objEntryStyles.propContainer,
+          backgroundColor: 'red',
+        },
+      }}
       translatedNamesForKeys={{}}
       renderForKeys={[
         ...(compatiblePlats ? compatiblePlats : [])
@@ -36,7 +46,20 @@ export const CompatiblePlatsEntry = (props: ICompatiblePlatsEntry) => {
               (_key, value) => (
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                   <MenuItem
-                    sx={{ fontSize: '2vw', py: 1, px: 1, minHeight: 'auto' }}
+                    sx={{
+                      py: 1,
+                      px: 1,
+                      minHeight: 'auto',
+                      width: '100%',
+                      fontSize: '1rem',
+                      '@media (max-width: 386px)': {
+                        fontSize: '2.5vw',
+                      },
+                      overflow:
+                        'hidden' /* Скрываем выходящий за границы текст */,
+                      whiteSpace: 'nowrap' /* Запрещаем перенос строк */,
+                      textOverflow: 'ellipsis',
+                    }}
                     onClick={() => {
                       onPlatItemClick(plat);
                     }}
@@ -69,6 +92,7 @@ export const CompatiblePlatsEntry = (props: ICompatiblePlatsEntry) => {
               onClick={(e) => {
                 onPlatAdd(e);
               }}
+              sx={{ width: '100%', borderRadius: 10 }}
             >
               <Add fontSize="small" />
             </IconButton>
