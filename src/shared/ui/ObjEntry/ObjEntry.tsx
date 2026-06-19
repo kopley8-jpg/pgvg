@@ -4,15 +4,17 @@ import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
 import { Box, MenuItem, type SxProps, type Theme } from '@mui/material';
 
 interface IObjEntryTwo {
-  translatedNamesForKeys: Record<string, string>;
+  translatedNamesForKeys: Record<string | symbol | number, string>;
   entryName: string;
   style?: ObjEntryStylesType;
-  renderForKeys: ({
-    key: string;
-    renderItem: () => React.ReactNode;
-    options?: { hideKeyName?: boolean };
-  } | null)[];
+  renderForKeys: (RenderPropType | React.ReactNode)[];
 }
+
+export type RenderPropType = {
+  options?: { style?: SxProps<Theme> };
+  key: string | number | symbol;
+  renderItem: React.ReactNode;
+};
 
 export type ObjEntryStylesType = Partial<
   Record<keyof ReturnType<typeof useStyles>, SxProps<Theme>>
@@ -43,7 +45,7 @@ export const ObjEntryTwo = ({
             <>
               {render ? (
                 <>
-                  {render.options?.hideKeyName ? (
+                  {!isRenderPropType(render) ? (
                     <Box
                       sx={{
                         ...styles.propContainer,
@@ -58,7 +60,7 @@ export const ObjEntryTwo = ({
                           width: '100%',
                         }}
                       >
-                        {render.renderItem()}
+                        {render}
                       </Box>
                     </Box>
                   ) : (
@@ -90,7 +92,7 @@ export const ObjEntryTwo = ({
                           alignItems: 'center',
                         }}
                       >
-                        {render.renderItem()}
+                        {render.renderItem}
                       </Box>
                     </Box>
                   )}
@@ -107,3 +109,7 @@ export const ObjEntryTwo = ({
     </Box>
   );
 };
+
+function isRenderPropType(item: any): item is RenderPropType {
+  return item && typeof item === 'object' && 'renderItem' in item;
+}

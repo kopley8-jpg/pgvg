@@ -1,5 +1,5 @@
 import { IconButton, TextField } from '@mui/material';
-import { Cancel, Save } from '@mui/icons-material';
+import { Save } from '@mui/icons-material';
 import { useStyles } from './styles';
 import React, { useState } from 'react';
 
@@ -15,7 +15,6 @@ export const TextEditor = ({
   keyName,
   value,
   style,
-  onCancelButtonPress,
   onSaveButtonPress,
 }: IPrimitiveValueEditor) => {
   const styles = useStyles();
@@ -48,13 +47,6 @@ export const TextEditor = ({
         sx={styles.TextField}
         value={localValue}
       />
-      <IconButton
-        size="small"
-        style={styles.button}
-        onClick={() => onCancelButtonPress?.()}
-      >
-        <Cancel fontSize="small" />
-      </IconButton>
     </div>
   );
 };

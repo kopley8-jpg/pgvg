@@ -25,41 +25,50 @@ export const DeviceCard = (props: IDeviceCard) => {
   return (
     <>
       <ObjCard
-        data={device}
         photoURL={device.photoURL}
-        styles={ObjCardStyles(colors)}
+        styles={{
+          ...ObjCardStyles(colors),
+          headerLeftContainer: {
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+          },
+        }}
         translatedNamesForKeys={translate}
-        renderInHeader={() => (
+        renderInHeader={
           <>
-            <TextValue value={device.brand} {...uiHandler.textField("brand")} />
-            <TextValue value={device.model} {...uiHandler.textField("model")} />
+            <TextValue value={device.brand} {...uiHandler.textField('brand')} />
+            <TextValue
+              style={{ textOverflow: 'ellipsis' }}
+              value={device.model}
+              {...uiHandler.textField('model')}
+            />
           </>
-        )}
+        }
         menu={{
           menuItems: [
             ...(device.photoURL
               ? [
-                {
-                  label: 'Заменить фото',
-                  sx: { gap: 1 },
-                  ...uiHandler.menuItem('load-photo'),
-                  renderBeforeLabel: <Photo />,
-                },
-                {
-                  label: 'Удалить фото',
-                  sx: { gap: 1 },
-                  ...uiHandler.menuItem('delete-photo'),
-                  renderBeforeLabel: <Photo />,
-                },
-              ]
+                  {
+                    label: 'Заменить фото',
+                    sx: { gap: 1 },
+                    ...uiHandler.menuItem('load-photo'),
+                    renderBeforeLabel: <Photo />,
+                  },
+                  {
+                    label: 'Удалить фото',
+                    sx: { gap: 1 },
+                    ...uiHandler.menuItem('delete-photo'),
+                    renderBeforeLabel: <Photo />,
+                  },
+                ]
               : [
-                {
-                  label: 'Добавить фото',
-                  ...uiHandler.menuItem('load-photo'),
-                  sx: { gap: 1 },
-                  renderBeforeLabel: <Photo />,
-                },
-              ]),
+                  {
+                    label: 'Добавить фото',
+                    ...uiHandler.menuItem('load-photo'),
+                    sx: { gap: 1 },
+                    renderBeforeLabel: <Photo />,
+                  },
+                ]),
             {
               label: 'Удалить девайс',
               ...uiHandler.menuItem('delete-device'),
@@ -69,49 +78,34 @@ export const DeviceCard = (props: IDeviceCard) => {
           ],
         }}
         renderForKeys={[
-          ...deviceConfig.forKeys(
-            ['platforms'],
-            (_key, value) => (
-              <PlatformEntry
-                platform={value}
-                objEntryStyles={ObjEntryStyles(colors)}
-                {...uiHandler.platformEntry}
-              />
-            ),
-            { hideKeyName: true }
-          ),
-          ...deviceConfig.forKeys(
-            ['battery'],
-            (_key, value) => (
-              <BatteryEntry
-                style={ObjEntryStyles(colors)}
-                battery={value}
-                {...uiHandler.batteryEntry}
-              />
-            ),
-            { hideKeyName: true }
-          ),
-          ...deviceConfig.forKeys(
-            ['kit'],
-            (_key, value) => (
-              <KitEntry kit={value} {...uiHandler.kitEntry} colors={colors} />
-            ),
-            { hideKeyName: true }
-          ),
+          <PlatformEntry
+            platform={device.platforms}
+            objEntryStyles={ObjEntryStyles(colors)}
+            {...uiHandler.platformEntry}
+          />,
+          <BatteryEntry
+            style={ObjEntryStyles(colors)}
+            battery={device.battery}
+            {...uiHandler.batteryEntry}
+          />,
+          <KitEntry kit={device.kit} {...uiHandler.kitEntry} colors={colors} />,
           ...deviceConfig.forKeys(['minCoilResistance'], (_key, value) => (
             <TextValue
               style={{ maxWidth: '120px' }}
               value={value}
-              {...uiHandler.textField("minCoilResistance")}
+              {...uiHandler.textField('minCoilResistance')}
             />
           )),
-          ...deviceConfig.forKeys(['screen'], (_key, value) => (
-            <DropDownList
-              value={value}
-              data={SCREEN_TYPES}
-              {...uiHandler.dropDown("screen")}
-            />
-          )),
+          {
+            key: 'screen',
+            renderItem: (
+              <DropDownList
+                value={device.screen}
+                data={SCREEN_TYPES}
+                {...uiHandler.dropDown('screen')}
+              />
+            ),
+          },
           ...deviceConfig.forKeys(['features', 'modes'], (key, value) => (
             <ArrayPrimitiveValue
               value={value}

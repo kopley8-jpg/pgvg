@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { IArrayPrimitiveValueEditor } from './types';
+import type { PopupState } from 'material-ui-popup-state/hooks';
 
 export const useArrayPrimitiveValueEditor = (
   props: IArrayPrimitiveValueEditor
@@ -7,37 +8,24 @@ export const useArrayPrimitiveValueEditor = (
   const { value, menuProps, onSaveButtonClick } = props;
 
   const [localValues, setLocalValues] = useState<(string | number)[]>(value);
-  const [pickedValueId, setPickedValueId] = useState<number | null>(null);
 
   const createHandler = () => {
     return {
-      item: {
-        onClick: (index: number) => {
-          setPickedValueId(index);
-        },
-      },
-      editing: {
+      editing: (id: number, state: PopupState) => ({
         textField: {
-          onCancelButtonPress: () => {
-            setPickedValueId(null);
-          },
           onSaveButtonPress: (newValue: string | number) => {
             setLocalValues((prev) =>
-              prev.map((val, index) =>
-                index === pickedValueId ? newValue : val
-              )
+              prev.map((val, index) => (index === id ? newValue : val))
             );
-            setPickedValueId(null);
+            state.close();
           },
         },
         deleteButton: {
           onClick: () => {
-            setLocalValues((prev) =>
-              prev.filter((_val, index) => index != pickedValueId)
-            );
+            setLocalValues((prev) => prev.filter((_val, index) => index != id));
           },
         },
-      },
+      }),
       addButton: {
         onClick: () => {
           setLocalValues((prev) => [...prev, '?']);
@@ -59,7 +47,6 @@ export const useArrayPrimitiveValueEditor = (
 
   return {
     localValues,
-    pickedValueId,
     createHandler,
   };
 };

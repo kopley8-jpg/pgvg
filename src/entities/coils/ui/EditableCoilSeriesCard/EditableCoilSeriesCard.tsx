@@ -2,16 +2,13 @@ import { createRenderConfig } from '@/shared/lib/createRenderConfig';
 import { ArrayPrimitiveValue } from '@/shared/ui/ArrayPrimitiveValue/ArrayPrimitiveValue';
 import { ObjCard } from '@/shared/ui/ObjCard/ObjCard';
 import { TextValue } from '@/shared/ui/PrimitiveValue/TextValue/TextValue';
-import { MoreVert } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
-import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
-import { CoilSeriesMenu } from './CoilSeriesMenu/CoilSeriesMenu';
+import { Delete } from '@mui/icons-material';
 import type { ICoilSeriesCard } from './model/types';
 import { useCoilSeriesCard } from './model/useCoilSeriesCard';
 import { ObjCardStyles } from '@/shared/constants/styles';
 
 export const CoilSeriesCard = (props: ICoilSeriesCard) => {
-  const { onChange, onMenuItemClick, colors, renderInHeader } = props;
+  const { onChange, colors, renderInHeader } = props;
   const { coilSeries, loading, handleOhmsChange } = useCoilSeriesCard(props);
 
   if (!coilSeries || loading) return <span>загрузка...</span>;
@@ -22,12 +19,11 @@ export const CoilSeriesCard = (props: ICoilSeriesCard) => {
         ...ObjCardStyles(colors),
         container: {
           ...ObjCardStyles(colors).container,
-          height: "20vh"
-        }
+          height: '20vh',
+        },
       }}
       translatedNamesForKeys={translate}
-      data={coilSeries}
-      renderInHeader={() => (
+      renderInHeader={
         <>
           <TextValue
             value={coilSeries.name}
@@ -35,22 +31,19 @@ export const CoilSeriesCard = (props: ICoilSeriesCard) => {
               onChange('name', value.toString());
             }}
           />
-          <PopupState variant="popover">
-            {(state) => (
-              <>
-                <IconButton {...bindTrigger(state)}>
-                  <MoreVert />
-                </IconButton>
-                <CoilSeriesMenu
-                  menuProps={{ ...bindMenu(state) }}
-                  onItemClick={onMenuItemClick}
-                />
-              </>
-            )}
-          </PopupState>
           {renderInHeader}
         </>
-      )}
+      }
+      menu={{
+        menuItems: [
+          {
+            label: 'Удалить серию',
+            sx: { color: 'red', gap: 1 },
+            renderBeforeLabel: <Delete />,
+            onClick: () => props.onMenuItemClick('delete'),
+          },
+        ],
+      }}
       renderForKeys={[
         ...createRenderConfig(coilSeries).forKeys(['ohms'], (_key, value) => (
           <ArrayPrimitiveValue

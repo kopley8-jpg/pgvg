@@ -56,41 +56,35 @@ export const PlatformEntry = (props: IPlatformEntry) => {
         )),
         ...(platform.type === 'магнит'
           ? [
-            ...createRenderConfig(platform).forKeys(
-              ['adjustmentAirflow'],
-              (_key, value) => (
-                <Switch
-                  checked={value}
-                  size="small"
-                  onClick={() =>
-                    onChange?.({
-                      ...platform,
-                      adjustmentAirflow: !platform.adjustmentAirflow,
-                    })
-                  }
-                />
-              )
-            ),
-            ...createRenderConfig(platform).forKeys(
-              ['compatiblePlats'],
-              (_key, value) => (
-                <CompatiblePlatsEntry
-                  compatiblePlats={value}
-                  objEntryStyles={objEntryStyles}
-                  onPlatItemClick={(plat) => {
-                    onPlatItemClick?.(plat);
-                  }}
-                  onDelete={(newPlats) => {
-                    onChange?.({ ...platform, compatiblePlats: newPlats });
-                  }}
-                  onPlatAdd={(e) => {
-                    onCompatiblePlatAdd?.(e);
-                  }}
-                />
+              ...createRenderConfig(platform).forKeys(
+                ['adjustmentAirflow'],
+                (_key, value) => (
+                  <Switch
+                    checked={value}
+                    size="small"
+                    onClick={() =>
+                      onChange?.({
+                        ...platform,
+                        adjustmentAirflow: !platform.adjustmentAirflow,
+                      })
+                    }
+                  />
+                )
               ),
-              { hideKeyName: true }
-            ),
-          ]
+              <CompatiblePlatsEntry
+                compatiblePlats={platform.compatiblePlats}
+                objEntryStyles={objEntryStyles}
+                onPlatItemClick={(plat) => {
+                  onPlatItemClick?.(plat);
+                }}
+                onDelete={(newPlats) => {
+                  onChange?.({ ...platform, compatiblePlats: newPlats });
+                }}
+                onPlatAdd={(e) => {
+                  onCompatiblePlatAdd?.(e);
+                }}
+              />,
+            ]
           : [null]),
       ]}
     />

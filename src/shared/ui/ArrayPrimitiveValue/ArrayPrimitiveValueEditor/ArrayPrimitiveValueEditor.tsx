@@ -4,6 +4,7 @@ import { useStyles } from './styles';
 import type { IArrayPrimitiveValueEditor } from './model/types';
 import { useArrayPrimitiveValueEditor } from './model/useArrayPrimitiveValueEditor';
 import { TextEditor } from '../../TextEditor/TextEditor';
+import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
 
 export const ArrayPrimitiveValueEditor = (
   props: IArrayPrimitiveValueEditor
@@ -12,8 +13,7 @@ export const ArrayPrimitiveValueEditor = (
 
   const { style } = props;
 
-  const { localValues, pickedValueId, createHandler } =
-    useArrayPrimitiveValueEditor(props);
+  const { localValues, createHandler } = useArrayPrimitiveValueEditor(props);
 
   const handler = createHandler();
 
@@ -39,25 +39,38 @@ export const ArrayPrimitiveValueEditor = (
       <Divider />
       {localValues.map((val, index) => (
         <>
-          {index === pickedValueId ? (
-            <div style={styles.item}>
-              <TextEditor value={val} {...handler.editing.textField} />
-              <IconButton
-                size="small"
-                {...handler.editing.deleteButton}
-                sx={style?.popupIcons}
-              >
-                <Delete fontSize="small" />
-              </IconButton>
-            </div>
-          ) : (
-            <MenuItem
-              onClick={() => handler.item.onClick(index)}
-              sx={style?.popupItem}
-            >
-              {val}
-            </MenuItem>
-          )}
+          <PopupState variant="popover">
+            {(state) => (
+              <>
+                <MenuItem
+                  {...bindTrigger(state)}
+                  sx={{ ...style?.popupItem, whiteSpace: 'normal' }}
+                >
+                  {val}
+                </MenuItem>
+                <Popover
+                  {...bindPopover(state)}
+                  slotProps={{
+                    paper: {
+                      style: { display: 'flex', flexDirection: 'row' },
+                    },
+                  }}
+                >
+                  <TextEditor
+                    value={val}
+                    {...handler.editing(index, state).textField}
+                  />
+                  <IconButton
+                    size="small"
+                    {...handler.editing(index, state).deleteButton}
+                    sx={style?.popupIcons}
+                  >
+                    <Delete fontSize="small" />
+                  </IconButton>
+                </Popover>
+              </>
+            )}
+          </PopupState>
         </>
       ))}
 

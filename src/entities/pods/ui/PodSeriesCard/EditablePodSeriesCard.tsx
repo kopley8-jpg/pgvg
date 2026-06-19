@@ -6,7 +6,7 @@ import { TextValue } from '@/shared/ui/PrimitiveValue/TextValue/TextValue';
 import { createRenderConfig } from '@/shared/lib/createRenderConfig';
 import { ArrayPrimitiveValue } from '@/shared/ui/ArrayPrimitiveValue/ArrayPrimitiveValue';
 import { ObjCardStyles } from '@/shared/constants/styles';
-import { CardMenu } from '@/shared/ui/CardMenu/CardMenu';
+import { Delete } from '@mui/icons-material';
 
 export const PodSeriesCard = (props: IPodSeriesCard) => {
   const { podSeries, loading, uiHandler } = usePodSeriesCard(props);
@@ -23,14 +23,22 @@ export const PodSeriesCard = (props: IPodSeriesCard) => {
         },
       }}
       translatedNamesForKeys={translate}
-      data={podSeries}
-      renderInHeader={() => (
+      menu={{
+        menuItems: [
+          {
+            label: 'Удалить серию',
+            sx: { color: 'red', gap: 1 },
+            renderBeforeLabel: <Delete />,
+            onClick: props.onDelete,
+          },
+        ],
+      }}
+      renderInHeader={
         <>
           <TextValue value={podSeries.name} {...uiHandler.name} />
-          <CardMenu {...uiHandler.menu} />
           {props.renderInHeader}
         </>
-      )}
+      }
       renderForKeys={[
         ...createRenderConfig(podSeries).forKeys(
           ['capacity', 'ohms'],

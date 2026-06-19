@@ -9,7 +9,7 @@ export const ObjCardStyles = (colors: typeof cols.light): ObjCardStylesType => {
       border: `2px ${colors.second} solid`,
       fontSize: '1rem',
       '@media (max-width: 386px)': {
-        fontSize: '3vw',
+        fontSize: '3.5vw',
       },
       color: colors.primary,
       backgroundColor: colors.background,
@@ -42,13 +42,13 @@ export const ObjEntryStyles = (
       color: colors.primary,
       fontSize: '1rem',
       '@media (max-width: 386px)': {
-        fontSize: '3vw',
+        fontSize: '3.5vw',
       },
     },
     propsContainer: {
       fontSize: '1rem',
       '@media (max-width: 386px)': {
-        fontSize: '3vw',
+        fontSize: '3.5vw',
       },
       borderLeft: `2px ${colors.primary} solid`,
     },

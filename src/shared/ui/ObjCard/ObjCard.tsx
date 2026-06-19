@@ -1,5 +1,10 @@
-import React from 'react';
-import type { IObjCard, ObjCardStyles } from './types';
+import {
+  isRenderPropType,
+  type IObjCard,
+  type ObjCardMenuType,
+  type ObjCardStyles,
+  type RenderPropType,
+} from './types';
 import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
 import {
   Box,
@@ -7,116 +12,120 @@ import {
   MenuItem,
   Popover,
   type SxProps,
+  type Theme,
 } from '@mui/material';
 import { MoreVert } from '@mui/icons-material';
 
-export const ObjCard = <T extends Record<string, any>>({
-  photoURL,
-  data,
-  translatedNamesForKeys,
-  renderInHeader,
-  styles: propsStyles,
-  renderForKeys,
-  menu,
-}: IObjCard<T>) => {
+export const ObjCard = (props: IObjCard) => {
+  const { styles: propsStyles, photoURL } = props;
+
   return (
     <Box sx={{ ...styles.container, ...propsStyles?.container } as SxProps}>
-      {photoURL ? (
-        <img
-          src={photoURL}
-          style={{ ...styles.photo, ...propsStyles?.photo }}
-        />
-      ) : (
-        <></>
-      )}
-
+      {photoURL ? <img src={photoURL} style={propsStyles?.photo} /> : <></>}
       <Box
         sx={
           { ...styles.infoContainer, ...propsStyles?.infoContainer } as SxProps
         }
       >
-        <Box sx={{ ...styles.header, ...propsStyles?.header } as SxProps}>
-          {renderInHeader()}
-          {menu ? (
-            <PopupState variant="popover">
-              {(state) => (
-                <>
-                  <IconButton
-                    {...bindTrigger(state)}
-                    {...menu.trigger}
-                    size={'small'}
-                  >
-                    <MoreVert fontSize="small" />
-                  </IconButton>
-                  <Popover
-                    {...bindPopover(state)}
-                    transformOrigin={{ horizontal: 'center', vertical: 'top' }}
-                    anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
-                  >
-                    {menu.menuItems.map((menuItem) => (
-                      <MenuItem
-                        {...menuItem}
-                        onClick={(e) => {
-                          state.close();
-                          menuItem.onClick?.(e);
-                        }}
-                      >
-                        {menuItem.renderBeforeLabel}
-                        {menuItem.label}
-                      </MenuItem>
-                    ))}
-                  </Popover>
-                </>
-              )}
-            </PopupState>
+        <Header {...props} propsStyles={propsStyles as any} />
+        <PropsList {...props} />
+      </Box>
+    </Box>
+  );
+};
+
+const Header = ({
+  propsStyles,
+  renderInHeader,
+  menu,
+}: {
+  propsStyles?: { header: SxProps<Theme>; headerLeftContainer: SxProps<Theme> };
+  renderInHeader: React.ReactNode;
+  menu?: ObjCardMenuType;
+}) => {
+  return (
+    <Box sx={{ ...styles.header, ...propsStyles?.header } as SxProps}>
+      <Box
+        sx={
+          {
+            ...styles.headerLeftContainer,
+            ...propsStyles?.headerLeftContainer,
+          } as SxProps
+        }
+      >
+        {renderInHeader}
+      </Box>
+      {menu ? <ObjCardMenu {...menu} /> : <></>}
+    </Box>
+  );
+};
+
+const PropsList = (props: {
+  renderForKeys: (RenderPropType | React.ReactNode)[];
+  translatedNamesForKeys?: Record<string | number | symbol, string>;
+}) => {
+  const { renderForKeys } = props;
+
+  return (
+    <Box sx={styles.props}>
+      {renderForKeys.map((render) => (
+        <>
+          {isRenderPropType(render) ? (
+            <PropWithKey render={render} {...props} />
           ) : (
-            <></>
+            render
           )}
-        </Box>
-        <Box sx={{ ...styles.props, ...propsStyles?.props } as SxProps}>
-          {renderForKeys.map((render, index) => (
-            <React.Fragment key={index}>
-              {!render.options?.hideKeyName ? (
-                <Box
-                  key={index}
-                  sx={
-                    {
-                      ...styles.prop,
-                      ...propsStyles?.prop,
-                      ...render.options?.style,
-                    } as SxProps
-                  }
-                >
-                  <Box sx={styles.propKeyName}>
-                    <span>
-                      {translatedNamesForKeys
-                        ? translatedNamesForKeys[render.key]
-                        : render.key.toString()}
-                    </span>
-                  </Box>
-                  <Box sx={{ ...styles.propContentContainer }}>
-                    {render.renderItem(render.key, data[render.key])}
-                  </Box>
-                </Box>
-              ) : (
-                <Box
-                  key={index}
-                  sx={
-                    {
-                      ...styles.prop,
-                      ...propsStyles?.prop,
-                      border: '0px black solid',
-                    } as SxProps
-                  }
-                >
-                  <Box sx={{ ...styles.propContentContainer, width: '100%' }}>
-                    {render.renderItem(render.key, data[render.key])}
-                  </Box>
-                </Box>
-              )}
-            </React.Fragment>
-          ))}
-        </Box>
+        </>
+      ))}
+    </Box>
+  );
+};
+
+const PropWithKey = ({
+  render,
+  translatedNamesForKeys,
+}: {
+  render: RenderPropType;
+  translatedNamesForKeys?: Record<string | number | symbol, string>;
+}) => {
+  return (
+    <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'stretch',
+        border: '2px gray solid',
+        borderRadius: '20px',
+      }}
+    >
+      <Box
+        sx={{
+          backgroundColor: 'gray',
+          width: '40%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          textAlign: 'center',
+          borderRadius: '20px',
+        }}
+      >
+        <span>
+          {translatedNamesForKeys?.hasOwnProperty(render.key)
+            ? translatedNamesForKeys[render.key]
+            : render.key.toString()}
+        </span>
+      </Box>
+      <Box
+        sx={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          wordBreak: 'break-all',
+        }}
+      >
+        {render.renderItem}
       </Box>
     </Box>
   );
@@ -125,15 +134,11 @@ export const ObjCard = <T extends Record<string, any>>({
 const styles: ObjCardStyles = {
   container: {
     border: '2px grey solid',
-    boxSizing: 'border-box',
     display: 'flex',
     flexDirection: 'row',
     height: '35vh',
   },
-  photo: {
-    objectFit: 'contain',
-    height: '100%',
-  },
+  photo: {},
   infoContainer: {
     display: 'flex',
     flexDirection: 'column',
@@ -144,48 +149,56 @@ const styles: ObjCardStyles = {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: 1,
-    gap: 1,
+    justifyContent: 'space-between',
+    px: '6%',
   },
-  props: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    paddingTop: '0.5vh',
-    paddingBottom: '0.5vh',
-    paddingLeft: 1,
-    paddingRight: 1,
-    gap: '0.5vh',
-    overflowY: 'auto',
-    boxSizing: 'border-box',
-  },
-  prop: {
-    width: '100%',
+  headerLeftContainer: {
     display: 'flex',
     flexDirection: 'row',
-    border: '2px grey solid',
-    borderRadius: '20px',
+    alignItems: 'center',
   },
-  propKeyName: {
-    backgroundColor: 'grey',
-    width: '50%',
-    borderRadius: '20px',
+  props: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
+    p: '3%',
+    gap: 1,
+    overflow: 'auto',
   },
-  propContentContainer: {
-    width: '50%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    overflow: 'hidden' /* Скрываем выходящий за границы текст */,
-    whiteSpace: 'nowrap' /* Запрещаем перенос строк */,
-    textOverflow: 'ellipsis',
-  },
+  prop: {},
+  propKeyName: {},
+  propContentContainer: {},
+};
+
+const ObjCardMenu = (props: ObjCardMenuType) => {
+  const { trigger, menuItems } = props;
+
+  return (
+    <PopupState variant="popover">
+      {(state) => (
+        <>
+          <IconButton {...bindTrigger(state)} {...trigger} size={'small'}>
+            <MoreVert fontSize="small" />
+          </IconButton>
+          <Popover
+            {...bindPopover(state)}
+            transformOrigin={{ horizontal: 'center', vertical: 'top' }}
+            anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
+          >
+            {menuItems.map((menuItem) => (
+              <MenuItem
+                {...menuItem}
+                onClick={(e) => {
+                  state.close();
+                  menuItem.onClick?.(e);
+                }}
+              >
+                {menuItem.renderBeforeLabel}
+                {menuItem.label}
+              </MenuItem>
+            ))}
+          </Popover>
+        </>
+      )}
+    </PopupState>
+  );
 };

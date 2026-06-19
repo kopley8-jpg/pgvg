@@ -103,6 +103,7 @@ export const useDeviceCard = (props: IDeviceCard) => {
       onFile: onPhotoAccept,
       onURL(url) {
         onChange?.('photoURL', url);
+        alert(url);
       },
       onClose: () => {
         setPhotoLoader({ open: false, anchorEl: null });

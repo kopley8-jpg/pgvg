@@ -118,8 +118,7 @@ const PodItemInKitEditorCard = ({
           height: '20vh',
         },
       }}
-      data={kitItem}
-      renderInHeader={() => <span>{kitItem.name}</span>}
+      renderInHeader={<span>{kitItem.name}</span>}
       renderForKeys={[
         ...podItemConfig.forKeys(['resistance'], (_key, value) => (
           <DropDownList
@@ -184,8 +183,7 @@ const TankItemInKitEditorCard = ({
           height: '20vh',
         },
       }}
-      data={kitItem}
-      renderInHeader={() => <span>{kitItem.name}</span>}
+      renderInHeader={<span>{kitItem.name}</span>}
       renderForKeys={[
         ...[
           series.capacity.length > 1
@@ -240,8 +238,7 @@ const CoilItemInKitEditorCard = ({
           height: '20vh',
         },
       }}
-      data={kitItem}
-      renderInHeader={() => <span>{kitItem.name}</span>}
+      renderInHeader={<span>{kitItem.name}</span>}
       renderForKeys={[
         ...coilItemConfig.forKeys(['resistance'], (_key, value) => (
           <DropDownList
