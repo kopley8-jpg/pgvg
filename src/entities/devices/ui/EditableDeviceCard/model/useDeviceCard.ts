@@ -1,24 +1,13 @@
 import { subscribeToDeviceById } from '@/shared/api/firebase/devices';
-import type {
-  BatteryType,
-  CompactiblePlatType,
-  DeviceKitType,
-  DeviceType,
-  PlatformType,
-  SomethingElseInKitType,
-} from '@/shared/types/device';
+import type { DeviceType } from '@/shared/types/device';
 import { useEffect, useState } from 'react';
-import type { IDeviceCard } from './types';
-import { convertToNumber } from '@/shared/lib/convertToNumber';
+import type { DEVICE_MENU_ACTIONS, IDeviceCard, UiHandlerType } from './types';
+import { convertToNumber } from '@/shared/lib/tryConvertToNumber';
 
 export const useDeviceCard = (props: IDeviceCard) => {
   const {
     device: imDevice,
     onChange,
-    onCompatiblePlatAdd,
-    onPlatItemClick,
-    onAddKitItemMenuClick,
-    onKitItemClick,
     onError,
     onDeviceDelete,
     onPhotoAccept,
@@ -47,116 +36,74 @@ export const useDeviceCard = (props: IDeviceCard) => {
     return unsubscribe;
   }, [imDevice]);
 
-  const handleChange = <K extends keyof Omit<DeviceType, 'id'>>(
-    key: K,
-    value: Omit<DeviceType, 'id'>[K]
-  ) => {
-    onChange?.(key, value);
-  };
-
   const handleTextFieldChange = (
     key: 'brand' | 'model' | 'minCoilResistance'
   ) => {
     return {
       onSaveButtonPress: (value: string | number) => {
         if (key === 'minCoilResistance') {
-          const normalize = Number(convertToNumber(value));
-          if (isNaN(normalize)) {
-            onError?.('значение должно быть числом');
-            return;
-          } else {
-            handleChange(key, normalize);
+          const num = convertToNumber(value);
+          if (isNaN(num)) {
+            return onError?.('значение должно быть числом');
           }
+          onChange?.(key, num);
         } else {
-          handleChange(key, value.toString());
+          onChange?.(key, value.toString());
         }
       },
     };
   };
 
-  const uiHandler = {
-    brand: handleTextFieldChange('brand'),
-    model: handleTextFieldChange('model'),
-    minCoilResisnatce: handleTextFieldChange('minCoilResistance'),
-    platform: {
-      onChange: (newPlatform: PlatformType) => {
-        onChange?.('platforms', newPlatform);
-        console.log(newPlatform);
+  const handleMenuItemClick = (item: (typeof DEVICE_MENU_ACTIONS)[number]) => {
+    return {
+      onClick: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+        switch (item) {
+          case 'load-photo':
+            setPhotoLoader({ open: true, anchorEl: e.currentTarget });
+            break;
+          case 'delete-photo':
+            onChange?.('photoURL', null);
+            break;
+          case 'delete-device':
+            onDeviceDelete?.();
+            break;
+        }
       },
-      onCompatiblePlatAdd: (
-        e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-      ) => {
-        onCompatiblePlatAdd?.(e);
-      },
-      onPlatItemClick: (plat: CompactiblePlatType) => {
-        onPlatItemClick?.(plat);
-      },
-    },
-    battery: {
-      onChange: (battery: BatteryType) => {
-        onChange?.('battery', battery);
-      },
-      onError: (error: string) => {
-        onError?.(error);
-      },
-    },
-    screen: {
-      onPick: (picked: 'индикация' | 'полноценный' | 'нет' | undefined) => {
-        if (!picked) return;
+    };
+  };
+
+  const uiHandler: UiHandlerType = {
+    menuItem: (item) => handleMenuItemClick(item),
+    textField: (key) => handleTextFieldChange(key),
+    arrayPrimitive: (key) => ({
+      onChangesSaved: (value) =>
+        onChange?.(
+          key,
+          value.map((val) => val.toString())
+        ),
+    }),
+    dropDown: (_key) => ({
+      onPick(picked) {
         onChange?.('screen', picked);
       },
+    }),
+    platformEntry: {
+      ...props,
+      onChange: (platform) => onChange?.('platforms', platform),
     },
-    featuresNModes: (key: 'features' | 'modes') => {
-      return {
-        onChangesSaved: (newVal: (string | number)[]) => {
-          onChange?.(
-            key,
-            newVal.map((val) => val.toString())
-          );
-        },
-      };
+    batteryEntry: {
+      onChange: (battery) => onChange?.('battery', battery),
+      onError,
     },
     kitEntry: {
-      onAddKitItemMenuClick: (
-        e: React.MouseEvent<HTMLLIElement, MouseEvent>
-      ) => {
-        onAddKitItemMenuClick?.(e);
-      },
-      onKitItemClick: (
-        item: Exclude<DeviceKitType, SomethingElseInKitType> & { id: number }
-      ) => {
-        onKitItemClick?.(item);
-      },
-      onChange: (newValue: DeviceKitType[]) => {
-        onChange?.('kit', newValue);
-      },
-      onError: (error: string) => {
-        onError?.(error);
-      },
-    },
-    menuItem: (item: 'delete-device' | 'load-photo' | 'delete-photo') => {
-      return {
-        onClick: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
-          switch (item) {
-            case 'delete-device':
-              onDeviceDelete?.();
-              break;
-            case 'load-photo':
-              setPhotoLoader({ open: true, anchorEl: e.currentTarget });
-              break;
-            case 'delete-photo':
-              onChange?.('photoURL', null);
-              break;
-          }
-        },
-      };
+      ...props,
+      onChange: (newValue) => onChange?.('kit', newValue),
     },
     photoLoader: {
-      onUrl: (url: string) => {
+      onFile: onPhotoAccept,
+      onURL(url) {
         onChange?.('photoURL', url);
-      },
-      onFile: (file: File) => {
-        onPhotoAccept?.(file);
+        alert(url);
       },
       onClose: () => {
         setPhotoLoader({ open: false, anchorEl: null });
@@ -167,7 +114,6 @@ export const useDeviceCard = (props: IDeviceCard) => {
   return {
     device,
     loading,
-    handleChange,
     uiHandler,
     photoLoader,
   };

@@ -49,7 +49,7 @@ export const useStyles = () => {
       minWidth: '50%',
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       justifyContent: 'center',
     },
   });

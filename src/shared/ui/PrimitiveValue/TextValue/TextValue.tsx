@@ -11,7 +11,6 @@ import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
 
 interface IPrimitiveValueEditor {
   value?: string | number | null;
-  fontSize?: any;
   style?: React.CSSProperties;
   onSaveButtonPress?: (newValue: string | number) => void;
   errorOptions?: {
@@ -23,7 +22,7 @@ interface IPrimitiveValueEditor {
 export const TextValue = ({
   value,
   onSaveButtonPress,
-  fontSize,
+  style,
 }: IPrimitiveValueEditor) => {
   const styles = useStyles();
 
@@ -39,7 +38,7 @@ export const TextValue = ({
           <span
             style={{
               ...styles.text,
-              fontSize: fontSize ? fontSize : undefined,
+              ...style,
             }}
             {...bindTrigger(state)}
           >

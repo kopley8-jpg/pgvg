@@ -2,7 +2,7 @@ import type { IDropDownList } from './DropDown.types';
 import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
 import { MenuItem, Popover } from '@mui/material';
 
-export const DropDownList = <T extends string | number | undefined | null>({
+export const DropDownList = <T extends string | number>({
   value,
   data,
   style,
@@ -13,7 +13,7 @@ export const DropDownList = <T extends string | number | undefined | null>({
       {(state) => (
         <>
           <span {...bindTrigger(state)} style={{ ...style?.value }}>
-            {value}
+            {value ? value : "значение?"}
           </span>
           <Popover
             {...bindMenu(state)}

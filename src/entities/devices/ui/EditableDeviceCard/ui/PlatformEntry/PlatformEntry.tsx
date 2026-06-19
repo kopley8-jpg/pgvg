@@ -11,12 +11,12 @@ import {
 import { Switch } from '@mui/material';
 import { CompatiblePlatsEntry } from './ui/CompatiblePlatsEntry/CompatiblePlatsEntry';
 
-interface IPlatformEntry {
+export interface IPlatformEntry {
   platform: PlatformType;
   objEntryStyles: ObjEntryStylesType;
-  onChange: (platform: PlatformType) => void;
-  onPlatItemClick: (plat: CompactiblePlatType) => void;
-  onCompatiblePlatAdd: (
+  onChange?: (platform: PlatformType) => void;
+  onPlatItemClick?: (plat: CompactiblePlatType) => void;
+  onCompatiblePlatAdd?: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => void;
 }
@@ -43,13 +43,13 @@ export const PlatformEntry = (props: IPlatformEntry) => {
             onPick={(picked) => {
               if (!picked || picked === platform.type) return;
               if (picked === 'магнит') {
-                onChange({
+                onChange?.({
                   type: picked,
                   adjustmentAirflow: false,
                   compatiblePlats: [],
                 });
               } else {
-                onChange({ type: picked });
+                onChange?.({ type: picked });
               }
             }}
           />
@@ -63,7 +63,7 @@ export const PlatformEntry = (props: IPlatformEntry) => {
                     checked={value}
                     size="small"
                     onClick={() =>
-                      onChange({
+                      onChange?.({
                         ...platform,
                         adjustmentAirflow: !platform.adjustmentAirflow,
                       })
@@ -71,25 +71,19 @@ export const PlatformEntry = (props: IPlatformEntry) => {
                   />
                 )
               ),
-              ...createRenderConfig(platform).forKeys(
-                ['compatiblePlats'],
-                (_key, value) => (
-                  <CompatiblePlatsEntry
-                    compatiblePlats={value}
-                    objEntryStyles={objEntryStyles}
-                    onPlatItemClick={(plat) => {
-                      onPlatItemClick(plat);
-                    }}
-                    onDelete={(newPlats) => {
-                      onChange({ ...platform, compatiblePlats: newPlats });
-                    }}
-                    onPlatAdd={(e) => {
-                      onCompatiblePlatAdd(e);
-                    }}
-                  />
-                ),
-                { hideKeyName: true }
-              ),
+              <CompatiblePlatsEntry
+                compatiblePlats={platform.compatiblePlats}
+                objEntryStyles={objEntryStyles}
+                onPlatItemClick={(plat) => {
+                  onPlatItemClick?.(plat);
+                }}
+                onDelete={(newPlats) => {
+                  onChange?.({ ...platform, compatiblePlats: newPlats });
+                }}
+                onPlatAdd={(e) => {
+                  onCompatiblePlatAdd?.(e);
+                }}
+              />,
             ]
           : [null]),
       ]}

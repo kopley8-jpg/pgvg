@@ -70,17 +70,15 @@ export const usePlatformPicker = (props: IPlatformPicker) => {
         }
       },
     },
-    modalDialog: {
-      onClose() {
-        setSeriesToShow(null);
-      },
-    },
     seriesCardDialog: {
       onAdd() {
         onPick?.(seriesToShow!);
         setSeriesToShow(null);
         onClose?.();
       },
+      onClose() {
+        setSeriesToShow(null);
+      },      
     },
   };
 
@@ -99,11 +97,9 @@ type IUiHandler = {
     onClick: (series: SeriesItem) => void;
     onSeriesAdd: (type: 'pod' | 'tank' | 'coil') => void;
   };
-  modalDialog: {
-    onClose: () => void;
-  };
   seriesCardDialog: {
     onAdd: () => void;
+    onClose: () => void;
   };
 };
 

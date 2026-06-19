@@ -9,6 +9,7 @@ import type {
   DeviceKitType,
   SomethingElseInKitType,
 } from '@/shared/types/device';
+import { ListEntryItem } from '@/shared/ui/ListEntryItem/ListEntryItem';
 import { ObjCard } from '@/shared/ui/ObjCard/ObjCard';
 import { ObjEntryTwo } from '@/shared/ui/ObjEntry/ObjEntry';
 import { TextValue } from '@/shared/ui/PrimitiveValue/TextValue/TextValue';
@@ -23,17 +24,18 @@ import {
 import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
 import { useState } from 'react';
 
-interface IKitEntry {
+export interface IKitEntry {
   kit: DeviceKitType[];
-  onAddKitItemMenuClick: (
+  colors: typeof cols.light;
+  onAddKitItemMenuClick?: (
     e: React.MouseEvent<HTMLLIElement, MouseEvent>
   ) => void;
-  onKitItemClick: (
-    item: Exclude<DeviceKitType, SomethingElseInKitType> & { id: number }
+  onKitItemClick?: (
+    item: Exclude<DeviceKitType, SomethingElseInKitType>,
+    id: number
   ) => void;
-  colors: typeof cols.light;
-  onChange: (newValue: DeviceKitType[]) => void;
-  onError: (error: string) => void;
+  onChange?: (newValue: DeviceKitType[]) => void;
+  onError?: (error: string) => void;
 }
 
 export const KitEntry = (props: IKitEntry) => {
@@ -56,88 +58,88 @@ export const KitEntry = (props: IKitEntry) => {
       style={ObjEntryStyles(colors)}
       renderForKeys={[
         ...kit
-          .map((item, index) =>
-            createRenderConfig({ item }).forKeys(
-              ['item'],
-              (_key, _value) => (
-                <>
-                  <KitMenuItem
-                    item={item}
-                    onClick={() => {
-                      if (item.type === 'something-else') {
-                        setClickedSomethingElseKitItem(item);
-                      } else {
-                        onKitItemClick({ ...item, id: index });
-                      }
-                    }}
-                    onDelete={() => {
-                      onChange(
-                        kit.filter((_kitItem, kitIndex) => kitIndex != index)
-                      );
-                    }}
-                  />
-                  <Modal
-                    sx={modalStyles}
-                    open={Boolean(clickedSomethingElseKitItem)}
-                    onClose={() => setClickedSomethingElseKitItem(null)}
-                  >
-                    <EditSomethingElseInKitCard
-                      item={clickedSomethingElseKitItem!}
-                      onChange={(newItem) => {
-                        onChange(
-                          kit.map((kitItem, kitIndex) =>
-                            index === kitIndex ? newItem : kitItem
-                          )
-                        );
-                        setClickedSomethingElseKitItem(newItem);
-                      }}
-                      onDelete={() => {
-                        onChange(
-                          kit.filter((_kitItem, kitIndex) => kitIndex != index)
-                        );
-                        setClickedSomethingElseKitItem(null);
-                      }}
-                      onError={onError}
-                      colors={colors}
-                    />
-                  </Modal>
-                </>
-              ),
-              { hideKeyName: true }
-            )
-          )
+          .map((item, index) => (
+            <>
+              <ListEntryItem
+                label={
+                  item.count +
+                  'x ' +
+                  item.name +
+                  ' ' +
+                  (item.type === 'pod' || item.type === 'coil'
+                    ? item.resistance
+                    : '')
+                }
+                onClick={() => {
+                  if (item.type === 'something-else') {
+                    setClickedSomethingElseKitItem(item);
+                  } else {
+                    onKitItemClick?.(item, index);
+                  }
+                }}
+                onDelete={() => {
+                  onChange?.(
+                    kit.filter((_kitItem, kitIndex) => kitIndex != index)
+                  );
+                }}
+              />
+              <Modal
+                sx={modalStyles}
+                open={Boolean(clickedSomethingElseKitItem)}
+                onClose={() => setClickedSomethingElseKitItem(null)}
+              >
+                <EditSomethingElseInKitCard
+                  item={clickedSomethingElseKitItem!}
+                  onChange={(newItem) => {
+                    onChange?.(
+                      kit.map((kitItem, kitIndex) =>
+                        index === kitIndex ? { ...newItem } : kitItem
+                      )
+                    );
+                    setClickedSomethingElseKitItem(newItem);
+                  }}
+                  onDelete={() => {
+                    onChange?.(
+                      kit.filter((_kitItem, kitIndex) => kitIndex != index)
+                    );
+                    setClickedSomethingElseKitItem(null);
+                  }}
+                  onError={onError}
+                  colors={colors}
+                />
+              </Modal>
+            </>
+          ))
           .flat(),
-        ...createRenderConfig({ a: 1 }).forKeys(
-          ['a'],
-          () => (
-            <PopupState variant="popover">
-              {(state) => (
-                <>
-                  <IconButton size="small" {...bindTrigger(state)}>
-                    <Add fontSize="small" />
-                  </IconButton>
-                  <AddItemToKitMenu
-                    onClick={(item, e) => {
-                      if (item === 'somethingElse') {
-                        const newKitItem: SomethingElseInKitType = {
-                          type: 'something-else',
-                          name: 'Новое что-то еще',
-                          count: 1,
-                        };
-                        onChange([...kit, newKitItem]);
-                        setClickedSomethingElseKitItem(newKitItem);
-                      } else {
-                        onAddKitItemMenuClick(e);
-                      }
-                    }}
-                    menuProps={{ ...bindPopover(state) }}
-                  />
-                </>
-              )}
-            </PopupState>
-          ),
-          { hideKeyName: true }
-        ),
+        <PopupState variant="popover">
+          {(state) => (
+            <>
+              <IconButton
+                size="small"
+                {...bindTrigger(state)}
+                sx={{ width: '100%', borderRadius: '10px' }}
+              >
+                <Add fontSize="small" />
+              </IconButton>
+              <AddItemToKitMenu
+                onClick={(item, e) => {
+                  if (item === 'somethingElse') {
+                    const newKitItem: SomethingElseInKitType = {
+                      type: 'something-else',
+                      name: 'Новое что-то еще',
+                      count: 1,
+                    };
+                    onChange?.([...kit, newKitItem]);
+                    setClickedSomethingElseKitItem(newKitItem);
+                  } else {
+                    onAddKitItemMenuClick?.(e);
+                  }
+                }}
+                menuProps={{ ...bindPopover(state) }}
+              />
+            </>
+          )}
+        </PopupState>,
       ]}
     />
   );
@@ -175,19 +177,18 @@ const EditSomethingElseInKitCard = ({
   colors: typeof cols.light;
   onChange: (newValue: SomethingElseInKitType) => void;
   onDelete: () => void;
-  onError: (error: string) => void;
+  onError?: (error: string) => void;
 }) => {
   const kitConfig = createRenderConfig(item);
   return (
     <ObjCard
-      data={item}
       styles={ObjCardStyles(colors)}
       translatedNamesForKeys={{
         name: 'Наименование',
         count: 'Кол-во',
         type: '',
       }}
-      renderInHeader={() => (
+      renderInHeader={
         <div
           style={{
             display: 'flex',
@@ -207,7 +208,7 @@ const EditSomethingElseInKitCard = ({
             <Delete />
           </IconButton>
         </div>
-      )}
+      }
       renderForKeys={[
         ...kitConfig.forKeys(['count'], (_key, value) => (
           <TextValue
@@ -215,7 +216,7 @@ const EditSomethingElseInKitCard = ({
             onSaveButtonPress={(newVal) => {
               const toNumber = Number(newVal);
               if (isNaN(toNumber)) {
-                onError('значение должно быть числом');
+                onError?.('значение должно быть числом');
               } else {
                 onChange({ ...item, count: toNumber });
               }
@@ -224,41 +225,5 @@ const EditSomethingElseInKitCard = ({
         )),
       ]}
     />
-  );
-};
-
-const KitMenuItem = ({
-  item,
-  onClick,
-  onDelete,
-}: {
-  item: DeviceKitType;
-  onClick?: () => void;
-  onDelete?: () => void;
-}) => {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'row' }}>
-      <MenuItem
-        sx={{
-          fontSize: '2vw',
-          py: 1,
-          px: 1,
-          minHeight: 'auto',
-          textOverflow: 'clip',
-          whiteSpace: 'normal',
-          textWrap: 'auto',
-        }}
-        onClick={() => onClick?.()}
-      >
-        {item.count +
-          'x ' +
-          item.name +
-          ' ' +
-          (item.type === 'pod' || item.type === 'coil' ? item.resistance : '')}
-      </MenuItem>
-      <IconButton size="small" onClick={onDelete}>
-        <Delete fontSize="small" />
-      </IconButton>
-    </div>
   );
 };

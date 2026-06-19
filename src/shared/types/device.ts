@@ -7,7 +7,7 @@ export type DeviceType = {
 
   modes: string[];
   features: string[];
-  screen: 'индикация' | 'полноценный' | 'нет';
+  screen: (typeof SCREEN_TYPES)[number];
   battery: BatteryType;
   minCoilResistance: number;
 
@@ -52,7 +52,8 @@ export type SomethingElseInKitType = {
   count: number;
 };
 
-export const BATTERY_FORMATS = ['18350', '18650', '20700', '21700'];
+export const BATTERY_FORMATS = ['18350', '18650', '20700', '21700'] as const;
+export const SCREEN_TYPES = ['индикация', 'полноценный', 'нет'] as const;
 export const PLATFORM_FORMATS = ['510', 'boro', 'dot', 'squonk', 'магнит'];
 
 export type PlatformType =

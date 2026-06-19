@@ -24,14 +24,13 @@ export const TankSeriesCard = (props: ITankSeriesCard) => {
         },
       }}
       translatedNamesForKeys={translate}
-      data={tankSeries}
-      renderInHeader={() => (
+      renderInHeader={
         <>
           <TextValue value={tankSeries.name} {...uiHandler.name} />
           <CardMenu {...uiHandler.menu} />
           {props.headerRender}
         </>
-      )}
+      }
       renderForKeys={[
         ...createRenderConfig(tankSeries).forKeys(
           ['capacity'],
@@ -42,17 +41,11 @@ export const TankSeriesCard = (props: ITankSeriesCard) => {
             />
           )
         ),
-        ...createRenderConfig(tankSeries).forKeys(
-          ['compatibleCoilSerieses'],
-          (_key, value) => (
-            <CompactibleCoilsEntry
-              compactibleCoils={value}
-              objEntryStyles={ObjEntryStyles(props.colors)}
-              {...uiHandler.coils}
-            />
-          ),
-          { hideKeyName: true }
-        ),
+        <CompactibleCoilsEntry
+          compactibleCoils={tankSeries.compatibleCoilSerieses}
+          objEntryStyles={ObjEntryStyles(props.colors)}
+          {...uiHandler.coils}
+        />,
       ]}
     />
   );

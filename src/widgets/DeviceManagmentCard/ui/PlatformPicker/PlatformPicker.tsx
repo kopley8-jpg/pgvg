@@ -31,16 +31,11 @@ export const PlatformPicker = (props: IPlatformPicker) => {
         ))}
       </Tabs>
       <SeriesesList serieses={serieses} {...uiHandler.seriesesList} />
-      <Modal
-        sx={modalStyles}
+      <SeriesCardDialog
         open={Boolean(seriesToShow)}
-        {...uiHandler.modalDialog}
-      >
-        <SeriesCardDialog
-          series={seriesToShow!}
-          {...uiHandler.seriesCardDialog}
-        />
-      </Modal>
+        series={seriesToShow!}
+        {...uiHandler.seriesCardDialog}
+      />
     </Popover>
   );
 };
@@ -55,7 +50,7 @@ const SeriesesList = ({
   onSeriesAdd: (type: 'pod' | 'tank' | 'coil') => void;
 }) => {
   return (
-    <Box sx={{ maxHeight: '50vw', overflowY: 'auto' }}>
+    <Box sx={{ maxHeight: '50vh', overflowY: 'auto' }}>
       <MenuItem onClick={() => onSeriesAdd(serieses[0].type)}>
         {'+ Добавить серию '}
       </MenuItem>
@@ -67,11 +62,15 @@ const SeriesesList = ({
 };
 
 const SeriesCardDialog = ({
+  open,
   series,
   onAdd,
+  onClose
 }: {
+  open:boolean,
   series: SeriesItem;
-  onAdd: () => void;
+  onAdd?: () => void;
+  onClose?:() => void
 }) => {
   const AddButton = (
     <IconButton onClick={onAdd}>
@@ -79,14 +78,21 @@ const SeriesCardDialog = ({
     </IconButton>
   );
 
-  switch (series.type) {
-    case 'tank':
-      return <TankManagmentCard tankSeries={series} headerRender={AddButton} />;
-    case 'pod':
-      return <PodManagmentCard podSeries={series} renderInHeader={AddButton} />;
-    case 'coil':
-      return (
-        <CoilManagmentCard coilSeries={series} renderInHeader={AddButton} />
-      );
+  const Card = () => {
+      switch (series.type) {
+      case 'tank':
+        return <TankManagmentCard tankSeries={series} headerRender={AddButton} />;
+      case 'pod':
+        return <PodManagmentCard podSeries={series} renderInHeader={AddButton} />;
+      case 'coil':
+        return <CoilManagmentCard coilSeries={series} renderInHeader={AddButton} />
+    }
   }
+
+  return(
+    <Modal open={open} onClose={onClose} sx={modalStyles}>
+      <Card/>
+    </Modal>
+  )
+
 };

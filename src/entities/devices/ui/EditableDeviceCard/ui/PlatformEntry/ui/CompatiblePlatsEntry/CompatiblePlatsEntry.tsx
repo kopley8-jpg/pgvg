@@ -1,11 +1,11 @@
-import { createRenderConfig } from '@/shared/lib/createRenderConfig';
 import type { CompactiblePlatType } from '@/shared/types/device';
+import { ListEntryItem } from '@/shared/ui/ListEntryItem/ListEntryItem';
 import {
   ObjEntryTwo,
   type ObjEntryStylesType,
 } from '@/shared/ui/ObjEntry/ObjEntry';
-import { Add, Delete } from '@mui/icons-material';
-import { IconButton, MenuItem } from '@mui/material';
+import { Add } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 
 interface ICompatiblePlatsEntry {
   compatiblePlats: CompactiblePlatType[] | null;
@@ -30,51 +30,29 @@ export const CompatiblePlatsEntry = (props: ICompatiblePlatsEntry) => {
       translatedNamesForKeys={{}}
       renderForKeys={[
         ...(compatiblePlats ? compatiblePlats : [])
-          .map((plat) =>
-            createRenderConfig({ plat }).forKeys(
-              ['plat'],
-              (_key, value) => (
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                  <MenuItem
-                    sx={{ fontSize: '2vw', py: 1, px: 1, minHeight: 'auto' }}
-                    onClick={() => {
-                      onPlatItemClick(plat);
-                    }}
-                  >
-                    {value.name}
-                  </MenuItem>
-                  <IconButton
-                    size="small"
-                    onClick={() => {
-                      onDelete(
-                        (compatiblePlats ? compatiblePlats : []).filter(
-                          (res) => res.idFromPlatforms != plat.idFromPlatforms
-                        )
-                      );
-                    }}
-                  >
-                    <Delete fontSize="small" />
-                  </IconButton>
-                </div>
-              ),
-              { hideKeyName: true }
-            )
-          )
-          .flat(),
-        ...createRenderConfig({ a: 1 }).forKeys(
-          ['a'],
-          () => (
-            <IconButton
-              size="small"
-              onClick={(e) => {
-                onPlatAdd(e);
+          .map((plat) => (
+            <ListEntryItem
+              label={plat.name}
+              onClick={() => onPlatItemClick(plat)}
+              onDelete={() => {
+                onDelete(
+                  (compatiblePlats ? compatiblePlats : []).filter(
+                    (res) => res.idFromPlatforms != plat.idFromPlatforms
+                  )
+                );
               }}
-            >
-              <Add fontSize="small" />
-            </IconButton>
-          ),
-          { hideKeyName: true }
-        ),
+            />
+          ))
+          .flat(),
+        <IconButton
+          size="small"
+          onClick={(e) => {
+            onPlatAdd(e);
+          }}
+          sx={{ width: '100%', borderRadius: 10 }}
+        >
+          <Add fontSize="small" />
+        </IconButton>,
       ]}
     />
   );

@@ -1,11 +1,11 @@
-import { createRenderConfig } from '@/shared/lib/createRenderConfig';
 import type { CompactibleCoilSeriesesType } from '@/shared/types/tank-series';
+import { ListEntryItem } from '@/shared/ui/ListEntryItem/ListEntryItem';
 import {
   ObjEntryTwo,
   type ObjEntryStylesType,
 } from '@/shared/ui/ObjEntry/ObjEntry';
-import { Add, Delete } from '@mui/icons-material';
-import { IconButton, MenuItem } from '@mui/material';
+import { Add } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 
 interface ICompatiblePlatsEntry {
   compactibleCoils: CompactibleCoilSeriesesType[] | null;
@@ -30,51 +30,28 @@ export const CompactibleCoilsEntry = (props: ICompatiblePlatsEntry) => {
       translatedNamesForKeys={{}}
       renderForKeys={[
         ...(compactibleCoils ? compactibleCoils : [])
-          .map((coil) =>
-            createRenderConfig({ coil }).forKeys(
-              ['coil'],
-              (_key, value) => (
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                  <MenuItem
-                    sx={{ fontSize: '2vw', py: 1, px: 1, minHeight: 'auto' }}
-                    onClick={() => {
-                      onCoilItemClick(coil);
-                    }}
-                  >
-                    {value.name}
-                  </MenuItem>
-                  <IconButton
-                    size="small"
-                    onClick={() => {
-                      onDelete(
-                        (compactibleCoils ? compactibleCoils : []).filter(
-                          (res) => res.idFromPlatforms != coil.idFromPlatforms
-                        )
-                      );
-                    }}
-                  >
-                    <Delete fontSize="small" />
-                  </IconButton>
-                </div>
-              ),
-              { hideKeyName: true }
-            )
-          )
-          .flat(),
-        ...createRenderConfig({ a: 1 }).forKeys(
-          ['a'],
-          () => (
-            <IconButton
-              size="small"
-              onClick={(e) => {
-                onCoilAdd(e);
+          .map((coil) => (
+            <ListEntryItem
+              label={coil.name}
+              onClick={() => onCoilItemClick(coil)}
+              onDelete={() => {
+                onDelete(
+                  (compactibleCoils ? compactibleCoils : []).filter(
+                    (res) => res.idFromPlatforms != coil.idFromPlatforms
+                  )
+                );
               }}
-            >
-              <Add fontSize="small" />
-            </IconButton>
-          ),
-          { hideKeyName: true }
-        ),
+            />
+          ))
+          .flat(),
+        <IconButton
+          size="small"
+          onClick={(e) => {
+            onCoilAdd(e);
+          }}
+        >
+          <Add fontSize="small" />
+        </IconButton>,
       ]}
     />
   );

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import type { IPodSeriesCard } from './types';
 import type { PodSeriesType } from '@/shared/types/pod-series';
 import { subscribeToPodSeriesById } from '@/shared/api/firebase/pods';
-import { convertToNumber } from '@/shared/lib/convertToNumber';
+import { convertToNumber } from '@/shared/lib/tryConvertToNumber';
 
 export const usePodSeriesCard = (props: IPodSeriesCard) => {
   const { podSeries: inPodSeries, onChange, onDelete, onError } = props;
