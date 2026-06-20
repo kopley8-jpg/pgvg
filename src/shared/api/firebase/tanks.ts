@@ -62,11 +62,14 @@ export const subscribeToTankSeriesById = (
 const snapshotToTank = (key: string, data: any): TankSeriesType => {
   return {
     id: key,
+    photoURL: data.photoURL ?? null,
     name: data.name ?? 'неизвестный танк',
     capacity:
       typeof data.capacity === 'object'
         ? Object.values(data.capacity ?? {})
-        : [data.capacity],
+        : typeof data.capacity === 'number'
+          ? [data.capacity]
+          : [],
     compatibleCoilSerieses: Object.values(data.compatibleCoilSerieses ?? {}),
   };
 };

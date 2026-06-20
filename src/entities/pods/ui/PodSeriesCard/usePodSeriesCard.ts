@@ -5,10 +5,20 @@ import { subscribeToPodSeriesById } from '@/shared/api/firebase/pods';
 import { convertToNumber } from '@/shared/lib/tryConvertToNumber';
 
 export const usePodSeriesCard = (props: IPodSeriesCard) => {
-  const { podSeries: inPodSeries, onChange, onDelete, onError } = props;
+  const {
+    podSeries: inPodSeries,
+    onPhotoAccept,
+    onChange,
+    onDelete,
+    onError,
+  } = props;
 
   const [podSeries, setPodSeries] = useState<PodSeriesType | null>(null);
   const [loading, setLoading] = useState(typeof inPodSeries === 'string');
+  const [photoLoader, setPhotoLoader] = useState<{
+    open: boolean;
+    anchorEl: HTMLElement | null;
+  }>({ open: false, anchorEl: null });
 
   useEffect(() => {
     if (typeof inPodSeries === 'object') {
@@ -38,6 +48,26 @@ export const usePodSeriesCard = (props: IPodSeriesCard) => {
     };
   };
 
+  const handleMenuItemClick = (
+    item: (typeof POD_SERIES_MENU_ACTIONS)[number]
+  ) => {
+    return {
+      onClick: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+        switch (item) {
+          case 'load-photo':
+            setPhotoLoader({ open: true, anchorEl: e.currentTarget });
+            break;
+          case 'delete-photo':
+            onChange?.('photoURL', null);
+            break;
+          case 'delete-pod-series':
+            onDelete?.();
+            break;
+        }
+      },
+    };
+  };
+
   const uiHandler = {
     name: {
       onSaveButtonPress: (newValue: string | number) => {
@@ -49,8 +79,16 @@ export const usePodSeriesCard = (props: IPodSeriesCard) => {
         ...handleArrayPrimitChange(key),
       };
     },
-    menu: {
-      onClick: () => onDelete(),
+    menuItem: handleMenuItemClick,
+    photoLoader: {
+      onFile: onPhotoAccept,
+      onURL(url: string) {
+        onChange?.('photoURL', url);
+        alert(url);
+      },
+      onClose: () => {
+        setPhotoLoader({ open: false, anchorEl: null });
+      },
     },
   };
 
@@ -58,5 +96,12 @@ export const usePodSeriesCard = (props: IPodSeriesCard) => {
     podSeries,
     loading,
     uiHandler,
+    photoLoader,
   };
 };
+
+const POD_SERIES_MENU_ACTIONS = [
+  'load-photo',
+  'delete-photo',
+  'delete-pod-series',
+] as const;

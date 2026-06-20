@@ -26,7 +26,7 @@ export const updateCoilSeries = async <
           'compatibleCoilSerieses',
           tank.compatibleCoilSerieses.map((coil) =>
             coil.idFromPlatforms === id
-              ? { ...coil, name: value.toString() }
+              ? { ...coil, name: (value as string).toString() }
               : coil
           )
         );

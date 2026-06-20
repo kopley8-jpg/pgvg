@@ -11,4 +11,5 @@ export interface IPodSeriesCard {
     value: Omit<PodSeriesType, 'id'>[K]
   ) => void;
   onError?: (err: string) => void;
+  onPhotoAccept?: (file: File) => void;
 }

@@ -26,7 +26,13 @@ export const ArrayPrimitiveValue = ({
   onChangesSaved,
 }: IArrayPrimitiveValue) => {
   const handleChangesSaved = (newValue: (string | number)[]) => {
-    onChangesSaved(newValue);
+    onChangesSaved(
+      newValue.sort((a, b) => {
+        const numA = Number(a);
+        const numB = Number(b);
+        return numA - numB;
+      })
+    );
   };
 
   return (

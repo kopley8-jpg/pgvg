@@ -1,5 +1,6 @@
 export type TankSeriesType = {
   id: string;
+  photoURL: string | null;
   name: string;
   capacity: number[];
   compatibleCoilSerieses: CompactibleCoilSeriesesType[];

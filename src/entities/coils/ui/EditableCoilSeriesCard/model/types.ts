@@ -8,7 +8,8 @@ export interface ICoilSeriesCard {
     entryName: K,
     value: CoilSeriesType[K]
   ) => void;
-  onMenuItemClick: (item: 'delete') => void;
+  onDelete: () => void;
   onError?: (error: Error) => void;
   colors: typeof colors.light;
+  onPhotoAccept?: (file: File) => void;
 }

@@ -4,7 +4,7 @@ import { off, onValue, ref } from 'firebase/database';
 
 export const subscribeToPodSeriesById = (
   id: string,
-  onUpdate: (coils: PodSeriesType) => void
+  onUpdate: (podSeries: PodSeriesType) => void
 ) => {
   const podsRef = ref(database, `kochegar/platform/pods/${id}`);
 
@@ -14,11 +14,9 @@ export const subscribeToPodSeriesById = (
       return;
     }
 
-    const { id: _, ...cleanData } = data;
+    const podSeries = snapshotToPod(data, id);
 
-    const coilSeries: PodSeriesType = { ...cleanData, id: id };
-
-    onUpdate(coilSeries);
+    onUpdate(podSeries);
   });
 
   return () => off(podsRef, 'value', handler);
@@ -39,10 +37,7 @@ export const subscribeToPods = (
       }
 
       const pods: PodSeriesType[] = Object.entries(data).map(
-        ([key, value]: [string, any]) => ({
-          id: key,
-          ...(value as Omit<PodSeriesType, 'id'>),
-        })
+        ([key, value]: [string, any]) => snapshotToPod(value, key)
       );
 
       onUpdate(pods);
@@ -53,5 +48,25 @@ export const subscribeToPods = (
 
   return () => {
     off(podsRef, 'value', handler);
+  };
+};
+
+const snapshotToPod = (value: any, key: string): PodSeriesType => {
+  return {
+    id: key,
+    name: value.name ?? 'неизвестный под',
+    photoURL: value.photoURL ?? null,
+    capacity:
+      typeof value.capacity === 'object'
+        ? Object.values(value.capacity ?? {})
+        : typeof value.capacity === 'number'
+          ? [value.capacity]
+          : [],
+    ohms:
+      typeof value.ohms === 'object'
+        ? Object.values(value.ohms ?? {})
+        : typeof value.ohms === 'number'
+          ? [value.ohms]
+          : [],
   };
 };
