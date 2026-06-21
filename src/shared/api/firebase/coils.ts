@@ -17,11 +17,7 @@ export const subscribeToCoils = (
       }
 
       const coilSerieses: CoilSeriesType[] = Object.entries(data).map(
-        ([key, value]: [string, any]) => ({
-          id: key,
-          name: value.name ?? 'Неизвестный испарик',
-          ohms: Object.values(value.ohms ?? {}),
-        })
+        ([key, value]: [string, any]) => snapshotToCoil(value, key)
       );
 
       onUpdate(coilSerieses);
@@ -45,9 +41,7 @@ export const subscribeToCoilSeriesById = (
       return;
     }
 
-    const { id: _, ...cleanData } = data;
-
-    const coilSeries: CoilSeriesType = { ...cleanData, id: id };
+    const coilSeries: CoilSeriesType = snapshotToCoil(data, id);
 
     onUpdate(coilSeries);
   });
@@ -68,6 +62,16 @@ export const pushCoilSeries = async (
 };
 
 export const NEW_COIL_SERIES: Omit<CoilSeriesType, 'id'> = {
+  photoURL: null,
   name: 'Новая серия испариков',
   ohms: [1],
+};
+
+const snapshotToCoil = (value: any, key: string): CoilSeriesType => {
+  return {
+    id: key,
+    name: value.name ?? 'Неизвестный испарик',
+    ohms: Object.values(value.ohms ?? {}),
+    photoURL: value.photoURL ?? null,
+  };
 };

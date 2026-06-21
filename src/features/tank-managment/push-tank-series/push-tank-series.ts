@@ -12,4 +12,5 @@ export const NEW_TANK_SERIES: Omit<TankSeriesType, 'id'> = {
   name: 'Новая серия танков',
   capacity: [1],
   compatibleCoilSerieses: [],
+  photoURL: null,
 };

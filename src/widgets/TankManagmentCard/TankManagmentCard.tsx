@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { Modal } from '@mui/material';
 import { CoilManagmentCard } from '../CoilManagnmentCard/CoilManagmentCard';
 import { PlatformPicker } from '../DeviceManagmentCard/ui/PlatformPicker/PlatformPicker';
+import { uploadImageToImgBB } from '@/shared/api/imgbb/uploadImage';
 
 export const TankManagmentCard = ({
   tankSeries,
@@ -54,22 +55,30 @@ export const TankManagmentCard = ({
         onCoilItemClick={(coil) => {
           setClickedCoil(coil);
         }}
-        onError={() => { }}
+        onError={() => {}}
+        onPhotoAccept={async (file) => {
+          await uploadImageToImgBB(file)
+            .then((url) => {
+              updateTankSeries(id, 'photoURL', url);
+            })
+            .catch(() => alert('не удалось загрузить фото'));
+        }}
         headerRender={headerRender}
       />
       <PlatformPicker
-        showedPlatforms={["coils"]}
+        showedPlatforms={['coils']}
         {...compatibleCoilPickerProps}
         onPick={(series) => {
-          if (series.type !== "coil") return
+          if (series.type !== 'coil') return;
           pushCompactibleCoilSeries(id, {
             ...series,
-            idFromPlatforms: series.id
-          })
+            idFromPlatforms: series.id,
+          });
         }}
         onClose={() => {
-          setCompatibleCoilPickerProps((prev) => ({ ...prev, open: false }))
-        }} />
+          setCompatibleCoilPickerProps((prev) => ({ ...prev, open: false }));
+        }}
+      />
       <CoilPreview coil={clickedCoil} onClose={() => setClickedCoil(null)} />
     </>
   );

@@ -38,7 +38,7 @@ export const updateTankSeries = async <
           ...platforms,
           compatiblePlats: platforms.compatiblePlats.map((plat) =>
             plat.idFromPlatforms === id && plat.type === 'tank'
-              ? { ...plat, name: value.toString() }
+              ? { ...plat, name: (value as string).toString() }
               : plat
           ),
         });

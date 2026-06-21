@@ -12,4 +12,5 @@ export const NEW_POD_SERIES: Omit<PodSeriesType, 'id'> = {
   name: 'Новая серия картриджей',
   capacity: [1],
   ohms: [1],
+  photoURL: null,
 };

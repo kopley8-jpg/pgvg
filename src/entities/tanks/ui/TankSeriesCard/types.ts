@@ -16,4 +16,5 @@ export interface ITankSeriesCard {
   onError?: (error: string) => void;
   onDelete: () => void;
   headerRender?: React.ReactNode;
+  onPhotoAccept?: (file: File) => void;
 }
